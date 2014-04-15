@@ -13,18 +13,6 @@ var ClientManager = (function(clients, A) {
         this.clients = clients;
     };
 
-    ClientManager.prototype.init() {
-        
-    }
-
-    ClientManager.prototype.talk() {
-    
-    }
-
-    ClientManager.prototype.leave() {
-
-    }
-
     // Singleton
     ClientManager.instance = new ClientManager();
     return ClientManager;
