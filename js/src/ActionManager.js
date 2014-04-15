@@ -1,4 +1,4 @@
-var ActionManager = (function(actions) {
+var ActionManager = (function(actions, MakeEventDispatcher) {
     'use strict';
 
     function ActionManager() {
@@ -11,6 +11,14 @@ var ActionManager = (function(actions) {
             return new ActionManager();
         }
         this.actions = actions;
+
+        MakeEventDispatcher(this);
+
+    }
+
+    function dispatchAction (argument) {
+        
+        ActionManager.instance.dispatch(ActionManager.ACTION_DISPATCHED);
     }
 
 

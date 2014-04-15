@@ -1,4 +1,4 @@
-var ClientManager = (function(clients) {
+var ClientManager = (function(clients, A) {
     'use strict';
 
     function ClientManager() {
@@ -12,6 +12,18 @@ var ClientManager = (function(clients) {
         }
         this.clients = clients;
     };
+
+    ClientManager.prototype.init() {
+        
+    }
+
+    ClientManager.prototype.talk() {
+    
+    }
+
+    ClientManager.prototype.leave() {
+
+    }
 
     // Singleton
     ClientManager.instance = new ClientManager();
