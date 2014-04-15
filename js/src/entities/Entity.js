@@ -10,7 +10,12 @@ var Entity = (function(AssetManager, View) {
             spritesheet: AssetManager.instance.assets.images['test']
         });
         this.x = 50;
+        this.speed = 50;
     };
+
+    Entity.prototype.update = function() {
+        this.x += this.speed * Time.deltaTime;
+    }
 
     return Entity;
 
