@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, assets) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets) {
     'use strict';
 
     function Game() {
@@ -14,21 +14,25 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     }
 
     Game.prototype.init = function() {
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        var dips = window.devicePixelRatio;
+        
 
         // Adding the canvas to the stage
         this.canvas            = document.createElement('canvas');
         this.context           = this.canvas.getContext('2d');
         this.canvas.id         = 'main';
-        this.canvas.width      = dips * width;
-        this.canvas.height     = dips * height;
-        console.log('canvas.width: ', this.canvas.width, this.canvas.height);
+        this.canvas.width      = Globals.CANVAS_WIDTH;
+        this.canvas.height     = Globals.CANVAS_HEIGHT;
         this.context.fillStyle = Globals.CANVAS_BACKGROUND;
         this.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
+        
+        Globals.canvasRatio = Globals.CANVAS_HEIGHT / Globals.CANVAS_WIDTH;
+        var width = Utils.getWidth();
+        var height = width * Globals.canvasRatio;
+
+        this.canvas.style.width = width + 'px';
+        this.canvas.style.height = height + 'px';
+
         document.body.appendChild(this.canvas);
-        console.log('test');
 
         // Initializing Input manager
         InputManager.instance.init();
@@ -180,4 +184,4 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     // Singleton
     return new Game();
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, assets);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets);
