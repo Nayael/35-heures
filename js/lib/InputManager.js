@@ -1,29 +1,66 @@
-var InputManager = (function(addEventCapabilities) {
+var InputManager = (function() {
     'use strict';
+
+    ////////////
+    // CLASSES
+    //
+    var InputEvent = (function() {
+        'use strict';
+    
+        function InputEvent(type) {
+            // enforces new
+            if (!(this instanceof InputEvent)) {
+                return new InputEvent(type);
+            }
+            this.target = null;
+            this.currentTarget = null;
+            this.type = type || '';
+
+            this.screenX = 0;
+            this.screenY = 0;
+            this.clientX = 0;
+            this.clientY = 0;
+
+            this.ctrlKey  = false;
+            this.shiftKey = false;
+            this.altKey   = false;
+            this.metaKey  = false;
+        }
+
+        ////////////
+        // STATIC ATTRIBUTES
+        //
+        InputEvent.TOUCH_START  = "InputEvent.TOUCH_START";
+        InputEvent.TOUCH_MOVE   = "InputEvent.TOUCH_MOVE";
+        InputEvent.TOUCH_END    = "InputEvent.TOUCH_END";
+    
+        return InputEvent;
+    })();
+
 
     /**
      * @constructor
+     * InputManager for single-touch app
      */
     function InputManager() {
         // Singleton
         if (InputManager.instance) {
             throw new Error('InputManager is a singleton. Use InputManager.instance.');
         }
-        // enforces new
+        // enforces
         if (!(this instanceof InputManager)) {
             return new InputManager();
         }
-        addEventCapabilities(this);
+        MakeEventDispatcher(this);
+        this.isTouched = false;
+        this.currentTouch = null;
     }
 
     ////////////
     // STATIC ATTRIBUTES
     //
-    InputManager.TOUCH_START  = "InputManager.TOUCH_START";
-    InputManager.TOUCH_MOVE   = "InputManager.TOUCH_MOVE";
-    InputManager.TOUCH_END    = "InputManager.TOUCH_END";
-    InputManager.TOUCH_LEAVE  = "InputManager.TOUCH_LEAVE";
-    InputManager.TOUCH_CANCEL = "InputManager.TOUCH_CANCEL";
+    InputManager.InputEvent = InputEvent;
+
 
     ////////////
     // PUBLIC METHODS
@@ -42,56 +79,90 @@ var InputManager = (function(addEventCapabilities) {
             canvas.addEventListener('touchstart', onTouchStart, false);
             canvas.addEventListener('touchmove', onTouchMove, false);
             canvas.addEventListener('touchend', onTouchEnd, false);
-            canvas.addEventListener('touchcancel', onTouchCancel, false);
-            canvas.addEventListener('touchleave', onTouchLeave, false);
         }
     }
+
 
     ////////////
     // PRIVATE METHODS
     //
+    function createInputEvent(type, e) {
+        var inputEvent = new InputEvent(InputEvent.TOUCH_START);
+        inputEvent.type  = type;
+
+        inputEvent.target        = e.target;
+        inputEvent.currentTarget = e.currentTarget;
+        inputEvent.view          = e.view;
+
+        inputEvent.screenX  = e.screenX;
+        inputEvent.screenY  = e.screenY;
+        inputEvent.clientX  = e.clientX;
+        inputEvent.clientY  = e.clientY;
+        inputEvent.ctrlKey  = e.ctrlKey;
+        inputEvent.shiftKey = e.shiftKey;
+        inputEvent.altKey   = e.altKey;
+        inputEvent.metaKey  = e.metaKey;
+        return inputEvent;
+    }
+
     function onMouseDown(e) {
-        console.log('onMouseDown');
-        InputManager.instance.dispatch(InputManager.TOUCH_START);
+        var inputEvent = createInputEvent(InputEvent.TOUCH_START, e);
+        InputManager.instance.dispatch(InputEvent.TOUCH_START, inputEvent);
     }
 
     function onMouseMove(e) {
-        InputManager.instance.dispatch(InputManager.TOUCH_MOVE);
+        var inputEvent = createInputEvent(InputEvent.TOUCH_MOVE, e);
+        InputManager.instance.dispatch(InputEvent.TOUCH_MOVE, inputEvent);
     }
 
     function onMouseUp(e) {
-        console.log('onMouseUp');
-        InputManager.instance.dispatch(InputManager.TOUCH_END);
+        var inputEvent = createInputEvent(InputEvent.TOUCH_END, e);
+        InputManager.instance.dispatch(InputEvent.TOUCH_END, inputEvent);
     }
 
     function onTouchStart(e) {
         e.preventDefault();
-        console.log('onTouchStart');
-        InputManager.instance.dispatch(InputManager.TOUCH_START);
+        if (this.currentTouch) {
+            return;
+        }
+        this.currentTouch = e.touches[0];
+        var inputEvent = createInputEvent(InputEvent.TOUCH_START, e);
+        inputEvent.screenX = this.currentTouch.screenX;
+        inputEvent.screenY = this.currentTouch.screenY;
+        inputEvent.clientX = this.currentTouch.clientX;
+        inputEvent.clientY = this.currentTouch.screenY;
+
+        InputManager.instance.dispatch(InputEvent.TOUCH_START, inputEvent);
     }
 
     function onTouchMove(e) {
         e.preventDefault();
-        InputManager.instance.dispatch(InputManager.TOUCH_MOVE);
+        if (e.changedTouches.indexOf(this.currentTouch) == -1) {
+            return;
+        }
+        var inputEvent = createInputEvent(InputEvent.TOUCH_MOVE, e);
+        inputEvent.screenX = this.currentTouch.screenX;
+        inputEvent.screenY = this.currentTouch.screenY;
+        inputEvent.clientX = this.currentTouch.clientX;
+        inputEvent.clientY = this.currentTouch.screenY;
+        InputManager.instance.dispatch(InputEvent.TOUCH_MOVE, inputEvent);
     }
 
     function onTouchEnd(e) {
-        console.log('onTouchEnd');
-        InputManager.instance.dispatch(InputManager.TOUCH_END);
+        var inputEvent = createInputEvent(InputEvent.TOUCH_END, e);
+        if (!this.currentTouch || e.changedTouches.indexOf(this.currentTouch) == -1) {
+            return;
+        }
+        InputManager.instance.dispatch(InputEvent.TOUCH_END, inputEvent);
+        inputEvent.screenX = this.currentTouch.screenX;
+        inputEvent.screenY = this.currentTouch.screenY;
+        inputEvent.clientX = this.currentTouch.clientX;
+        inputEvent.clientY = this.currentTouch.screenY;
+        this.currentTouch = null;
     }
 
-    function onTouchCancel(e) {
-        console.log('onTouchCancel');
-        InputManager.instance.dispatch(InputManager.TOUCH_CANCEL);
-    }
-
-    function onTouchLeave(e) {
-        console.log('onTouchLeave');
-        InputManager.instance.dispatch(InputManager.TOUCH_LEAVE);
-    }
-
-    
+    // Singleton
     InputManager.instance = new InputManager();
     return InputManager;
 
-})(addEventCapabilities);
+})(MakeEventDispatcher);

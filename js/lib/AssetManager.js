@@ -1,4 +1,4 @@
-var AssetManager = (function(addEventCapabilities, PxLoader, PxLoaderImage) {
+var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
     'use strict';
 
     /**
@@ -13,7 +13,7 @@ var AssetManager = (function(addEventCapabilities, PxLoader, PxLoaderImage) {
         if (!(this instanceof AssetManager)) {
             return new AssetManager();
         }
-        addEventCapabilities(this);
+        MakeEventDispatcher(this);
 
         this.IMAGE_PATH = '';
         this.AUDIO_PATH = '';
@@ -100,4 +100,4 @@ var AssetManager = (function(addEventCapabilities, PxLoader, PxLoaderImage) {
     AssetManager.instance = new AssetManager();
     return AssetManager;
 
-}) (addEventCapabilities, PxLoader, PxLoaderImage);
+}) (MakeEventDispatcher, PxLoader, PxLoaderImage);

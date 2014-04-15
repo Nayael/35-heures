@@ -1,4 +1,4 @@
-function addEventCapabilities(object) {
+function MakeEventDispatcher(object) {
 	object.listenersFor = {};   // A list of all the listeners on a given event
 	
 	object.addListener = function(eventName, callback, target) {

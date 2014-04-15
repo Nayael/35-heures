@@ -36,6 +36,9 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
         // Initializing Input manager
         InputManager.instance.init();
+        InputManager.instance.addListener(InputManager.InputEvent.TOUCH_START, this.onTouchStart, this);
+        InputManager.instance.addListener(InputManager.InputEvent.TOUCH_MOVE, this.onTouchMove, this);
+        InputManager.instance.addListener(InputManager.InputEvent.TOUCH_END, this.onTouchEnd, this);
 
         // Initializing Asset manager
         AssetManager.instance.enqueueAssets(this.assets);
@@ -128,6 +131,18 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
         this.startGame();
+    };
+
+    Game.prototype.onTouchStart = function(e) {
+        console.log('onTouchStart', e.screenX, e.screenY);
+    };
+
+    Game.prototype.onTouchMove = function(e) {
+        // console.log('onTouchMove', e.screenX, e.screenY);
+    };
+
+    Game.prototype.onTouchEnd = function(e) {
+        console.log('onTouchEnd', e.screenX, e.screenY);
     };
 
     /**
