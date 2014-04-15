@@ -1,29 +1,20 @@
-var ClientManager = (function(ActionManager) {
-	'use strict';
+var ClientManager = (function(clients) {
+    'use strict';
 
-	function ClientManager() {
-		// enforces new
-		if (!(this instanceof ClientManager)) {
-			return new ClientManager();
-		}
-		this.actions = ActionManager;
-	};
+    function ClientManager() {
+        // Singleton
+        if (ClientManager.instance) {
+            throw new Error('ClientManager is a singleton. Use ClientManager.instance.');
+        }
+        // enforces new
+        if (!(this instanceof ClientManager)) {
+            return new ClientManager();
+        }
+        this.clients = clients;
+    };
 
-	var clients = {
-		"Pro": {
-			"Name" : "Henry",
-			"Actions" : [],
-			"Vulnerability" : 4,
-			"Patience" : 60
-		},
-		"OldMan": {
-			"Name" : "Jean-Jacques",
-			"Actions" : [],
-			"Vulnerability" : 1
-			"Patience" : 100
-		}
-	};
+    // Singleton
+    ClientManager.instance = new ClientManager();
+    return ClientManager;
 
-	return ClientManager;
-
-}(ActionManager));
+})(clients);

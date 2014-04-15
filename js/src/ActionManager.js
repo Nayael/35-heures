@@ -1,20 +1,22 @@
-var ActionManager = (function() {
+var ActionManager = (function(actions) {
+    'use strict';
 
-	var actions = {
+    function ActionManager() {
+        // Singleton
+        if (ActionManager.instance) {
+            throw new Error('ActionManager is a singleton. Use ActionManager.instance.');
+        }
+        // enforces new
+        if (!(this instanceof ActionManager)) {
+            return new ActionManager();
+        }
+        this.actions = actions;
+    }
 
-		"1": {
-			"Type" : "init", 
-			"answerReference" : 2, 
-			"phrase" : "Bonjour, je viens retirer une commande, tenez voici le recommandé ainsi que ma carte d’identité."
-		},
-		"2":{ 
-			"Type" : "technology", 
-			"answerReference" : 0, 
-			"phrase" : "Bonjour, je m’en occupe tout de suite."
-		}
-	
-	};
 
-	return actions;
 
-});
+    // Singleton
+    ActionManager.instance = new ActionManager();
+    return ActionManager;
+
+})(actions);
