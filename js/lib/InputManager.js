@@ -52,8 +52,8 @@ var InputManager = (function() {
             return new InputManager();
         }
         MakeEventDispatcher(this);
-        this.isTouched = false;
         this.currentTouch = null;
+        this.canvasElements = [];
     }
 
     ////////////
@@ -72,6 +72,8 @@ var InputManager = (function() {
         var canvasElements = document.getElementsByTagName('canvas');
         for (var i = 0, canvas; i < canvasElements.length; i++) {
             canvas = canvasElements[i];
+            MakeEventDispatcher(canvas);
+            this.canvasElements.push(canvas);
             canvas.addEventListener('mousedown', onMouseDown, false);
             canvas.addEventListener('mouseup', onMouseUp, false);
             canvas.addEventListener('mousemove', onMouseMove, false);
@@ -94,71 +96,91 @@ var InputManager = (function() {
         inputEvent.currentTarget = e.currentTarget;
         inputEvent.view          = e.view;
 
-        inputEvent.screenX  = e.screenX;
-        inputEvent.screenY  = e.screenY;
-        inputEvent.clientX  = e.clientX;
-        inputEvent.clientY  = e.clientY;
-        inputEvent.ctrlKey  = e.ctrlKey;
-        inputEvent.shiftKey = e.shiftKey;
-        inputEvent.altKey   = e.altKey;
-        inputEvent.metaKey  = e.metaKey;
+        var eventData = (navigator.isCocoonJS) ? e.changedTouches[0] : e;
+        var canvas = eventData.target;
+        inputEvent.screenX  = eventData.screenX * canvas.ratio;
+        inputEvent.screenY  = eventData.screenY * canvas.ratio;
+        inputEvent.clientX  = eventData.clientX * canvas.ratio;
+        inputEvent.clientY  = eventData.clientY * canvas.ratio;
+        inputEvent.ctrlKey  = eventData.ctrlKey;
+        inputEvent.shiftKey = eventData.shiftKey;
+        inputEvent.altKey   = eventData.altKey;
+        inputEvent.metaKey  = eventData.metaKey;
         return inputEvent;
     }
 
     function onMouseDown(e) {
+        // If the clicked element is not a registered canvas, stop
+        if (InputManager.instance.canvasElements.indexOf(e.target) == -1) {
+            return
+        }
         var inputEvent = createInputEvent(InputEvent.TOUCH_START, e);
         InputManager.instance.dispatch(InputEvent.TOUCH_START, inputEvent);
+        e.target.dispatch(InputEvent.TOUCH_START, inputEvent);
     }
 
     function onMouseMove(e) {
+        // If the clicked element is not a registered canvas, stop
+        if (InputManager.instance.canvasElements.indexOf(e.target) == -1) {
+            return
+        }
         var inputEvent = createInputEvent(InputEvent.TOUCH_MOVE, e);
         InputManager.instance.dispatch(InputEvent.TOUCH_MOVE, inputEvent);
+        e.target.dispatch(InputEvent.TOUCH_MOVE, inputEvent);
     }
 
     function onMouseUp(e) {
+        // If the clicked element is not a registered canvas, stop
+        if (InputManager.instance.canvasElements.indexOf(e.target) == -1) {
+            return
+        }
         var inputEvent = createInputEvent(InputEvent.TOUCH_END, e);
         InputManager.instance.dispatch(InputEvent.TOUCH_END, inputEvent);
+        e.target.dispatch(InputEvent.TOUCH_END, inputEvent);
     }
 
     function onTouchStart(e) {
         e.preventDefault();
-        if (this.currentTouch) {
+        // If the clicked element is not a registered canvas, stop
+        if (InputManager.instance.canvasElements.indexOf(e.target) == -1) {
+            return
+        }
+        if (InputManager.instance.currentTouch) {
             return;
         }
-        this.currentTouch = e.touches[0];
-        var inputEvent = createInputEvent(InputEvent.TOUCH_START, e);
-        inputEvent.screenX = this.currentTouch.screenX;
-        inputEvent.screenY = this.currentTouch.screenY;
-        inputEvent.clientX = this.currentTouch.clientX;
-        inputEvent.clientY = this.currentTouch.screenY;
+        InputManager.instance.currentTouch = e.touches[0];
 
+        var inputEvent = createInputEvent(InputEvent.TOUCH_START, e);
         InputManager.instance.dispatch(InputEvent.TOUCH_START, inputEvent);
+        e.target.dispatch(InputEvent.TOUCH_START, inputEvent);
     }
 
     function onTouchMove(e) {
         e.preventDefault();
-        if (e.changedTouches.indexOf(this.currentTouch) == -1) {
+        // If the clicked element is not a registered canvas, stop
+        if (InputManager.instance.canvasElements.indexOf(e.target) == -1) {
+            return
+        }
+        if (e.changedTouches.indexOf(InputManager.instance.currentTouch) == -1) {
             return;
         }
         var inputEvent = createInputEvent(InputEvent.TOUCH_MOVE, e);
-        inputEvent.screenX = this.currentTouch.screenX;
-        inputEvent.screenY = this.currentTouch.screenY;
-        inputEvent.clientX = this.currentTouch.clientX;
-        inputEvent.clientY = this.currentTouch.screenY;
         InputManager.instance.dispatch(InputEvent.TOUCH_MOVE, inputEvent);
+        e.target.dispatch(InputEvent.TOUCH_MOVE, inputEvent);
     }
 
     function onTouchEnd(e) {
+        // If the clicked element is not a registered canvas, stop
+        if (InputManager.instance.canvasElements.indexOf(e.target) == -1) {
+            return
+        }
         var inputEvent = createInputEvent(InputEvent.TOUCH_END, e);
-        if (!this.currentTouch || e.changedTouches.indexOf(this.currentTouch) == -1) {
+        if (!InputManager.instance.currentTouch || e.changedTouches.indexOf(InputManager.instance.currentTouch) == -1) {
             return;
         }
         InputManager.instance.dispatch(InputEvent.TOUCH_END, inputEvent);
-        inputEvent.screenX = this.currentTouch.screenX;
-        inputEvent.screenY = this.currentTouch.screenY;
-        inputEvent.clientX = this.currentTouch.clientX;
-        inputEvent.clientY = this.currentTouch.screenY;
-        this.currentTouch = null;
+        e.target.dispatch(InputEvent.TOUCH_END, inputEvent);
+        InputManager.instance.currentTouch = null;
     }
 
     // Singleton

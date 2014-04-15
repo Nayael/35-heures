@@ -25,15 +25,26 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.context.fillStyle = Globals.CANVAS_BACKGROUND;
         this.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
         
-        Globals.canvasRatio = Globals.CANVAS_HEIGHT / Globals.CANVAS_WIDTH;
-        var width = Utils.getWidth();
-        var height = width * Globals.canvasRatio;
+        // Logical Ratio
+        Globals.canvasRatio = Globals.CANVAS_WIDTH / Globals.CANVAS_HEIGHT;
+        var navigatorRatio = window.innerWidth / (window.innerHeight - 5);
+        var width, height;
+        if (navigatorRatio > Globals.canvasRatio) {
+            width = ((window.innerHeight - 5) * Globals.canvasRatio) | 0;
+            height = (window.innerHeight - 5);
+            this.canvas.ratio = Globals.CANVAS_HEIGHT / (window.innerHeight - 5);
+        } else {
+            width = window.innerWidth;
+            height = (window.innerWidth / Globals.canvasRatio) | 0;
+            this.canvas.ratio = Globals.CANVAS_WIDTH / window.innerWidth;
+        }
+
+        document.body.appendChild(this.canvas);
 
         this.canvas.style.width = width + 'px';
         this.canvas.style.height = height + 'px';
 
-        document.body.appendChild(this.canvas);
-
+        // Disable right click
         // Initializing Input manager
         InputManager.instance.init();
         InputManager.instance.addListener(InputManager.InputEvent.TOUCH_START, this.onTouchStart, this);
@@ -134,7 +145,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.onTouchStart = function(e) {
-        console.log('onTouchStart', e.screenX, e.screenY);
+        // console.log('onTouchStart', e.screenX, e.screenY, e.target);
     };
 
     Game.prototype.onTouchMove = function(e) {
@@ -142,7 +153,16 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.onTouchEnd = function(e) {
-        console.log('onTouchEnd', e.screenX, e.screenY);
+        // console.log('onTouchEnd', e.screenX, e.screenY, e.target);
+    };
+
+    /**
+     * Adds a new entity to the entities list
+     * @param  {Entity} entity The entity to add
+     */
+    Game.prototype.addEntity = function(entity) {
+        this.entities.push(entity);
+
     };
 
     /**
