@@ -27,4 +27,4 @@ var ActionManager = (function(actions, MakeEventDispatcher) {
     ActionManager.instance = new ActionManager();
     return ActionManager;
 
-})(actions);
+})(actions, MakeEventDispatcher);
