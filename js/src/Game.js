@@ -6,7 +6,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         if (!(this instanceof Game)) {
             return new Game();
         }
-        
+
         this.assets = assets;
 
         // State machine
@@ -14,24 +14,31 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     }
 
     Game.prototype.init = function() {
-        
+
 
         // Adding the canvas to the stage
-        this.canvas            = document.createElement('canvas');
-        this.context           = this.canvas.getContext('2d');
-        this.canvas.id         = 'main';
-        this.canvas.width      = Globals.CANVAS_WIDTH;
-        this.canvas.height     = Globals.CANVAS_HEIGHT;
+        this.canvas = document.createElement('canvas');
+        this.context = this.canvas.getContext('2d');
+        this.canvas.id = 'main';
+        this.canvas.width = Globals.CANVAS_WIDTH;
+        this.canvas.height = Globals.CANVAS_HEIGHT;
         this.context.fillStyle = Globals.CANVAS_BACKGROUND;
         this.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
-        
-        Globals.canvasRatio = Globals.CANVAS_HEIGHT / Globals.CANVAS_WIDTH;
-        var width = Utils.getWidth();
-        var height = width * Globals.canvasRatio;
+
+        // Logical Ratio
+        Globals.canvasRatio = Globals.CANVAS_WIDTH / Globals.CANVAS_HEIGHT;
+        var navigatorRate = window.innerWidth / (window.innerHeight - 5);
+        var width, height;
+        if (navigatorRate > Globals.canvasRatio) {
+            width = ((window.innerHeight - 5) * Globals.canvasRatio) | 0;
+            height = (window.innerHeight - 5);
+        } else {
+            width = window.innerWidth;
+            height = (window.innerWidth / Globals.canvasRatio) | 0;
+        }
 
         this.canvas.style.width = width + 'px';
         this.canvas.style.height = height + 'px';
-
         document.body.appendChild(this.canvas);
 
         // Initializing Input manager
@@ -185,3 +192,18 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     return new Game();
 
 })(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets);
+
+var Character = (function() {
+    'use strict';
+
+    function Character(osef) {
+        // enforces new
+        if (!(this instanceof Character)) {
+            return new Character(osef);
+        }
+
+    };
+
+    return Character;
+
+}());
