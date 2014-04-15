@@ -102,7 +102,7 @@ var onEachFrame = (function() {
     onEachFrame(function() {
         Time.time = Time.time || Date.now();
         var t = Date.now();
-        Time.deltaTime = (t - Time.time) / 100;
+        Time.deltaTime = (t - Time.time) / 1000;
         if (Time.deltaTime > 0.2) {
             Time.deltaTime = 0.2;
         }

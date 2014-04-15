@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Entity) {
     'use strict';
 
     function Game() {
@@ -13,9 +13,15 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         // this.initFsm();
     }
 
-    Game.prototype.init = function() {
-        
+    ////////////
+    // PRIVATE ATTRIBUTES
+    //
+    var _entities = [];
 
+    ////////////
+    // PUBLIC METHODS
+    //
+    Game.prototype.init = function() {
         // Adding the canvas to the stage
         this.canvas            = document.createElement('canvas');
         this.context           = this.canvas.getContext('2d');
@@ -27,12 +33,12 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         
         // Logical Ratio
         Globals.canvasRatio = Globals.CANVAS_WIDTH / Globals.CANVAS_HEIGHT;
-        var navigatorRatio = window.innerWidth / (window.innerHeight - 5);
+        var navigatorRatio = window.innerWidth / (window.innerHeight);
         var width, height;
         if (navigatorRatio > Globals.canvasRatio) {
-            width = ((window.innerHeight - 5) * Globals.canvasRatio) | 0;
-            height = (window.innerHeight - 5);
-            this.canvas.ratio = Globals.CANVAS_HEIGHT / (window.innerHeight - 5);
+            width = ((window.innerHeight) * Globals.canvasRatio) | 0;
+            height = (window.innerHeight);
+            this.canvas.ratio = Globals.CANVAS_HEIGHT / (window.innerHeight);
         } else {
             width = window.innerWidth;
             height = (window.innerWidth / Globals.canvasRatio) | 0;
@@ -44,12 +50,11 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.canvas.style.width = width + 'px';
         this.canvas.style.height = height + 'px';
 
-        // Disable right click
         // Initializing Input manager
         InputManager.instance.init();
-        InputManager.instance.addListener(InputManager.InputEvent.TOUCH_START, this.onTouchStart, this);
-        InputManager.instance.addListener(InputManager.InputEvent.TOUCH_MOVE, this.onTouchMove, this);
-        InputManager.instance.addListener(InputManager.InputEvent.TOUCH_END, this.onTouchEnd, this);
+        // InputManager.instance.addListener(InputManager.InputEvent.TOUCH_START, this.onTouchStart, this);
+        // InputManager.instance.addListener(InputManager.InputEvent.TOUCH_MOVE, this.onTouchMove, this);
+        // InputManager.instance.addListener(InputManager.InputEvent.TOUCH_END, this.onTouchEnd, this);
 
         // Initializing Asset manager
         AssetManager.instance.enqueueAssets(this.assets);
@@ -144,32 +149,41 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.startGame();
     };
 
-    Game.prototype.onTouchStart = function(e) {
-        // console.log('onTouchStart', e.screenX, e.screenY, e.target);
-    };
-
-    Game.prototype.onTouchMove = function(e) {
-        // console.log('onTouchMove', e.screenX, e.screenY);
-    };
-
-    Game.prototype.onTouchEnd = function(e) {
-        // console.log('onTouchEnd', e.screenX, e.screenY, e.target);
-    };
-
     /**
      * Adds a new entity to the entities list
      * @param  {Entity} entity The entity to add
      */
-    Game.prototype.addEntity = function(entity) {
-        this.entities.push(entity);
+    Game.prototype.addEntity = function(entity, index) {
+        if (index === undefined || index > _entities.length) {
+            index = _entities.length;
+        }
+        _entities.splice(index, 0, entity);
+    };
 
+
+    /**
+     * Removes an entity from the entities list
+     * @param  {Entity} entity The entity to remove
+     */
+    Game.prototype.removeEntity = function(entity) {
+        var index = _entities.indexOf(entity);
+        if (index == -1) {
+            return;
+        }
+        _entities.splice(index, 1);
     };
 
     /**
      * Starts a new game
      */
     Game.prototype.startGame = function() {
-        this.entities = [];
+        var a = new Entity();
+        a.x = 50
+        this.addEntity(a);
+        var b = new Entity();
+        b.x = 100;
+        b.y = 100;
+        this.addEntity(b);
 
         // We launch the main game loop
         this.launchGame();
@@ -207,11 +221,13 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
 
         // Updating all the entities
-        for (var i = 0, entity = null; i < this.entities; i++) {
-            entity = this.entities[i];
-            entity.update();
-            if (entity.render) {
-                entity.render(context);
+        for (var i = 0, entity = null; i < _entities.length; i++) {
+            entity = _entities[i];
+            if (entity.update) {
+                entity.update();
+            }
+            if (entity.view) {
+                entity.view.draw(this.context);
             }
         }
     };
@@ -219,4 +235,4 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     // Singleton
     return new Game();
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Entity);

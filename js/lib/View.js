@@ -13,14 +13,14 @@ var View = (function() {
         this.localX       = data.localX || 0;
         this.localY       = data.localY || 0;
         
-        this.width        = data.width;
-        this.height       = data.height;
-        
         this.currentFrame = 0;     // The current frame to draw
         this.frameCount   = 0;     // The number of frames elapsed since the first draw
         this.totalFrames  = data.totalFrames || 1;
         this.frameRate    = data.frameRate   || 60;
         this.enabled      = true;
+        
+        this.spriteWidth  = data.width  || this.spritesheet.width / this.totalFrames;
+        this.spriteHeight = data.height || this.spritesheet.height / this.totalFrames;
 
         if (data.animated === false) {
             this.animated = data.animated;
@@ -35,12 +35,12 @@ var View = (function() {
         if (!this.enabled) {
             return;
         }
-        var globalX = this.localX + (this.entity ? this.entity.x : 0),
-            globalY = this.localY + (this.entity ? this.entity.y : 0);
+        var globalX = this.localX + ( (this.entity.x ? this.entity.x : 0) + 0.5 ) | 0,
+            globalY = this.localY + ( (this.entity.y ? this.entity.y : 0) + 0.5 ) | 0;
         
-        context.drawImage(this.spritesheet, this.width * this.currentFrame, 0, this.width, this.height, globalX, globalY, this.width, this.height);
-        
-        if (this.animated === false) {
+        context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, globalX, globalY, this.spriteWidth, this.spriteHeight);
+
+        if (this.animated === false || this.totalFrames == 1) {
             return;
         }
         this.frameCount++;
