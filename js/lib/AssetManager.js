@@ -7,14 +7,13 @@ var AssetManager = (function(addEventCapabilities, PxLoader, PxLoaderImage) {
     function AssetManager() {
         // Singleton
         if (AssetManager.instance) {
-            return null;
+            throw new Error('AssetManager is a singleton. Use AssetManager.instance.');
         }
         // enforces new
         if (!(this instanceof AssetManager)) {
             return new AssetManager();
         }
         addEventCapabilities(this);
-        instance = this;    // Use this for private methods
 
         this.IMAGE_PATH = '';
         this.AUDIO_PATH = '';
@@ -29,7 +28,6 @@ var AssetManager = (function(addEventCapabilities, PxLoader, PxLoaderImage) {
     ////////////
     // PRIVATE ATTRIBUTES
     //
-    var instance;
     var pxLoader = new PxLoader();
 
 
@@ -91,7 +89,7 @@ var AssetManager = (function(addEventCapabilities, PxLoader, PxLoaderImage) {
                 if (typeof current === 'object' && current.length == undefined) {
                     parseImageData(current)
                 } else {
-                    obj[prop] = pxLoader.addImage(instance.IMAGE_PATH + current[0], current[1]);
+                    obj[prop] = pxLoader.addImage(AssetManager.instance.IMAGE_PATH + current[0], current[1]);
                 }
             }
         }

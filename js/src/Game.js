@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, Globals, assets) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, assets) {
     'use strict';
 
     function Game() {
@@ -14,17 +14,26 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, Globals,
     }
 
     Game.prototype.init = function() {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        var dips = window.devicePixelRatio;
+
         // Adding the canvas to the stage
         this.canvas            = document.createElement('canvas');
         this.context           = this.canvas.getContext('2d');
         this.canvas.id         = 'main';
-        this.canvas.width      = Globals.CANVAS_WIDTH;
-        this.canvas.height     = Globals.CANVAS_HEIGHT;
-        this.context.fillStyle = 'rgb(0, 0, 0)';
+        this.canvas.width      = dips * width;
+        this.canvas.height     = dips * height;
+        console.log('canvas.width: ', this.canvas.width, this.canvas.height);
+        this.context.fillStyle = Globals.CANVAS_BACKGROUND;
         this.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
         document.body.appendChild(this.canvas);
+        console.log('test');
 
-        // Initializing asset manager
+        // Initializing Input manager
+        InputManager.instance.init();
+
+        // Initializing Asset manager
         AssetManager.instance.enqueueAssets(this.assets);
         AssetManager.instance.addListener(AssetManager.LOADING_COMPLETE, this.onAssetsLoadingComplete, this);
         AssetManager.instance.loadAll();
@@ -155,7 +164,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, Globals,
      */
     Game.prototype.update = function() {
         // Clearing the canvas
-        this.context.fillStyle = 'rgb(0, 0, 0)';
+        this.context.fillStyle = Globals.CANVAS_BACKGROUND;
         this.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
 
         // Updating all the entities
@@ -171,4 +180,4 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, Globals,
     // Singleton
     return new Game();
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, Globals, assets);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, assets);
