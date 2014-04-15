@@ -72,7 +72,10 @@ var InputManager = (function() {
         var canvasElements = document.getElementsByTagName('canvas');
         for (var i = 0, canvas; i < canvasElements.length; i++) {
             canvas = canvasElements[i];
-            MakeEventDispatcher(canvas);
+            // Make the canvas an event dispatcher
+            if (!canvas.addListener) {
+                MakeEventDispatcher(canvas);
+            }
             this.canvasElements.push(canvas);
             canvas.addEventListener('mousedown', onMouseDown, false);
             canvas.addEventListener('mouseup', onMouseUp, false);
@@ -102,10 +105,13 @@ var InputManager = (function() {
         inputEvent.screenY  = eventData.screenY * canvas.ratio;
         inputEvent.clientX  = eventData.clientX * canvas.ratio;
         inputEvent.clientY  = eventData.clientY * canvas.ratio;
+        inputEvent.localX   = inputEvent.clientX - canvas.offsetLeft * canvas.ratio;
+        inputEvent.localY   = inputEvent.clientY - canvas.offsetTop * canvas.ratio;
         inputEvent.ctrlKey  = eventData.ctrlKey;
         inputEvent.shiftKey = eventData.shiftKey;
         inputEvent.altKey   = eventData.altKey;
         inputEvent.metaKey  = eventData.metaKey;
+
         return inputEvent;
     }
 

@@ -1,4 +1,4 @@
-var Stage = (function(InputManager) {
+var Stage = (function(MakeEventDispatcher, InputManager) {
     'use strict';
 
     /**
@@ -44,10 +44,16 @@ var Stage = (function(InputManager) {
             this.canvas.ratio = stageWidth / window.innerWidth;
         }
 
+        // Add the canvas to the document
         document.body.appendChild(this.canvas);
-
-        this.canvas.style.width = width + 'px';
+        this.canvas.style.width  = width + 'px';
         this.canvas.style.height = height + 'px';
+
+        // Listen to input
+        if (!this.canvas.addListener) {
+            MakeEventDispatcher(this.canvas);
+        }
+        this.canvas.addListener(InputManager.InputEvent.TOUCH_START, this.onTouchStart, this);
     }
 
     ////////////
@@ -96,6 +102,14 @@ var Stage = (function(InputManager) {
         }
     };
 
+    /**
+     * Called when the canvas is touched
+     * @param  {InputEvent} e The touch InputEvent
+     */
+    Stage.prototype.onTouchStart = function(e) {
+        
+    }
+
     return Stage;
 
-})(InputManager);
+})(MakeEventDispatcher, InputManager);
