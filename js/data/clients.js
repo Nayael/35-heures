@@ -42,56 +42,6 @@ var clients = (function() {
 				},
 				"fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
 			},
-		},
-		"OldMan": {
-			"Name": "Jean-Jacques",
-			"Phrases": {
-				"type": "technology",
-				"phrase": "Bonjour, je m’en occupe tout de suite."
-			},
-			"Patience": 100 "Vulnerability": {
-				"technology": 3,
-				"paperwork": 0.8
-			},
-			"Action": {
-				"computerFakbok": {
-					"phrase": ""
-					"success": true
-				},
-				"computerInfo": {
-					"phrase": ""
-					"success": true
-				},
-				"computerKey": {
-					"phrase": ""
-					"success": true
-				},
-				"stampFail": {
-					"phrase": ""
-					"success": false
-				},
-				"closeFail": {
-					"phrase": ""
-					"success": false
-				},
-				"tamponWrong": {
-					"phrase": ""
-					"success": false
-				},
-				"tamponFail": {
-					"phrase": ""
-					"success": false
-				},
-				"staplerEmpty": {
-					"phrase": ""
-					"success": false
-				},
-				"default": {
-					"phrase": "J'ai pas envie de pourrir ici moi !",
-					"success": false
-				}
-
-			},
 		}
 	};
 
