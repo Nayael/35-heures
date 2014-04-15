@@ -20,6 +20,10 @@ var InputManager = (function() {
             this.screenY = 0;
             this.clientX = 0;
             this.clientY = 0;
+            this.stageX = 0;
+            this.stageY = 0;
+            this.localX = 0;
+            this.localY = 0;
 
             this.ctrlKey  = false;
             this.shiftKey = false;
@@ -73,7 +77,7 @@ var InputManager = (function() {
         for (var i = 0, canvas; i < canvasElements.length; i++) {
             canvas = canvasElements[i];
             // Make the canvas an event dispatcher
-            if (!canvas.addListener) {
+            if (!canvas.isEventDispatcher) {
                 MakeEventDispatcher(canvas);
             }
             this.canvasElements.push(canvas);
@@ -105,8 +109,10 @@ var InputManager = (function() {
         inputEvent.screenY  = eventData.screenY * canvas.ratio;
         inputEvent.clientX  = eventData.clientX * canvas.ratio;
         inputEvent.clientY  = eventData.clientY * canvas.ratio;
-        inputEvent.localX   = inputEvent.clientX - canvas.offsetLeft * canvas.ratio;
-        inputEvent.localY   = inputEvent.clientY - canvas.offsetTop * canvas.ratio;
+        inputEvent.stageX   = inputEvent.clientX - canvas.offsetLeft * canvas.ratio;
+        inputEvent.stageY   = inputEvent.clientY - canvas.offsetTop * canvas.ratio;
+        inputEvent.localX   = inputEvent.stageX;
+        inputEvent.localY   = inputEvent.stageY;
         inputEvent.ctrlKey  = eventData.ctrlKey;
         inputEvent.shiftKey = eventData.shiftKey;
         inputEvent.altKey   = eventData.altKey;

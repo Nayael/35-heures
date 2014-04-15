@@ -1,4 +1,4 @@
-var Entity = (function(AssetManager, View) {
+var Entity = (function(AssetManager, View, MakeEventDispatcher) {
     'use strict';
 
     function Entity() {
@@ -10,13 +10,9 @@ var Entity = (function(AssetManager, View) {
             spritesheet: AssetManager.instance.assets.images['test']
         });
         this.x = 50;
-        this.speed = 50;
+        this.y = 50;
     };
-
-    Entity.prototype.update = function() {
-        this.x += this.speed * Time.deltaTime;
-    }
 
     return Entity;
 
-})(AssetManager, View);
+})(AssetManager, View, MakeEventDispatcher);
