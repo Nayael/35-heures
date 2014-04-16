@@ -20,15 +20,16 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
         // State machine
         this.initFsm();
+        this.currentUpdateLoop = null;
     }
 
     ////////////
     // STATIC ATTRIBUTES
     //
-    Game.STATE_LOADING = 'STATE_LOADING';
-    Game.STATE_MENU    = 'STATE_MENU';
-    Game.STATE_PLAYING = 'STATE_PLAYING';
-    Game.STATE_PAUSED  = 'STATE_PAUSED';
+    Game.STATE_LOADING = 'loading';
+    Game.STATE_MENU    = 'menu';
+    Game.STATE_PLAYING = 'playing';
+    Game.STATE_PAUSED  = 'paused';
 
     ////////////
     // PRIVATE ATTRIBUTES
@@ -62,18 +63,33 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.fsm = StateMachine.create({
             events: [{
                 name: 'load',
-                from: ['none', Game.STATE_MENU],
-                to: Game.STATE_LOADING
+                from: ['none', 'menu'],
+                to: 'loading'
             }, {
                 name: 'play',
-                from: Game.STATE_LOADING,
-                to: Game.STATE_PLAYING
+                from: ['none', 'loading'],
+                to: 'playing'
+            }, {
+                name: 'pause',
+                from: 'playing',
+                to: 'paused'
             }],
             callbacks: {
-                
+                onload: function (e) {
+                    console.log('Game state: ', Game.instance.fsm.current);
+                    Game.instance.currentUpdateLoop = null;
+                    // Game.instance.currentUpdateLoop = Game.instance.loadingLoop;
+                },
+                onplay: function (e) {
+                    console.log('Game state: ', Game.instance.fsm.current);
+                    Game.instance.currentUpdateLoop = Game.instance.gameLoop;
+                },
+                onpause: function (e) {
+                    console.log('Game state: ', Game.instance.fsm.current);
+                    Game.instance.currentUpdateLoop = Game.instance.gamePause;
+                }
             }
         });
-        this.fsm.subject = this;
     };
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
@@ -118,35 +134,29 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         a.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
 
         // We launch the main game loop
-        this.launchGame();
+        this.fsm.play();
     };
-
-    /**
-     * Launches the main game loop
-     */
-    Game.prototype.launchGame = function() {
-        this.paused = false;
-    };
-
-    Game.prototype.update = function() {
-        TimeManager.instance.update();
-        this.gameLoop();
-    }
 
     /**
      * Pauses the game
      */
     Game.prototype.pauseGame = function() {
-        this.paused = true;
-        // onEachFrame.cancel('game');
+        this.fsm.pause();
     };
 
     /**
      * Resumes the game
      */
     Game.prototype.resumeGame = function() {
-        this.paused = false;
+        this.fsm.play();
     };
+
+    Game.prototype.update = function() {
+        TimeManager.instance.update();
+        if (this.currentUpdateLoop) {
+            this.currentUpdateLoop();
+        }
+    }
 
     /**
      * The main game loop
@@ -162,6 +172,13 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         }
 
         this.stage.update();
+    };
+
+    /**
+     * Loop called while the game is paused
+     */
+    Game.prototype.gamePauseLoop = function() {
+        
     };
 
     /**
