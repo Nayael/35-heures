@@ -9,3 +9,9 @@ body, html{
 canvas{
 	display: inline-block;
 }
+
+#debugCanvas {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}

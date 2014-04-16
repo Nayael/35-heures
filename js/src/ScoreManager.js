@@ -23,7 +23,8 @@ var ScoreManager = (function() {
 		for (var i = 0; i < this.clients.length; i++) {
 			totalTime += this.clients[i].totalTime;
 			neededTime += this.clients[i].neededTime;
-		}
+		};
+		this.days.push({});
 	};
 
 	ScoreManager.prototype.endOfWeek = function() {
