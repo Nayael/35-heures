@@ -23,6 +23,7 @@ var TimeManager = (function(MakeEventDispatcher) {
 	// Private
 	var timeOfDay;
 	var timeSinceAction = 0;
+	var timeSinceClient = 0;
 
 	TimeManager.prototype.update = function() {
 		timeOfDay += Time.deltaTime;
