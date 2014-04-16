@@ -8,11 +8,13 @@ var clients = (function() {
 			"Vulnerability": {
 				"technology": 0.5,
 				"paperwork": 1.5,
+				"time": 3,
 				"default": 2
 			},
 			"ResponseDelay": {
 				"technology": 0.5,
 				"paperwork": 1.5,
+				"time": 3,
 				"default": 2
 			},
 			"Phrases": {
