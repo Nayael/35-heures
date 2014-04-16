@@ -53,6 +53,9 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
         this.canvas.style.width  = width + 'px';
         this.canvas.style.height = height + 'px';
 
+        // Screen Handling
+        this.screen = null;
+
         // Listen to input
         MakeEventDispatcher(this.canvas);
         this.canvas.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onTouchClicked, this);
@@ -90,6 +93,24 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
             return;
         }
         _children.splice(index, 1);
+    };
+
+    Stage.prototype.containsChild = function(child) {
+        return (_children.indexOf(child) != -1);
+    }
+
+    Stage.prototype.setScreen = function(stageScreen) {
+        if (this.screen) {
+            this.screen.stage = null;
+            this.screen = null;
+            _children = [];
+        }
+        if (!stageScreen) {
+            return;
+        }
+        _children = stageScreen.getChildren();
+        stageScreen.stage = this;
+        this.screen = stageScreen;
     };
 
     Stage.prototype.update = function() {
