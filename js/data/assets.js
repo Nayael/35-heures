@@ -13,6 +13,7 @@ var assets = (function() {
             "henry-happy"      : ["assets/img/game/characters/henry-happy.png", "game"],
             "henry-angry"      : ["assets/img/game/characters/henry-angry.png", "game"],
             
+            "access_card"  : ["assets/img/game/access_card.png", "game"],
             "computer"     : ["assets/img/game/computer.png", "game"],
             "crayons"      : ["assets/img/game/crayons.png", "game"],
             "envelope"     : ["assets/img/game/envelope.png", "game"],
@@ -28,7 +29,8 @@ var assets = (function() {
             "tampon_2"     : ["assets/img/game/tampon_2.png", "game"],
             "desk"         : ["assets/img/game/desk.png", "game"],
             "wall"         : ["assets/img/game/wall.png", "game"],
-            "telephone"    : ["assets/img/game/telephone.png", "game"]
+            "telephone"    : ["assets/img/game/telephone.png", "game"],
+            "monitor"      : ["assets/img/game/monitor.png", "game"]
         },
         "atlases": {
             // "young_woman": ["assets/img/game/characters/young_woman", "game"]

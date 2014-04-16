@@ -146,10 +146,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         var envelope      = new Entity('envelope');
         var envelope_2    = new Entity('envelope_2');
         var id_card       = new Entity('id_card');
-        var keys          = new Entity('keys');
         var bad_package   = new Entity('bad_package');
         var bad_package_2 = new Entity('bad_package_2');
-        var stamps        = new Entity('stamps');
         var tampon        = new Entity('tampon');
         var tampon_2      = new Entity('tampon_2');
         var telephone     = new Entity('telephone');
@@ -157,6 +155,10 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         var stapler       = new Entity('stapler');
         var desk          = new Entity('desk');
         var wall          = new Entity('wall');
+        var keys          = new Entity('keys');
+        var access_card   = new Entity('access_card');
+        var monitor       = new Entity('monitor');
+        var stamps        = new Entity('stamps');
 
         computer.x = -90;
         computer.y = 250;
@@ -178,6 +180,13 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         stapler.y = 595;
         wall.x = Globals.CANVAS_WIDTH - wall.view.spriteWidth;
         desk.y = Globals.CANVAS_HEIGHT - desk.view.spriteHeight;
+        keys.x = 1100;
+        keys.y = 255;
+        access_card.x = 930;
+        access_card.y = 260;
+        monitor.x = Globals.CANVAS_WIDTH - monitor.view.spriteWidth;
+        stamps.x = 1000;
+        stamps.y = 510;
 
         _screenOffice.addChild(desk);
         _screenOffice.addChild(wall);
@@ -189,12 +198,14 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         _screenOffice.addChild(keys);
         // _screenOffice.addChild(bad_package);
         // _screenOffice.addChild(bad_package_2);
-        _screenOffice.addChild(stamps);
         _screenOffice.addChild(tampon);
         _screenOffice.addChild(tampon_2);
         _screenOffice.addChild(telephone);
         _screenOffice.addChild(sweets);
         _screenOffice.addChild(stapler);
+        _screenOffice.addChild(monitor);
+        _screenOffice.addChild(access_card);
+        _screenOffice.addChild(stamps);
     }
 
     /**
