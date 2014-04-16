@@ -106,23 +106,22 @@ var InputManager = (function() {
     // PRIVATE METHODS
     //
     function _createInputEvent(type, e) {
-        var inputEvent = new InputEvent(InputEvent.TOUCH_START);
+        var inputEvent = new InputEvent(type);
         inputEvent.type  = type;
 
         inputEvent.target        = e.target;
         inputEvent.currentTarget = e.currentTarget;
         inputEvent.view          = e.view;
-
         var eventData = (navigator.isCocoonJS && e.changedTouches) ? e.changedTouches[0] : e;
         var canvas = eventData.target;
-        inputEvent.screenX  = eventData.screenX * canvas.ratio;
-        inputEvent.screenY  = eventData.screenY * canvas.ratio;
-        inputEvent.clientX  = eventData.clientX * canvas.ratio;
-        inputEvent.clientY  = eventData.clientY * canvas.ratio;
-        inputEvent.stageX   = inputEvent.clientX - canvas.offsetLeft * canvas.ratio;
-        inputEvent.stageY   = inputEvent.clientY - canvas.offsetTop * canvas.ratio;
-        inputEvent.localX   = inputEvent.stageX;
-        inputEvent.localY   = inputEvent.stageY;
+        inputEvent.screenX  = eventData.screenX;
+        inputEvent.screenY  = eventData.screenY;
+        inputEvent.clientX  = eventData.clientX;
+        inputEvent.clientY  = eventData.clientY;
+        inputEvent.stageX   = (inputEvent.clientX - canvas.offsetLeft) / canvas.scaleFactor;
+        inputEvent.stageY   = (inputEvent.clientY - canvas.offsetTop) / canvas.scaleFactor;
+        inputEvent.canvasX  = inputEvent.stageX * canvas.scaleFactor;
+        inputEvent.canvasY  = inputEvent.stageY * canvas.scaleFactor;
         inputEvent.ctrlKey  = eventData.ctrlKey;
         inputEvent.shiftKey = eventData.shiftKey;
         inputEvent.altKey   = eventData.altKey;
