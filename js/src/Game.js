@@ -160,6 +160,22 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         var monitor       = new Entity('monitor');
         var stamps        = new Entity('stamps');
 
+        computer.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        crayons.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        envelope.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        envelope_2.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        id_card.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        bad_package.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        bad_package_2.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        tampon.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        tampon_2.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        telephone.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        sweets.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        stapler.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        keys.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        access_card.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        stamps.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+
         computer.x = -90;
         computer.y = 250;
         crayons.x = 220;
@@ -258,6 +274,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Called when an entity is touched
      */
     Game.prototype.onEntityActionned = function(target) {
+        console.log('target: ', target);
         ActionManager.instance.setCurrentAction("computerFakbok");
         ClientManager.instance.updateOnAction();
     };
