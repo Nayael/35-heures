@@ -7,6 +7,7 @@ var Entity = (function(AssetManager, View, MakeEventDispatcher, InputManager) {
             return new Entity(name);
         }
         this.view = null;
+        this.action = name;
         this.name = name;
         if (this.name) {
             this.view = new View(this, {

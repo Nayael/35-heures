@@ -1,6 +1,11 @@
 var View = (function(MakeEventDispatcher) {
     'use strict';
 
+    /**
+     * @constructor
+     * @param {Object} entity The view's entity
+     * @param {Object} data   The view data
+     */
     function View(entity, data) {
         // enforces new
         if (!(this instanceof View)) {

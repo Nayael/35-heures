@@ -1,6 +1,9 @@
-var ActionManager = (function(actions, MakeEventDispatcher) {
+var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
     'use strict';
 
+    /**
+     * @constructor
+     */
     function ActionManager() {
         // Singleton
         if (ActionManager.instance) {
@@ -11,38 +14,40 @@ var ActionManager = (function(actions, MakeEventDispatcher) {
             return new ActionManager();
         }
         this.actions = actions;
-        this.currentAction = null;
 
         MakeEventDispatcher(this);
-
     }
 
-    function dispatchAction () {
-        
-        ActionManager.instance.dispatch(ActionManager.ACTION_DISPATCHED);
+    ////////////
+    // PUBLIC METHODS
+    //
+    ActionManager.prototype.makeAction = function (action) {
+        if (this.currentAction) {
+            if (action == this.currentAction.name) {
+                return _endAction();
+            }
+            if (TimeManager.instance.getTimeSinceAction() < this.currentAction.minDuration) {
+                return;
+            }
+        }
+        this.currentAction = this.actions[action];
+        _dispatchAction(action);
+        TimeManager.instance.resetTimeSinceAction();
     }
 
-    function endAction () {
-        
+    ////////////
+    // PRIVATE METHODS
+    //
+    function _dispatchAction(action) {
+        ActionManager.instance.dispatch(ActionManager.ACTION_DISPATCHED, action);
+    }
+
+    function _endAction() {
         ActionManager.instance.dispatch(ActionManager.ACTION_END);
     }
-
-    ActionManager.prototype.getCurrentAction = function() {
-        return this.currentAction;
-    }
-
-    ActionManager.prototype.setCurrentAction = function (currentAction) {
-        this.currentAction = currentAction;
-    }
-
-    ActionManager.prototype.getCurrentTechnology = function () {
-        this.currentTechnology
-    }
-
-
 
     // Singleton
     ActionManager.instance = new ActionManager();
     return ActionManager;
 
-})(actions, MakeEventDispatcher);
+})(actions, MakeEventDispatcher, TimeManager);
