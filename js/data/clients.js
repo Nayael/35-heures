@@ -46,7 +46,7 @@ var clients = (function() {
 		"OldMan": {
 			"Name": "Henry",
 			"StartPatience": 60,
-			"PhraseIntro": "Bonjour, je viens retirer une commande, tenez voici le recommandé ainsi que ma carte d’identité.",
+			"PhraseIntro": "Je voudrais poster cette enveloppe",
 			"Vulnerability": {
 				"technology": 0.5,
 				"paperwork": 1.5
