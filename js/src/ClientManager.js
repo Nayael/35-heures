@@ -1,4 +1,4 @@
-var ClientManager = (function(clients) {
+var ClientManager = (function(clients, TimeManager, ActionManager) {
     'use strict';
 
     function ClientManager() {
@@ -13,6 +13,9 @@ var ClientManager = (function(clients) {
         this.clients = clients;
         this.currentClient = null;
         this.currentPhase = null;
+        this.currentPatience = null;
+        this.currentVulnerability = 1;
+        this.currentAction = null;
 
         MakeEventDispatcher(this);
     };
@@ -23,20 +26,25 @@ var ClientManager = (function(clients) {
         
         this.currentClient = this.clients["Pro"];
         this.currentPhase = 0;
+        this.currentTime = null;
+        this.currentPatience = this.clients["Pro"]["StartPatience"];
         ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);
     }
 
-    ClientManager.prototype.update = function(eventName) {
+    ClientManager.prototype.updateOnAction = function() {
 
-        ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);
-        if(typeof this.currentClient["Scenario"]["phase_"+this.currentPhase] !== "undefined")
+
+        ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);        
+        this.currentAction = ActionManager.instance.getCurrentAction();
+        console.log(this.currentAction);
+        if(typeof this.currentClient["Scenario"]["phase_"+this.currentPhase][this.currentAction] !== "undefined")
         {
-            console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase]["intro"]);
+            console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase][this.currentAction]["intro"]);
             this.currentPhase++;
 
-        }else if(typeof this.currentClient["Scenario"]["default"]["phaseDefault"]["computerFakbok"] !== "undefined")
+        }else if(typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined")
         {
-            console.log(this.currentClient["Scenario"]["default"]["phaseDefault"]["computerFakbok"]);
+            console.log(this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
 
 
         }else{
@@ -45,8 +53,33 @@ var ClientManager = (function(clients) {
         }
     }
 
+    ClientManager.prototype.update = function() {
+        
+        this.timesinceClient = Math.floor(TimeManager.instance.getTimeSinceCleint());
+        this.timeSinceAction = TimeManager.instance.getTimeSinceAction();
+
+        if(this.currentTime < this.timesinceClient)
+        {
+            this.currentTime = this.timesinceClient;
+            this.currentPatience -= (5/3) * this.currentVulnerability;
+            console.log(this.currentPatience);
+        }
+
+        if(this.currentPatience <= 0)
+        {
+            console.log(this.currentClient["Scenario"]["fail"]);
+            TimeManager.instance.newClient();
+            this.currentTime = 0;
+            this.currentClient = this.clients["OldMan"];
+            this.currentPatience = this.clients["OldMan"]["StartPatience"];
+            ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);
+            console.log("New Client Enter");
+        }
+
+    }
+
     // Singleton
     ClientManager.instance = new ClientManager();
     return ClientManager;
 
-})(clients);
+})(clients, TimeManager, ActionManager);

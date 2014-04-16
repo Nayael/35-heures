@@ -82,7 +82,7 @@ var clients = (function() {
 				"fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
 			},
 		},
-		"OldMan": {
+		"Hippie": {
 			"Name": "Henry",
 			"StartPatience": 60,
 			"PhraseIntro": "Je voudrais poster cette enveloppe",

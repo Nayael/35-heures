@@ -11,14 +11,32 @@ var ActionManager = (function(actions, MakeEventDispatcher) {
             return new ActionManager();
         }
         this.actions = actions;
+        this.currentAction = null;
 
         MakeEventDispatcher(this);
 
     }
 
-    function dispatchAction (argument) {
+    function dispatchAction () {
         
         ActionManager.instance.dispatch(ActionManager.ACTION_DISPATCHED);
+    }
+
+    function endAction () {
+        
+        ActionManager.instance.dispatch(ActionManager.ACTION_END);
+    }
+
+    ActionManager.prototype.getCurrentAction = function() {
+        return this.currentAction;
+    }
+
+    ActionManager.prototype.setCurrentAction = function (currentAction) {
+        this.currentAction = currentAction;
+    }
+
+    ActionManager.prototype.getCurrentTechnology = function () {
+        this.currentTechnology
     }
 
 
