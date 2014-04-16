@@ -56,14 +56,12 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
 
     ClientManager.prototype.update = function() {
 
+
+        this.currentPatience -= (5/3) * Time.deltaTime * this.currentVulnerability;
+        // console.log(this.currentPatience);
+
         this.timesinceClient = Math.floor(TimeManager.instance.getTimeSinceCleint());
         this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
-
-        if (this.currentTime < this.timesinceClient) {
-            this.currentTime = this.timesinceClient;
-            this.currentPatience -= (5 / 3) * this.currentVulnerability;
-            console.log(this.currentPatience);
-        }
 
         if (this.currentPatience <= 0) {
             console.log(this.currentClient["Scenario"]["fail"]);
@@ -75,13 +73,10 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             console.log("New Client Enter");
         }
         console.log(this.timeSinceAction);
-        if(this.timeSinceAction > 5)
+        if(this.timeSinceAction > 7)
         {
-            this.currentVulnerability += 0.01;
+            this.currentVulnerability += 1 * Time.deltaTime;
         }
-
-
-
     }
 
     // Singleton
