@@ -17,7 +17,7 @@ var DebugManager = (function() {
 		this.context = this.canvas.getContext('2d');
 		this.canvas.id = 'debugCanvas';
 		this.canvas.width = 300;
-		this.canvas.height = 1080;
+		this.canvas.height = 100;
 
 	};
 
