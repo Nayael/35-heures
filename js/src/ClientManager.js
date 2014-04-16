@@ -34,12 +34,15 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         //Pick new client
         this.currentClient = ClientManager.instance.clients["Pro"];
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
+        this.globalPatience = 100;
 
     }
 
     ClientManager.prototype.startClient = function() {
 
         console.log(this.currentClient["Intro"]);
+        ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
+        this.currentTime = 0;
     }
 
     ClientManager.prototype.actionHasChange = function() {
@@ -73,15 +76,13 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         }
         this.globalPatience -= (5/3) * Time.deltaTime * this.currentVulnerability;
         
-        this.timesinceClient = Math.floor(TimeManager.instance.getTimeSinceCleint());
         this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
 
         if (this.globalPatience <= 0) {
             console.log(this.currentClient["Scenario"]["fail"]);
             TimeManager.instance.newClient();
-            this.currentTime = 0;
-            this.globalPatience = 100;
             console.log("New Client Enter");
+            ClientManager.instance.newClient();
         }
         if(this.timeSinceAction > 7)
         {

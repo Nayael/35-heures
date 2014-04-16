@@ -276,7 +276,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Called when an entity is touched
      */
     Game.prototype.onEntityActionned = function(target) {
-        console.log('target: ', target);
         ActionManager.instance.makeAction(target.action);
         ClientManager.instance.updateCurrentAction();
     };
@@ -293,6 +292,10 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         {
             this.currentClient.fsm.makeIdle();
             ClientManager.instance.removeListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState);
+        }else if(state == ClientManager.PATIENCE_HAPPY && this.currentClient.fsm.current != "happy")
+        {
+            this.currentClient.fsm.makeHappy();
+            ClientManager.instance.removeListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState);
         }
         
 
@@ -306,9 +309,10 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         var previousClient = this.currentClient;
         if (previousClient) {
             previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
-            setTimeout(function () {
+            // setTimeout(function () {
                 Game.instance.removeEntity(previousClient);
-            }, 1000);
+                _screenOffice.removeChild(previousClient);
+            // }, 1000);
         }
         var newClient = new Character(client.Name);
         this.currentClient = newClient;
@@ -316,12 +320,14 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         _screenOffice.addChild(newClient, 0);
         ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
         ClientManager.instance.addListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState, this);
+        ClientManager.instance.addListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState, this);
+
 
         // TODO Anim Character
 
         setTimeout(function () {
-                ClientManager.instance.startClient();
-            }, 1000);
+            ClientManager.instance.startClient();
+        }, 1000);
         
     };
 
