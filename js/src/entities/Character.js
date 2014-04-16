@@ -38,7 +38,6 @@ var Character = (function(Entity, StateMachine) {
             });
             _views[stateName].addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onViewTouchClicked, this);
         }
-        console.log('_views: ', _views);
     }
 
     Character.prototype.initFsm = function() {

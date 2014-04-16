@@ -47,11 +47,7 @@ var View = (function(MakeEventDispatcher) {
         this.stageX = this.localX + ( (this.entity.x ? this.entity.x : 0) + 0.5 ) | 0,
         this.stageY = this.localY + ( (this.entity.y ? this.entity.y : 0) + 0.5 ) | 0;
         
-        if (!this.spritesheetData) {
-            context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, this.stageX, this.stageY, this.spriteWidth, this.spriteHeight);
-        } else {
-            // context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, this.stageX, this.stageY, this.spriteWidth, this.spriteHeight);
-        }
+        context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, this.stageX, this.stageY, this.spriteWidth, this.spriteHeight);
 
         if (this.animated === false || this.totalFrames == 1) {
             return;

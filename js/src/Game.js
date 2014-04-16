@@ -45,15 +45,10 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
         this.stage = new Stage(Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT, Globals.CANVAS_BACKGROUND);
 
-        // Initializing Input manager
-        InputManager.instance.init();
-
         // Initializing Asset manager
         AssetManager.instance.enqueueAssets(this.assets);
         AssetManager.instance.addListener(AssetManager.LOADING_COMPLETE, this.onAssetsLoadingComplete, this);
         AssetManager.instance.loadAll();
-
-        ClientManager.instance.init();
 
         onEachFrame(this.update, 'game', this);
     };
@@ -96,8 +91,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
-        _screenOffice = new Screen();
-        window.screenOffice = _screenOffice;
         this.startGame();
     };
 
@@ -132,6 +125,13 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.startGame = function() {
 
+        // Initializing Input manager
+        InputManager.instance.init();
+
+        // Initalizaing Client Manager
+        ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
+        ClientManager.instance.init();
+
         this.initScreens();
 
         // We launch the main game loop
@@ -139,13 +139,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.initScreens = function() {
-        // this.currentClient = new Character('young_woman');
-        // this.currentClient.x = 50;
-        // this.currentClient.y = 50;
-        // this.addEntity(this.currentClient);
-        // this.currentClient.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
-
-        // _screenOffice.addChild(this.currentClient);
+        _screenOffice = new Screen();
+        
     }
 
     /**
@@ -203,15 +198,27 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
     /**
      * Called when a client is ended, and a new client arrives
-     * @param  {String} clientName The new client's name
+     * @param  {String} client The new client
      */
-    Game.prototype.onNewClient = function(clientName) {
+    Game.prototype.onNewClient = function(client) {
         var previousClient = this.currentClient;
+        if (previousClient) {
+            previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
+            setTimeout(function () {
+                Game.instance.removeEntity(previousClient);
+            }, 1000);
+        }
+        var newClient = new Character(client.Name)
+        this.currentClient = newClient;
+        this.addEntity(newClient);
+        this.currentClient.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+
+        ///////////////
+        // TEMPORARY //
+        ///////////////
         setTimeout(function () {
-            Game.instance.removeEntity(previousClient);
-        }, 1000);
-        this.currentClient = new Character(clientName);
-        this.addEntity(this.currentClient);
+            _screenOffice.addChild(newClient);
+        }, 100);
     };
 
     // Singleton

@@ -3,7 +3,8 @@ var clients = (function() {
 
 	var clients = {
 		"Pro": {
-			"Name": "Henry",
+			"Name": "henry",
+			"DisplayName": "Henry",
 			"StartPatience": 60,
 			"Vulnerability": {
 				"technology": 0.5,
@@ -43,7 +44,8 @@ var clients = (function() {
 			},
 		},
 		"OldMan": {
-			"Name": "Jean-Jacques",
+			"Name": "jean_jacques",
+			"DisplayName": "Jean-Jacques",
 			"StartPatience": 80,
 			"Vulnerability": {
 				"technology": 0.5,
@@ -83,7 +85,8 @@ var clients = (function() {
 			},
 		},
 		"Hippie": {
-			"Name": "Henry",
+			"Name": "henryIV",
+			"DisplayName": "Henry IV",
 			"StartPatience": 60,
 			"PhraseIntro": "Je voudrais poster cette enveloppe",
 			"Vulnerability": {

@@ -20,59 +20,58 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         MakeEventDispatcher(this);
     };
 
-    ClientManager.SEND_CURRENT_CHARACTER = "ClientManager.SEND_CURRENT_CHARACTER";
+    ////////////
+    // STATIC ATTRIBUTES
+    //
+    ClientManager.NEW_CLIENT = "ClientManager.NEW_CLIENT";
+
 
     ClientManager.prototype.init = function() {
-        
         this.currentClient = this.clients["Pro"];
         this.currentPhase = 0;
         this.currentTime = null;
         this.currentPatience = this.clients["Pro"]["StartPatience"];
-        ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);
+        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
     }
 
     ClientManager.prototype.updateOnAction = function() {
 
 
-        ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);        
+        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
         this.currentAction = ActionManager.instance.getCurrentAction();
         console.log(this.currentAction);
-        if(typeof this.currentClient["Scenario"]["phase_"+this.currentPhase][this.currentAction] !== "undefined")
-        {
-            console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase][this.currentAction]["intro"]);
+        if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
+            console.log(this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]["intro"]);
             this.currentPhase++;
 
-        }else if(typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined")
-        {
+        } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
             console.log(this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
 
 
-        }else{
+        } else {
 
             console.log(this.currentClient["Scenario"]["default"]["phaseDefault"]["phrase"]);
         }
     }
 
     ClientManager.prototype.update = function() {
-        
+
         this.timesinceClient = Math.floor(TimeManager.instance.getTimeSinceCleint());
         this.timeSinceAction = TimeManager.instance.getTimeSinceAction();
 
-        if(this.currentTime < this.timesinceClient)
-        {
+        if (this.currentTime < this.timesinceClient) {
             this.currentTime = this.timesinceClient;
-            this.currentPatience -= (5/3) * this.currentVulnerability;
+            this.currentPatience -= (5 / 3) * this.currentVulnerability;
             console.log(this.currentPatience);
         }
 
-        if(this.currentPatience <= 0)
-        {
+        if (this.currentPatience <= 0) {
             console.log(this.currentClient["Scenario"]["fail"]);
             TimeManager.instance.newClient();
             this.currentTime = 0;
             this.currentClient = this.clients["OldMan"];
             this.currentPatience = this.clients["OldMan"]["StartPatience"];
-            ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);
+            ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
             console.log("New Client Enter");
         }
 
