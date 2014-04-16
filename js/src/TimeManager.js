@@ -43,15 +43,14 @@ var TimeManager = (function(MakeEventDispatcher) {
 	};
 
 	TimeManager.prototype.getTimeHour = function() {
-		if (this.currPhase == 'morning') {
-			var time = {
-				h: 9 + (timeOfDay / 30) | 0,
-				m: ((timeOfDay % 30) * 2) | 0,
-			};
-			return time;
-		} else {
-			return 10 + timeOfDay / 30;
-		}
+		var time = {
+			h: 9 + (timeOfDay / 30) | 0,
+			m: ((timeOfDay % 30) * 2) | 0,
+		};
+		if (this.currPhase == 'afternoon')
+			time.h += 1;
+
+		return time;
 	};
 
 	TimeManager.prototype.newClient = function() {

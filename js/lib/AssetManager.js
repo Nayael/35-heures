@@ -28,7 +28,8 @@ var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
     ////////////
     // PRIVATE ATTRIBUTES
     //
-    var pxLoader = new PxLoader();
+    var _pxLoader = new PxLoader();
+    var _atlasesJSONRequests = [];
 
 
     ////////////
@@ -39,7 +40,21 @@ var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
      */
     AssetManager.prototype.enqueueImages = function() {
         // Declaring all the assets in PxLoader
-        this.assets.images = parseImageData(this.assets.images);
+        this.assets.images = _parseImageData(this.assets.images);
+    };
+
+    /**
+     * Loads the images for the game
+     */
+    AssetManager.prototype.enqueueAtlases = function() {
+        var jsonReq, current;
+        // Declaring all the assets in PxLoader
+        for (var prop in this.assets.atlases) {
+            if (this.assets.atlases.hasOwnProperty(prop)) {
+                current = this.assets.atlases[prop];
+                this.assets.images[prop] = _pxLoader.addImage(AssetManager.instance.IMAGE_PATH + current[0] + '.png', current[1]);
+            }
+        }
     };
 
     /**
@@ -55,22 +70,30 @@ var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
     AssetManager.prototype.enqueueAssets = function(assets) {
         this.assets = assets;
         this.enqueueImages();
+        this.enqueueAtlases();
         // this.enqueueSounds();
     }
 
     AssetManager.prototype.loadAll = function() {
         // Loader progression
-        pxLoader.addProgressListener(function(e) {
+        _pxLoader.addProgressListener(function(e) {
             console.log('loading progress');
         });
 
-        pxLoader.addCompletionListener(function(e) {
+        _pxLoader.addCompletionListener(function(e) {
             console.log('loading finished');
             AssetManager.instance.dispatch(AssetManager.LOADING_COMPLETE);
         });
 
         // Starting the loading
-        pxLoader.start();
+        _pxLoader.start();
+        for (var i = 0; i < _atlasesJSONRequests.length; i++) {
+            _atlasesJSONRequests[i].send(null);
+        }
+    };
+
+    AssetManager.prototype.getImage = function(name) {
+        
     };
 
     ////////////
@@ -81,20 +104,24 @@ var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
      * @param  {object} data The file data
      * @return {object}      The new object with assets added to PxLoader
      */
-    function parseImageData (data) {
+    function _parseImageData (data) {
         var obj = data, prop, current;
         for (prop in obj) {
             if (obj.hasOwnProperty(prop)) {
                 current = obj[prop];
                 if (typeof current === 'object' && current.length == undefined) {
-                    parseImageData(current)
+                    _parseImageData(current)
                 } else {
-                    obj[prop] = pxLoader.addImage(AssetManager.instance.IMAGE_PATH + current[0], current[1]);
+                    obj[prop] = _pxLoader.addImage(AssetManager.instance.IMAGE_PATH + current[0], current[1]);
                 }
             }
         }
         return obj;
     };
+
+    function _onAtlasJSONLoaded(response) {
+        console.log('response: ', response);
+    }
 
     // Singleton
     AssetManager.instance = new AssetManager();

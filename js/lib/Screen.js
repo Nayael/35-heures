@@ -12,7 +12,7 @@ var Screen = (function() {
             for (var i = 0, entity; i < entities.length; i++) {
                 entity = entities[i];
                 if (entity.view) {
-                    _children.push(entity.view);
+                    _children.push(entity);
                 }
             }
         }

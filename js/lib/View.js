@@ -6,8 +6,9 @@ var View = (function(MakeEventDispatcher) {
         if (!(this instanceof View)) {
             return new View(entity, data);
         }
-        this.entity       = entity;
-        this.spritesheet  = data.spritesheet;
+        this.entity          = entity;
+        this.spritesheet     = data.spritesheet;
+        this.spritesheetData = data.spritesheetData || null;
         
         // The local position of the sprite in the entity
         this.localX = data.localX || 0;
@@ -46,7 +47,11 @@ var View = (function(MakeEventDispatcher) {
         this.stageX = this.localX + ( (this.entity.x ? this.entity.x : 0) + 0.5 ) | 0,
         this.stageY = this.localY + ( (this.entity.y ? this.entity.y : 0) + 0.5 ) | 0;
         
-        context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, this.stageX, this.stageY, this.spriteWidth, this.spriteHeight);
+        if (!this.spritesheetData) {
+            context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, this.stageX, this.stageY, this.spriteWidth, this.spriteHeight);
+        } else {
+            // context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, this.stageX, this.stageY, this.spriteWidth, this.spriteHeight);
+        }
 
         if (this.animated === false || this.totalFrames == 1) {
             return;

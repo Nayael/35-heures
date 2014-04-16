@@ -97,6 +97,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
         _screenOffice = new Screen();
+        window.screenOffice = _screenOffice;
         this.startGame();
     };
 
@@ -130,14 +131,14 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Starts a new game
      */
     Game.prototype.startGame = function() {
-        var a = new Character('test');
-        a.x = 50;
-        a.y = 50;
-        this.addEntity(a);
+        this.currentClient = new Character('young_woman');
+        this.currentClient.x = 50;
+        this.currentClient.y = 50;
+        this.addEntity(this.currentClient);
 
-        _screenOffice.addChild(a.view);
+        _screenOffice.addChild(this.currentClient);
 
-        a.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        this.currentClient.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
 
         // We launch the main game loop
         this.fsm.play();
@@ -191,7 +192,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Called when an entity is touched
      */
     Game.prototype.onEntityActionned = function(target) {
-        console.log(Math.floor(Math.random() * 10000) + 'Entity actionned', target);
         ClientManager.instance.update("computerFakbok");
     };
 
