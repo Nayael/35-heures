@@ -29,14 +29,19 @@ var ClientManager = (function(clients) {
     ClientManager.prototype.update = function(eventName) {
 
         ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);
-        if(this.currentClient["Scenario"]["phase_"+this.currentPhase]["success"])
+        if(typeof this.currentClient["Scenario"]["phase_"+this.currentPhase] !== "undefined")
         {
             console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase]["intro"]);
             this.currentPhase++;
 
+        }else if(typeof this.currentClient["Scenario"]["default"]["phaseDefault"]["computerFakbok"] !== "undefined")
+        {
+            console.log(this.currentClient["Scenario"]["default"]["phaseDefault"]["computerFakbok"]);
+
+
         }else{
 
-            console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase]["default"]["phraseDefault"]);
+            console.log(this.currentClient["Scenario"]["default"]["phaseDefault"]["phrase"]);
         }
     }
 
