@@ -50,16 +50,16 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
         this.canvas.style.height = height + 'px';
 
         // Listen to input
-        if (!this.canvas.isEventDispatcher) {
-            MakeEventDispatcher(this.canvas);
-        }
-        this.canvas.addListener(InputManager.InputEvent.TOUCH_START, this.onTouchStart, this);
+        MakeEventDispatcher(this.canvas);
+        this.canvas.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onTouchClicked, this);
     }
+
 
     ////////////
     // PRIVATE ATTRIBUTES
     //
     var _children = [];
+
 
     ////////////
     // PUBLIC METHODS
@@ -104,7 +104,7 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
      * Called when the canvas is touched
      * @param  {InputEvent} e The touch InputEvent
      */
-    Stage.prototype.onTouchStart = function(e) {
+    Stage.prototype.onTouchClicked = function(e) {
         var touchedChild = null;
 
         // Parse all the children (ordered by index), and get the one that was touched that is the most on top of the list
@@ -120,9 +120,7 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
             return;
         }
 
-        if (!touchedChild.isEventDispatcher) {
-            MakeEventDispatcher(touchedChild);
-        }
+        MakeEventDispatcher(touchedChild);
         e.localX -= touchedChild.stageX;
         e.localY -= touchedChild.stageY;
         e.target = touchedChild;

@@ -1,6 +1,9 @@
 var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity) {
     'use strict';
 
+    /**
+     * @constructor
+     */
     function Game() {
         // enforces new
         if (!(this instanceof Game)) {
@@ -163,7 +166,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.addEntity(a);
         this.addEntity(b);
 
-        a.view.addListener(InputManager.InputEvent.TOUCH_START, this.onEntityTouched, this);
+        a.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
 
         // We launch the main game loop
         this.launchGame();
@@ -210,10 +213,9 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
     /**
      * Called when an entity is touched
-     * @param  {InputEvent} e The touch InputEvent
      */
-    Game.prototype.onEntityTouched = function(e) {
-        console.log('Clicked entity: ', e.target.entity);
+    Game.prototype.onEntityActionned = function(target) {
+        console.log('Entity actionned', target);
     }
 
     // Singleton
