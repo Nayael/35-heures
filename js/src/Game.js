@@ -281,9 +281,21 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     /**
      * Called when a client gets angry
      */
-    Game.prototype.onClientChangeState = function() {
-        this.currentClient.fsm.makeAngry();
-        ClientManager.instance.removeListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState);
+    Game.prototype.onClientChangeState = function(state) {
+        if(state == ClientManager.PATIENCE_ANGRY && this.currentClient.fsm.current != "angry")
+        {
+            this.currentClient.fsm.makeAngry();
+            ClientManager.instance.removeListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState);
+        }else if(state == ClientManager.PATIENCE_HAPPY && this.currentClient.fsm.current != "happy")
+        {
+            this.currentClient.fsm.makeHappy();
+            ClientManager.instance.removeListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState);
+        }else if(state == ClientManager.PATIENCE_IDLE && this.currentClient.fsm.current != "idle")
+        {
+            this.currentClient.fsm.makeIdle();
+            ClientManager.instance.removeListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState);
+        }
+        
 
     };
 
@@ -303,6 +315,10 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.currentClient = newClient;
         this.addEntity(newClient);
         ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
+        ClientManager.instance.addListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState, this);
+        ClientManager.instance.addListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState, this);
+
+
 
         ///////////////
         // TEMPORARY //

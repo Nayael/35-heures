@@ -46,7 +46,7 @@ var Character = (function(Entity, StateMachine) {
         var self = this;
 
         this.fsm = StateMachine.create({
-            initial: 'idle',
+            initial: 'happy',
             events: [{
                 name: 'makeIdle',
                 from: ['happy', 'angry'],
