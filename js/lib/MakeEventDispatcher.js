@@ -1,5 +1,9 @@
 function MakeEventDispatcher(object) {
+	if (object.isEventDispatcher) {
+		return;
+	}
 	object.listenersFor = {};   // A list of all the listeners on a given event
+	object.isEventDispatcher = true;
 	
 	object.addListener = function(eventName, callback, target) {
 		if (!this.listenersFor[eventName]) {

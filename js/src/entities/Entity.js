@@ -1,4 +1,4 @@
-var Entity = (function(AssetManager, View) {
+var Entity = (function(AssetManager, View, MakeEventDispatcher, InputManager) {
     'use strict';
 
     function Entity() {
@@ -10,13 +10,25 @@ var Entity = (function(AssetManager, View) {
             spritesheet: AssetManager.instance.assets.images['test']
         });
         this.x = 50;
-        this.speed = 50;
+        this.y = 50;
+
+        MakeEventDispatcher(this);
+
+        this.view.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onViewTouchClicked, this);
     };
 
-    Entity.prototype.update = function() {
-        this.x += this.speed * Time.deltaTime;
+    ////////////
+    // STATIC ATTRIBUTES
+    //
+    Entity.ACTIONNED = 'Entity.ACTIONNED';
+
+    ////////////
+    // PUBLIC METHODS
+    //
+    Entity.prototype.onViewTouchClicked = function(e) {
+        this.dispatch(Entity.ACTIONNED, this);
     }
 
     return Entity;
 
-})(AssetManager, View);
+})(AssetManager, View, MakeEventDispatcher, InputManager);

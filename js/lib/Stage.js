@@ -1,4 +1,4 @@
-var Stage = (function(InputManager) {
+var Stage = (function(MakeEventDispatcher, InputManager) {
     'use strict';
 
     /**
@@ -44,16 +44,22 @@ var Stage = (function(InputManager) {
             this.canvas.ratio = stageWidth / window.innerWidth;
         }
 
+        // Add the canvas to the document
         document.body.appendChild(this.canvas);
-
-        this.canvas.style.width = width + 'px';
+        this.canvas.style.width  = width + 'px';
         this.canvas.style.height = height + 'px';
+
+        // Listen to input
+        MakeEventDispatcher(this.canvas);
+        this.canvas.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onTouchClicked, this);
     }
+
 
     ////////////
     // PRIVATE ATTRIBUTES
     //
     var _children = [];
+
 
     ////////////
     // PUBLIC METHODS
@@ -90,12 +96,37 @@ var Stage = (function(InputManager) {
         // Updating all the children
         for (var i = 0, child = null; i < _children.length; i++) {
             child = _children[i];
-            if (child.view) {
-                child.view.draw(this.context);
-            }
+            child.draw(this.context);
         }
+    };
+
+    /**
+     * Called when the canvas is touched
+     * @param  {InputEvent} e The touch InputEvent
+     */
+    Stage.prototype.onTouchClicked = function(e) {
+        var touchedChild = null;
+
+        // Parse all the children (ordered by index), and get the one that was touched that is the most on top of the list
+        for (var i = 0, child = null; i < _children.length; i++) {
+            child = _children[i];
+            if (child.stageX > e.localX || child.stageY > e.localY || child.stageX + child.spriteWidth < e.localX || child.stageY + child.spriteHeight < e.localY) {
+                continue;
+            }
+            touchedChild = child;
+        };
+
+        if (!touchedChild) {
+            return;
+        }
+
+        MakeEventDispatcher(touchedChild);
+        e.localX -= touchedChild.stageX;
+        e.localY -= touchedChild.stageY;
+        e.target = touchedChild;
+        touchedChild.dispatch(e.type, e);
     };
 
     return Stage;
 
-})(InputManager);
+})(MakeEventDispatcher, InputManager);

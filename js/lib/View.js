@@ -1,4 +1,4 @@
-var View = (function() {
+var View = (function(MakeEventDispatcher) {
     'use strict';
 
     function View(entity, data) {
@@ -10,8 +10,10 @@ var View = (function() {
         this.spritesheet  = data.spritesheet;
         
         // The local position of the sprite in the entity
-        this.localX       = data.localX || 0;
-        this.localY       = data.localY || 0;
+        this.localX = data.localX || 0;
+        this.localY = data.localY || 0;
+        this.stageX = this.localX + ( (this.entity.x ? this.entity.x : 0) + 0.5 ) | 0;
+        this.stageY = this.localY + ( (this.entity.y ? this.entity.y : 0) + 0.5 ) | 0;
         
         this.currentFrame = 0;     // The current frame to draw
         this.frameCount   = 0;     // The number of frames elapsed since the first draw
@@ -25,6 +27,10 @@ var View = (function() {
         if (data.animated === false) {
             this.animated = data.animated;
         }
+
+        if (!this.isEventDispatcher) {
+            MakeEventDispatcher(this);
+        }
     }
 
     /**
@@ -35,10 +41,10 @@ var View = (function() {
         if (!this.enabled) {
             return;
         }
-        var globalX = this.localX + ( (this.entity.x ? this.entity.x : 0) + 0.5 ) | 0,
-            globalY = this.localY + ( (this.entity.y ? this.entity.y : 0) + 0.5 ) | 0;
+        this.stageX = this.localX + ( (this.entity.x ? this.entity.x : 0) + 0.5 ) | 0,
+        this.stageY = this.localY + ( (this.entity.y ? this.entity.y : 0) + 0.5 ) | 0;
         
-        context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, globalX, globalY, this.spriteWidth, this.spriteHeight);
+        context.drawImage(this.spritesheet, this.spriteWidth * this.currentFrame, 0, this.spriteWidth, this.spriteHeight, this.stageX, this.stageY, this.spriteWidth, this.spriteHeight);
 
         if (this.animated === false || this.totalFrames == 1) {
             return;
@@ -56,4 +62,4 @@ var View = (function() {
 
     return View;
 
-})();
+})(MakeEventDispatcher);

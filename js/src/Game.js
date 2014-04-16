@@ -1,6 +1,9 @@
 var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity) {
     'use strict';
 
+    /**
+     * @constructor
+     */
     function Game() {
         // enforces new
         if (!(this instanceof Game)) {
@@ -133,7 +136,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             index = _entities.length;
         }
         _entities.splice(index, 0, entity);
-        this.stage.addChild(entity);
+        this.stage.addChild(entity.view);
     };
 
 
@@ -147,7 +150,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             return;
         }
         _entities.splice(index, 1);
-        this.stage.addChild(entity);
+        this.stage.addChild(entity.view);
     };
 
     /**
@@ -157,7 +160,13 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         var a = new Entity();
         a.x = 50;
         a.x = 50;
+        var b = new Entity();
+        b.x = 150;
+        b.x = 150;
         this.addEntity(a);
+        this.addEntity(b);
+
+        a.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
 
         // We launch the main game loop
         this.launchGame();
@@ -201,6 +210,13 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
         this.stage.update();
     };
+
+    /**
+     * Called when an entity is touched
+     */
+    Game.prototype.onEntityActionned = function(target) {
+        console.log('Entity actionned', target);
+    }
 
     // Singleton
     return new Game();
