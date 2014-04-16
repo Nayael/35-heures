@@ -75,6 +75,11 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         {
             this.currentVulnerability += Time.deltaTime;
         }
+
+        if(this.currentPatience < this.clients["Pro"]["StartPatience"] * (3/10))
+        {
+            ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY);
+        }
     }
 
     // Singleton

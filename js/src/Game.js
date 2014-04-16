@@ -263,6 +263,15 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     /**
+     * Called when a client gets angry
+     */
+    Game.prototype.onClientChangeState = function() {
+        this.currentClient.fsm.makeAngry();
+        ClientManager.instance.removeListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState);
+
+    };
+
+    /**
      * Called when a client is ended, and a new client arrives
      * @param  {String} client The new client
      */
@@ -278,6 +287,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.currentClient = newClient;
         this.addEntity(newClient);
         this.currentClient.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
 
         ///////////////
         // TEMPORARY //
