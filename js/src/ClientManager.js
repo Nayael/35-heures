@@ -13,26 +13,30 @@ var ClientManager = (function(clients) {
         this.clients = clients;
         this.currentClient = null;
         this.currentPhase = null;
+
+        MakeEventDispatcher(this);
     };
+
+    ClientManager.SEND_CURRENT_CHARACTER = "ClientManager.SEND_CURRENT_CHARACTER";
 
     ClientManager.prototype.init = function() {
         
         this.currentClient = this.clients["Pro"];
         this.currentPhase = 0;
+        ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);
     }
 
     ClientManager.prototype.update = function(eventName) {
 
-        console.log(this.currentPhase);
+        ClientManager.instance.dispatch(ClientManager.SEND_CURRENT_CHARACTER, this.currentClient);
         if(this.currentClient["Scenario"]["phase_"+this.currentPhase]["success"])
         {
             console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase]["intro"]);
             this.currentPhase++;
 
-        }else{=
+        }else{
 
             console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase]["default"]["phraseDefault"]);
-
         }
     }
 
