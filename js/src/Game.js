@@ -130,12 +130,15 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
         // Initalizaing Client Manager
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
-        ClientManager.instance.init();
 
         this.initScreens();
 
         // We launch the main game loop
         this.fsm.play();
+
+        setTimeout(function () {
+            ClientManager.instance.newClient();
+        },1000);
     };
 
     Game.prototype.initScreens = function() {
@@ -274,8 +277,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.onEntityActionned = function(target) {
         console.log('target: ', target);
-        ActionManager.instance.setCurrentAction("computerFakbok");
-        ClientManager.instance.updateOnAction();
+        ActionManager.instance.makeAction(target.action);
+        ClientManager.instance.updateCurrentAction();
     };
 
     /**
@@ -307,20 +310,19 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
                 Game.instance.removeEntity(previousClient);
             }, 1000);
         }
-        var newClient = new Character(client.Name)
+        var newClient = new Character(client.Name);
         this.currentClient = newClient;
         this.addEntity(newClient);
+        _screenOffice.addChild(newClient, 0);
         ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
         ClientManager.instance.addListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState, this);
 
+        // TODO Anim Character
 
-
-        ///////////////
-        // TEMPORARY //
-        ///////////////
         setTimeout(function () {
-            _screenOffice.addChild(newClient, 0);
-        }, 100);
+                ClientManager.instance.startClient();
+            }, 1000);
+        
     };
 
     // Singleton

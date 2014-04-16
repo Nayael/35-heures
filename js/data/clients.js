@@ -3,8 +3,9 @@ var clients = (function() {
 
 	var clients = {
 		"Pro": {
-			"Name": "henry",
+			"Name": "young_woman",
 			"DisplayName": "Henry",
+			"Intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
 			"Vulnerability": {
 				"technology": 0.5,
 				"paperwork": 1.5,
@@ -17,7 +18,7 @@ var clients = (function() {
 				"time": 3,
 				"default": 2
 			},
-			"Phrases": {
+			"Scenario": {
 				"default": {
 					"computerFakbok": "Vous faites quoi là !?",
 					"default": "Vous croyez que c'est le moment de faire ça"

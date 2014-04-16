@@ -12,8 +12,9 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         }
         this.clients = clients;
         this.currentClient = null;
-        this.currentPhase = null;
-        this.currentPatience = 100;
+        this.currentPhase = 0;
+        this.globalPatience = 100;
+        this.currentPatience = null;
         this.currentVulnerability = 1;
         this.currentAction = null;
 
@@ -28,23 +29,31 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
     ClientManager.PATIENCE_ANGRY = "ClientManager.PATIENCE_ANGRY";
 
 
-
-    ClientManager.prototype.init = function() {
-        this.currentClient = this.clients["Pro"];
-        this.currentPhase = 0;
-        this.currentTime = null;
-        this.currentPatience = 100;
+    ClientManager.prototype.newClient = function() {
+        
+        //Pick new client
+        this.currentClient = ClientManager.instance.clients["Pro"];
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
+
     }
 
-    ClientManager.prototype.updateOnAction = function() {
+    ClientManager.prototype.startClient = function() {
 
+        console.log(this.currentClient["Intro"]);
+    }
 
-        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
+    ClientManager.prototype.actionHasChange = function() {
+
         this.currentAction = ActionManager.instance.getCurrentAction();
+
+        // TODO Get current things linked to action
+    }
+
+    ClientManager.prototype.updateCurrentAction = function() {
+
         if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
-            console.log(this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]["intro"]);
             this.currentPhase++;
+            return this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction];
 
         } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
             console.log(this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
@@ -52,25 +61,26 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
 
         } else {
 
-            console.log(this.currentClient["Scenario"]["default"]["phaseDefault"]["phrase"]);
+            console.log(this.currentClient["Scenario"]["default"]["default"]);
         }
     }
 
     ClientManager.prototype.update = function() {
 
-
-        this.currentPatience -= (5/3) * Time.deltaTime * this.currentVulnerability;
+        if(!this.currentClient)
+        {
+            return;
+        }
+        this.globalPatience -= (5/3) * Time.deltaTime * this.currentVulnerability;
         
         this.timesinceClient = Math.floor(TimeManager.instance.getTimeSinceCleint());
         this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
 
-        if (this.currentPatience <= 0) {
+        if (this.globalPatience <= 0) {
             console.log(this.currentClient["Scenario"]["fail"]);
             TimeManager.instance.newClient();
             this.currentTime = 0;
-            this.currentClient = this.clients["OldMan"];
-            this.currentPatience = 100;
-            ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
+            this.globalPatience = 100;
             console.log("New Client Enter");
         }
         if(this.timeSinceAction > 7)
@@ -78,13 +88,13 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             this.currentVulnerability += Time.deltaTime;
         }
 
-        if(this.currentPatience < 60 && this.currentPatience > 30)
+        if(this.globalPatience < 60 && this.globalPatience > 30)
         {
             console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
         }
 
-        if(this.currentPatience < 30)
+        if(this.globalPatience < 30)
         {
             console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
