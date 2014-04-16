@@ -21,9 +21,19 @@ var ClientManager = (function(clients, A) {
         this.currentPhase = 0;
     }
 
-    ClientManager.prototype.update = function() {
+    ClientManager.prototype.update = function(eventName) {
 
-        console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase]["intro"]);
+        console.log(this.currentPhase);
+        if(this.currentClient["Scenario"]["phase_"+this.currentPhase]["success"])
+        {
+            console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase]["intro"]);
+            this.currentPhase++;
+
+        }else{=
+
+            console.log(this.currentClient["Scenario"]["phase_"+this.currentPhase]["default"]["phraseDefault"]);
+
+        }
     }
 
     // Singleton

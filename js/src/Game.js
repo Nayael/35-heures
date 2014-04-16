@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, ClientManager) {
     'use strict';
 
     /**
@@ -39,6 +39,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         AssetManager.instance.enqueueAssets(this.assets);
         AssetManager.instance.addListener(AssetManager.LOADING_COMPLETE, this.onAssetsLoadingComplete, this);
         AssetManager.instance.loadAll();
+
+        ClientManager.instance.init();
     };
 
     /**
@@ -295,10 +297,11 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.onEntityActionned = function(target) {
         console.log(Math.floor(Math.random() * 10000) + 'Entity actionned', target);
+        ClientManager.instance.update("computerFakbok");
     }
 
     // Singleton
     Game.instance = new Game();
     return Game;
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, ClientManager);
