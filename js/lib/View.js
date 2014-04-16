@@ -31,6 +31,8 @@ var View = (function(MakeEventDispatcher) {
         if (!this.isEventDispatcher) {
             MakeEventDispatcher(this);
         }
+
+        this.touchable = true;
     }
 
     /**

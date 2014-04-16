@@ -27,7 +27,15 @@ var Entity = (function(AssetManager, View, MakeEventDispatcher, InputManager) {
     //
     Entity.prototype.onViewTouchClicked = function(e) {
         this.dispatch(Entity.ACTIONNED, this);
-    }
+    };
+
+    Entity.prototype.setTouchable = function(value) {
+        this.view.touchable = value ? true : false;
+    };
+
+    Entity.prototype.isTouchable = function() {
+        return this.view.touchable ? true : false;
+    };
 
     return Entity;
 

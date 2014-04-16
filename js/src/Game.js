@@ -5,6 +5,10 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * @constructor
      */
     function Game() {
+        // Singleton
+        if (Game.instance) {
+            throw new Error('Game is a singleton. Use Game.instance.');
+        }
         // enforces new
         if (!(this instanceof Game)) {
             return new Game();
@@ -13,7 +17,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.assets = assets;
 
         // State machine
-        // this.initFsm();
+        this.initFsm();
     }
 
     ////////////
@@ -30,9 +34,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
         // Initializing Input manager
         InputManager.instance.init();
-        // InputManager.instance.addListener(InputManager.InputEvent.TOUCH_START, this.onTouchStart, this);
-        // InputManager.instance.addListener(InputManager.InputEvent.TOUCH_MOVE, this.onTouchMove, this);
-        // InputManager.instance.addListener(InputManager.InputEvent.TOUCH_END, this.onTouchEnd, this);
 
         // Initializing Asset manager
         AssetManager.instance.enqueueAssets(this.assets);
@@ -120,7 +121,83 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         //         }
         //     }
         // });
-        // this.fsm.subject = this;
+        this.fsm = StateMachine.create({
+            events: [{
+                name: 'load',
+                from: ['none', 'menu'],
+                to: 'loading'
+            }, {
+                name: 'showMenu',
+                from: 'loading',
+                to: 'menu'
+            }, {
+                name: 'play',
+                from: 'loading',
+                to: 'game'
+            }],
+            callbacks: {
+                /**
+                 * On Loading state
+                 */
+                onload: function(e) {
+                    var game = this.subject,
+                        loaderAnim = new Engine.View(null, {
+                            spritesheet: game.assets.images.loading,
+                            localX     : (Globals.CANVAS_WIDTH >> 1) - (71 >> 1),
+                            localY     : (Globals.CANVAS_HEIGHT >> 2) - (72 >> 1),
+                            width      : 71,
+                            height     : 72,
+                            totalFrames: 8,
+                            frameRate  : 150
+                        });
+
+                    onEachFrame(function() {
+                        if (!game.fsm.is('loading')) {
+                            return;
+                        }
+                        game.context.fillStyle = 'rgb(0, 0, 0)';
+                        game.context.fillRect(loaderAnim.localX, loaderAnim.localY, loaderAnim.width, loaderAnim.height);
+                        loaderAnim.draw(game.context);
+                    }, 'loading');
+                },
+
+                /**
+                 * On Stop loading state
+                 */
+                onleaveloading: function(e) {
+                    onEachFrame.cancel('loading');
+                },
+
+                /**
+                 * On Menu state
+                 */
+                onshowMenu: function(e) {
+                    var game = this.subject,
+                        onKeyDownMenu = function(e) {
+                            Keyboard.remove(Keyboard.Event_KEY_DOWN, Keyboard.SPACE, onKeyDownMenu);
+                            AssetManager.instance.loadGame(game); // Start the loading of the game assets
+                        };
+                    game.context.drawImage(game.assets.images.menus.splashscreen, 0, 0);
+                    Keyboard.on(Keyboard.Event_KEY_DOWN, Keyboard.SPACE, onKeyDownMenu);
+                },
+
+                /**
+                 * On Stop menu state
+                 */
+                onleavemenu: function(e) {
+                    this.subject.context.fillStyle = 'rgb(0, 0, 0)';
+                    this.subject.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
+                },
+
+                /**
+                 * On Play state (starts the game)
+                 */
+                onplay: function(e) {
+                    this.subject.startGame();
+                }
+            }
+        });
+        this.fsm.subject = this;
     };
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
@@ -159,14 +236,16 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     Game.prototype.startGame = function() {
         var a = new Entity();
         a.x = 50;
-        a.x = 50;
+        a.y = 50;
         var b = new Entity();
         b.x = 150;
-        b.x = 150;
+        b.y = 150;
         this.addEntity(a);
         this.addEntity(b);
+        b.setTouchable(false);
 
         a.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        // b.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
 
         // We launch the main game loop
         this.launchGame();
@@ -177,7 +256,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.launchGame = function() {
         this.paused = false;
-        onEachFrame(this.update, 'game', this);
+        onEachFrame(this.gameLoop, 'game', this);
     };
 
     /**
@@ -185,7 +264,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.pauseGame = function() {
         this.paused = true;
-        onEachFrame.cancel('game');
+        // onEachFrame.cancel('game');
     };
 
     /**
@@ -198,7 +277,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     /**
      * The main game loop
      */
-    Game.prototype.update = function() {
+    Game.prototype.gameLoop = function() {
         
         // Updating all the entities
         for (var i = 0, entity = null; i < _entities.length; i++) {
@@ -215,10 +294,11 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Called when an entity is touched
      */
     Game.prototype.onEntityActionned = function(target) {
-        console.log('Entity actionned', target);
+        console.log(Math.floor(Math.random() * 10000) + 'Entity actionned', target);
     }
 
     // Singleton
-    return new Game();
+    Game.instance = new Game();
+    return Game;
 
 })(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity);
