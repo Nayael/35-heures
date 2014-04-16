@@ -37,7 +37,7 @@ function MakeEventDispatcher(object) {
 					listeners[i].callback.apply(listeners[i].target, args);	// We call all the listeners one by one
 				} catch(e) {
 					console.warn('Error on event ' + eventName);
-					throw(e); 
+					throw(e);
 				}
 			}
 		}

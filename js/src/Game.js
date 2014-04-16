@@ -285,11 +285,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         if(state == ClientManager.PATIENCE_ANGRY && this.currentClient.fsm.current != "angry")
         {
             this.currentClient.fsm.makeAngry();
-            ClientManager.instance.removeListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState);
-        }else if(state == ClientManager.PATIENCE_HAPPY && this.currentClient.fsm.current != "happy")
-        {
-            this.currentClient.fsm.makeHappy();
-            ClientManager.instance.removeListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState);
+            ClientManager.instance.removeListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState);
         }else if(state == ClientManager.PATIENCE_IDLE && this.currentClient.fsm.current != "idle")
         {
             this.currentClient.fsm.makeIdle();
@@ -315,7 +311,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.currentClient = newClient;
         this.addEntity(newClient);
         ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
-        ClientManager.instance.addListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState, this);
         ClientManager.instance.addListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState, this);
 
 

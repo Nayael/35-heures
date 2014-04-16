@@ -13,7 +13,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         this.clients = clients;
         this.currentClient = null;
         this.currentPhase = null;
-        this.currentPatience = null;
+        this.currentPatience = 100;
         this.currentVulnerability = 1;
         this.currentAction = null;
 
@@ -24,13 +24,16 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
     // STATIC ATTRIBUTES
     //
     ClientManager.NEW_CLIENT = "ClientManager.NEW_CLIENT";
+    ClientManager.PATIENCE_IDLE = "ClientManager.PATIENCE_IDLE";
+    ClientManager.PATIENCE_ANGRY = "ClientManager.PATIENCE_ANGRY";
+
 
 
     ClientManager.prototype.init = function() {
         this.currentClient = this.clients["Pro"];
         this.currentPhase = 0;
         this.currentTime = null;
-        this.currentPatience = this.clients["Pro"]["StartPatience"];
+        this.currentPatience = 100;
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
     }
 
@@ -39,7 +42,6 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
 
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
         this.currentAction = ActionManager.instance.getCurrentAction();
-        console.log(this.currentAction);
         if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
             console.log(this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]["intro"]);
             this.currentPhase++;
@@ -58,7 +60,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
 
 
         this.currentPatience -= (5/3) * Time.deltaTime * this.currentVulnerability;
-
+        
         this.timesinceClient = Math.floor(TimeManager.instance.getTimeSinceCleint());
         this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
 
@@ -67,7 +69,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             TimeManager.instance.newClient();
             this.currentTime = 0;
             this.currentClient = this.clients["OldMan"];
-            this.currentPatience = this.clients["OldMan"]["StartPatience"];
+            this.currentPatience = 100;
             ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
             console.log("New Client Enter");
         }
@@ -76,13 +78,15 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             this.currentVulnerability += Time.deltaTime;
         }
 
-        if(this.currentPatience < this.clients["Pro"]["StartPatience"] * (6/10) || this.currentPatience > this.clients["Pro"]["StartPatience"] * (3/10))
+        if(this.currentPatience < 60 && this.currentPatience > 30)
         {
+            console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
         }
 
-        if(this.currentPatience < this.clients["Pro"]["StartPatience"] * (3/10))
+        if(this.currentPatience < 30)
         {
+            console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
         }
     }
