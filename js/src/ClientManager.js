@@ -57,7 +57,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
     ClientManager.prototype.update = function() {
 
         this.timesinceClient = Math.floor(TimeManager.instance.getTimeSinceCleint());
-        this.timeSinceAction = TimeManager.instance.getTimeSinceAction();
+        this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
 
         if (this.currentTime < this.timesinceClient) {
             this.currentTime = this.timesinceClient;
@@ -74,6 +74,13 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
             console.log("New Client Enter");
         }
+        console.log(this.timeSinceAction);
+        if(this.timeSinceAction > 5)
+        {
+            this.currentVulnerability += 0.01;
+        }
+
+
 
     }
 
