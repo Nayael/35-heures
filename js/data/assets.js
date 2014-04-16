@@ -6,7 +6,6 @@ var assets = (function() {
 
         },
         "images": {
-            "test": ["assets/img/game/test.jpg", "game"],
             "young_woman-idle": ["assets/img/game/characters/young_woman-idle.png", "game"],
             "young_woman-happy": ["assets/img/game/characters/young_woman-happy.png", "game"],
             "young_woman-angry": ["assets/img/game/characters/young_woman-angry.png", "game"]

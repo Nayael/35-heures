@@ -62,7 +62,6 @@ var Character = (function(Entity, StateMachine) {
             callbacks: {
                 onafterevent: function (e) {
                     self.view = _views[this.current];
-                    console.log('self.view: ', self.view);
                 }
             }
         });

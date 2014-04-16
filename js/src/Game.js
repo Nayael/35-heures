@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager) {
     'use strict';
 
     /**
@@ -131,18 +131,22 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Starts a new game
      */
     Game.prototype.startGame = function() {
-        this.currentClient = new Character('young_woman');
-        this.currentClient.x = 50;
-        this.currentClient.y = 50;
-        this.addEntity(this.currentClient);
 
-        _screenOffice.addChild(this.currentClient);
-
-        this.currentClient.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        this.initScreens();
 
         // We launch the main game loop
         this.fsm.play();
     };
+
+    Game.prototype.initScreens = function() {
+        // this.currentClient = new Character('young_woman');
+        // this.currentClient.x = 50;
+        // this.currentClient.y = 50;
+        // this.addEntity(this.currentClient);
+        // this.currentClient.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+
+        // _screenOffice.addChild(this.currentClient);
+    }
 
     /**
      * Pauses the game
@@ -179,6 +183,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         }
 
         this.stage.update();
+        ClientManager.instance.update();
     };
 
     /**
@@ -192,7 +197,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Called when an entity is touched
      */
     Game.prototype.onEntityActionned = function(target) {
-        ClientManager.instance.update("computerFakbok");
+        ActionManager.instance.setCurrentAction("computerFakbok");
+        ClientManager.instance.updateOnAction();
     };
 
     /**
@@ -200,7 +206,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * @param  {String} clientName The new client's name
      */
     Game.prototype.onNewClient = function(clientName) {
-        var previousClient = currentClient;
+        var previousClient = this.currentClient;
         setTimeout(function () {
             Game.instance.removeEntity(previousClient);
         }, 1000);
@@ -213,4 +219,4 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     return Game;
 
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager);
