@@ -121,7 +121,9 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
         // Updating all the children
         for (var i = 0, child = null; i < _children.length; i++) {
             child = _children[i];
-            child.draw(this.context);
+            if (child.view) {
+                child.view.draw(this.context);
+            }
         }
     };
 
@@ -133,7 +135,7 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
         var touchedChild = null;
         // Parse all the children (ordered by index), and get the one that was touched that is the most on top of the list
         for (var i = 0, child = null; i < _children.length; i++) {
-            child = _children[i];
+            child = _children[i].view;
             if (!child.touchable || child.stageX > e.stageX || child.stageY > e.stageY || child.stageX + child.spriteWidth < e.stageX || child.stageY + child.spriteHeight < e.stageY) {
                 continue;
             }
