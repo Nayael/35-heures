@@ -1,4 +1,4 @@
-var ClientManager = (function(clients, A) {
+var ClientManager = (function(clients) {
     'use strict';
 
     function ClientManager() {
