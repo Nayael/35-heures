@@ -75,8 +75,10 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         console.log(this.timeSinceAction);
         if(this.timeSinceAction > 7)
         {
-            this.currentVulnerability += 1 * Time.deltaTime;
+            this.currentVulnerability += Time.deltaTime;
         }
+
+        console.log(this.currentPatience);
     }
 
     // Singleton
