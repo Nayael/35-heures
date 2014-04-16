@@ -11,20 +11,13 @@ var DebugManager = (function() {
 		if (!(this instanceof DebugManager)) {
 			return new DebugManager();
 		}
-
-		// Adding the canvas to the stage
-		this.canvas = document.createElement('canvas');
-		this.context = this.canvas.getContext('2d');
-		this.canvas.id = 'debugCanvas';
-		this.canvas.width = 300;
-		this.canvas.height = 100;
-
 	};
 
 	DebugManager.prototype.init = function() {
-		// Add the canvas to the document
-		document.body.appendChild(this.canvas);
-	}
+		// Adding the canvas to the stage
+		this.canvas = document.getElementById('main');
+		this.context = this.canvas.getContext('2d');
+	};
 
 	DebugManager.prototype.update = function() {
 		var ctx = this.context;

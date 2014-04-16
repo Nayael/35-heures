@@ -222,7 +222,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         _screenOffice.addChild(monitor);
         _screenOffice.addChild(access_card);
         _screenOffice.addChild(stamps);
-    }
+    };
 
     /**
      * Pauses the game
@@ -239,18 +239,17 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.update = function() {
-        DebugManager.instance.update();
         TimeManager.instance.update();
         if (this.currentUpdateLoop) {
             this.currentUpdateLoop();
         }
-    }
+        DebugManager.instance.update();
+    };
 
     /**
      * The main game loop
      */
     Game.prototype.gameLoop = function() {
-        
         // Updating all the entities
         for (var i = 0, entity = null; i < _entities.length; i++) {
             entity = _entities[i];
@@ -303,7 +302,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         var newClient = new Character(client.Name)
         this.currentClient = newClient;
         this.addEntity(newClient);
-        this.currentClient.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
 
         ///////////////
