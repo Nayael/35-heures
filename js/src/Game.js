@@ -17,6 +17,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         this.assets = assets;
         this.currentClient = null;
         this.fsm = null;
+        this.stage = null;
 
         // State machine
         this.initFsm();
@@ -35,6 +36,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     // PRIVATE ATTRIBUTES
     //
     var _entities = [];
+    var _screenOffice;
 
     ////////////
     // PUBLIC METHODS
@@ -83,6 +85,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
                 onplay: function (e) {
                     console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.gameLoop;
+                    Game.instance.stage.setScreen(_screenOffice);
                 },
                 onpause: function (e) {
                     console.log('Game state: ', Game.instance.fsm.current);
@@ -93,6 +96,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
+        _screenOffice = new Screen();
         this.startGame();
     };
 
@@ -105,7 +109,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             index = _entities.length;
         }
         _entities.splice(index, 0, entity);
-        this.stage.addChild(entity.view);
+        return entity;
     };
 
 
@@ -119,7 +123,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             return;
         }
         _entities.splice(index, 1);
-        this.stage.addChild(entity.view);
+        return entity;
     };
 
     /**
@@ -130,6 +134,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         a.x = 50;
         a.y = 50;
         this.addEntity(a);
+
+        _screenOffice.addChild(a.view);
 
         a.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
 
