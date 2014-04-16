@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character) {
     'use strict';
 
     /**
@@ -234,15 +234,15 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Starts a new game
      */
     Game.prototype.startGame = function() {
-        var a = new Entity();
+        var a = new Character('test');
         a.x = 50;
         a.y = 50;
-        var b = new Entity();
-        b.x = 150;
-        b.y = 150;
         this.addEntity(a);
-        this.addEntity(b);
-        b.setTouchable(false);
+        // var b = new Entity();
+        // b.x = 150;
+        // b.y = 150;
+        // this.addEntity(b);
+        // b.setTouchable(false);
 
         a.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         // b.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
@@ -301,4 +301,4 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     Game.instance = new Game();
     return Game;
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character);

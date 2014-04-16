@@ -1,20 +1,25 @@
 var Entity = (function(AssetManager, View, MakeEventDispatcher, InputManager) {
     'use strict';
 
-    function Entity() {
+    function Entity(name) {
         // enforces new
         if (!(this instanceof Entity)) {
-            return new Entity();
+            return new Entity(name);
         }
-        this.view = new View(this, {
-            spritesheet: AssetManager.instance.assets.images['test']
-        });
+        this.view = null;
+        this.name = name;
+        if (this.name) {
+            this.view = new View(this, {
+                spritesheet: AssetManager.instance.assets.images[this.name]
+            });
+        }
         this.x = 50;
         this.y = 50;
 
         MakeEventDispatcher(this);
-
-        this.view.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onViewTouchClicked, this);
+        if (this.view) {
+            this.view.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onViewTouchClicked, this);
+        }
     };
 
     ////////////
