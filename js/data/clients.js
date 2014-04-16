@@ -23,10 +23,10 @@ var clients = (function() {
 					"intro": "Je viens retirer une commande! tenez voici le recommandé ainsi que ma carte d’identité. et vite ...SVP!",
 					"success": "checkPapers",
 					"checkPapers": {
-						"phrase": "Tenez voici mes papier"
+						"phrase": "Tenez voici mes papiers"
 					},
 					"getPackage": {
-						"phrase": "Vous ne vérifier pas mon identité"
+						"phrase": "Vous ne vérifier pas mon identité ?"
 					}
 
 				},
