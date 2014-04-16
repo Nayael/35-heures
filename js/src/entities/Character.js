@@ -13,6 +13,8 @@ var Character = (function(Entity, StateMachine) {
         this.initViews();
         this.initFsm();
 
+        this.x = 170;
+        this.y = 15;
     }
     Character.inheritsFrom(Entity);
 

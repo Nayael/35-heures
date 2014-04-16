@@ -141,6 +141,60 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     Game.prototype.initScreens = function() {
         _screenOffice = new Screen();
         
+        var computer      = new Entity('computer');
+        var crayons       = new Entity('crayons');
+        var envelope      = new Entity('envelope');
+        var envelope_2    = new Entity('envelope_2');
+        var id_card       = new Entity('id_card');
+        var keys          = new Entity('keys');
+        var bad_package   = new Entity('bad_package');
+        var bad_package_2 = new Entity('bad_package_2');
+        var stamps        = new Entity('stamps');
+        var tampon        = new Entity('tampon');
+        var tampon_2      = new Entity('tampon_2');
+        var telephone     = new Entity('telephone');
+        var sweets        = new Entity('sweets');
+        var stapler       = new Entity('stapler');
+        var desk          = new Entity('desk');
+        var wall          = new Entity('wall');
+
+        computer.x = -90;
+        computer.y = 250;
+        crayons.x = 220;
+        crayons.y = 460;
+        envelope.x = 270;
+        envelope.y = 490;
+        envelope_2.x = 245;
+        envelope_2.y = 540;
+        tampon.x = 295;
+        tampon.y = 570;
+        tampon_2.x = 335;
+        tampon_2.y = 615;
+        telephone.x = 585;
+        telephone.y = 435;
+        sweets.x = 620;
+        sweets.y = 585;
+        stapler.x = 720;
+        stapler.y = 595;
+        wall.x = Globals.CANVAS_WIDTH - wall.view.spriteWidth;
+        desk.y = Globals.CANVAS_HEIGHT - desk.view.spriteHeight;
+
+        _screenOffice.addChild(desk);
+        _screenOffice.addChild(wall);
+        _screenOffice.addChild(computer);
+        _screenOffice.addChild(crayons);
+        _screenOffice.addChild(envelope);
+        _screenOffice.addChild(envelope_2);
+        // _screenOffice.addChild(id_card);
+        _screenOffice.addChild(keys);
+        // _screenOffice.addChild(bad_package);
+        // _screenOffice.addChild(bad_package_2);
+        _screenOffice.addChild(stamps);
+        _screenOffice.addChild(tampon);
+        _screenOffice.addChild(tampon_2);
+        _screenOffice.addChild(telephone);
+        _screenOffice.addChild(sweets);
+        _screenOffice.addChild(stapler);
     }
 
     /**
@@ -217,7 +271,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         // TEMPORARY //
         ///////////////
         setTimeout(function () {
-            _screenOffice.addChild(newClient);
+            _screenOffice.addChild(newClient, 0);
         }, 100);
     };
 

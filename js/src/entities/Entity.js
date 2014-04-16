@@ -13,8 +13,6 @@ var Entity = (function(AssetManager, View, MakeEventDispatcher, InputManager) {
                 spritesheet: AssetManager.instance.assets.images[this.name]
             });
         }
-        this.x = 50;
-        this.y = 50;
 
         MakeEventDispatcher(this);
         if (this.view) {
