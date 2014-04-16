@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager) {
     'use strict';
 
     /**
@@ -15,10 +15,20 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         }
         
         this.assets = assets;
+        this.currentClient = null;
+        this.fsm = null;
 
         // State machine
         this.initFsm();
     }
+
+    ////////////
+    // STATIC ATTRIBUTES
+    //
+    Game.STATE_LOADING = 'STATE_LOADING';
+    Game.STATE_MENU    = 'STATE_MENU';
+    Game.STATE_PLAYING = 'STATE_PLAYING';
+    Game.STATE_PAUSED  = 'STATE_PAUSED';
 
     ////////////
     // PRIVATE ATTRIBUTES
@@ -41,162 +51,26 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         AssetManager.instance.loadAll();
 
         ClientManager.instance.init();
+
+        onEachFrame(this.update, 'game', this);
     };
 
     /**
      * Initialises the game's FSM
      */
     Game.prototype.initFsm = function() {
-        // this.fsm = StateMachine.create({
-        //     events: [{
-        //         name: 'load',
-        //         from: ['none', 'menu'],
-        //         to: 'loading'
-        //     }, {
-        //         name: 'showMenu',
-        //         from: 'loading',
-        //         to: 'menu'
-        //     }, {
-        //         name: 'play',
-        //         from: 'loading',
-        //         to: 'game'
-        //     }],
-        //     callbacks: {
-        //         /**
-        //          * On Loading state
-        //          */
-        //         onload: function(e) {
-        //             var game = this.subject,
-        //                 loaderAnim = new Engine.View(null, {
-        //                     spritesheet: game.assets.images.loading,
-        //                     localX     : (Globals.CANVAS_WIDTH >> 1) - (71 >> 1),
-        //                     localY     : (Globals.CANVAS_HEIGHT >> 2) - (72 >> 1),
-        //                     width      : 71,
-        //                     height     : 72,
-        //                     totalFrames: 8,
-        //                     frameRate  : 150
-        //                 });
-
-        //             onEachFrame(function() {
-        //                 if (!game.fsm.is('loading')) {
-        //                     return;
-        //                 }
-        //                 game.context.fillStyle = 'rgb(0, 0, 0)';
-        //                 game.context.fillRect(loaderAnim.localX, loaderAnim.localY, loaderAnim.width, loaderAnim.height);
-        //                 loaderAnim.draw(game.context);
-        //             }, 'loading');
-        //         },
-
-        //         /**
-        //          * On Stop loading state
-        //          */
-        //         onleaveloading: function(e) {
-        //             onEachFrame.cancel('loading');
-        //         },
-
-        //         /**
-        //          * On Menu state
-        //          */
-        //         onshowMenu: function(e) {
-        //             var game = this.subject,
-        //                 onKeyDownMenu = function(e) {
-        //                     Keyboard.remove(Keyboard.Event_KEY_DOWN, Keyboard.SPACE, onKeyDownMenu);
-        //                     AssetManager.instance.loadGame(game); // Start the loading of the game assets
-        //                 };
-        //             game.context.drawImage(game.assets.images.menus.splashscreen, 0, 0);
-        //             Keyboard.on(Keyboard.Event_KEY_DOWN, Keyboard.SPACE, onKeyDownMenu);
-        //         },
-
-        //         /**
-        //          * On Stop menu state
-        //          */
-        //         onleavemenu: function(e) {
-        //             this.subject.context.fillStyle = 'rgb(0, 0, 0)';
-        //             this.subject.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
-        //         },
-
-        //         /**
-        //          * On Play state (starts the game)
-        //          */
-        //         onplay: function(e) {
-        //             this.subject.startGame();
-        //         }
-        //     }
-        // });
         this.fsm = StateMachine.create({
             events: [{
                 name: 'load',
-                from: ['none', 'menu'],
-                to: 'loading'
-            }, {
-                name: 'showMenu',
-                from: 'loading',
-                to: 'menu'
+                from: ['none', Game.STATE_MENU],
+                to: Game.STATE_LOADING
             }, {
                 name: 'play',
-                from: 'loading',
-                to: 'game'
+                from: Game.STATE_LOADING,
+                to: Game.STATE_PLAYING
             }],
             callbacks: {
-                /**
-                 * On Loading state
-                 */
-                onload: function(e) {
-                    var game = this.subject,
-                        loaderAnim = new Engine.View(null, {
-                            spritesheet: game.assets.images.loading,
-                            localX     : (Globals.CANVAS_WIDTH >> 1) - (71 >> 1),
-                            localY     : (Globals.CANVAS_HEIGHT >> 2) - (72 >> 1),
-                            width      : 71,
-                            height     : 72,
-                            totalFrames: 8,
-                            frameRate  : 150
-                        });
-
-                    onEachFrame(function() {
-                        if (!game.fsm.is('loading')) {
-                            return;
-                        }
-                        game.context.fillStyle = 'rgb(0, 0, 0)';
-                        game.context.fillRect(loaderAnim.localX, loaderAnim.localY, loaderAnim.width, loaderAnim.height);
-                        loaderAnim.draw(game.context);
-                    }, 'loading');
-                },
-
-                /**
-                 * On Stop loading state
-                 */
-                onleaveloading: function(e) {
-                    onEachFrame.cancel('loading');
-                },
-
-                /**
-                 * On Menu state
-                 */
-                onshowMenu: function(e) {
-                    var game = this.subject,
-                        onKeyDownMenu = function(e) {
-                            Keyboard.remove(Keyboard.Event_KEY_DOWN, Keyboard.SPACE, onKeyDownMenu);
-                            AssetManager.instance.loadGame(game); // Start the loading of the game assets
-                        };
-                    game.context.drawImage(game.assets.images.menus.splashscreen, 0, 0);
-                    Keyboard.on(Keyboard.Event_KEY_DOWN, Keyboard.SPACE, onKeyDownMenu);
-                },
-
-                /**
-                 * On Stop menu state
-                 */
-                onleavemenu: function(e) {
-                    this.subject.context.fillStyle = 'rgb(0, 0, 0)';
-                    this.subject.context.fillRect(0, 0, Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
-                },
-
-                /**
-                 * On Play state (starts the game)
-                 */
-                onplay: function(e) {
-                    this.subject.startGame();
-                }
+                
             }
         });
         this.fsm.subject = this;
@@ -240,14 +114,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         a.x = 50;
         a.y = 50;
         this.addEntity(a);
-        // var b = new Entity();
-        // b.x = 150;
-        // b.y = 150;
-        // this.addEntity(b);
-        // b.setTouchable(false);
 
         a.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
-        // b.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
 
         // We launch the main game loop
         this.launchGame();
@@ -258,8 +126,12 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.launchGame = function() {
         this.paused = false;
-        onEachFrame(this.gameLoop, 'game', this);
     };
+
+    Game.prototype.update = function() {
+        TimeManager.instance.update();
+        this.gameLoop();
+    }
 
     /**
      * Pauses the game
@@ -298,11 +170,24 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     Game.prototype.onEntityActionned = function(target) {
         console.log(Math.floor(Math.random() * 10000) + 'Entity actionned', target);
         ClientManager.instance.update("computerFakbok");
-    }
+    };
+
+    /**
+     * Called when a client is ended, and a new client arrives
+     * @param  {String} clientName The new client's name
+     */
+    Game.prototype.onNewClient = function(clientName) {
+        var previousClient = currentClient;
+        setTimeout(function () {
+            Game.instance.removeEntity(previousClient);
+        }, 1000);
+        this.currentClient = new Character(clientName);
+        this.addEntity(this.currentClient);
+    };
 
     // Singleton
     Game.instance = new Game();
     return Game;
 
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager);
