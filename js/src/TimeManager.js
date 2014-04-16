@@ -35,7 +35,6 @@ var TimeManager = (function(MakeEventDispatcher) {
 		}
 		timeSinceClient += Time.deltaTime;
 		timeSinceAction += Time.deltaTime;
-
 	};
 
 	TimeManager.prototype.newDay = function() {
@@ -45,7 +44,11 @@ var TimeManager = (function(MakeEventDispatcher) {
 
 	TimeManager.prototype.getTimeHour = function() {
 		if (this.currPhase == 'morning') {
-			return 9 + timeOfDay / 30;
+			var time = {
+				h: 9 + (timeOfDay / 30) | 0,
+				m: ((timeOfDay % 30) * 2) | 0,
+			};
+			return time;
 		} else {
 			return 10 + timeOfDay / 30;
 		}
