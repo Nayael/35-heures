@@ -25,14 +25,14 @@ var clients = (function() {
                 },
                 "phase_0": {
                     "intro": "Je viens retirer une commande! tenez voici le recommandé ainsi que ma carte d’identité. et vite ...SVP!",
-                    "success": "keys",
-                    "keys": "Tenez voici mes papiers",
-                    "getPackage": "Vous ne vérifier pas mon identité ?"
+                    "success": "id_card",
+                    "id_card": "Tenez voici mes papiers",
+                    "keys": "Vous ne vérifier pas mon identité ?"
                 },
                 "phase_1": {
                     "intro": "Bon maintenant que vous avez vérifier mes papiers je veux bien ma commande",
                     "success": "keys",
-                    "checkPapers": "Je vous est déjà donner les papiers",
+                    "id_card": "Je vous est déjà donner les papiers",
                     "keys": "Merci, bonne journée"
                 },
                 "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"

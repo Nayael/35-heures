@@ -51,7 +51,7 @@ var actions = (function() {
             'name': 'stapler'
         },
         'keys': {
-            'minDuration': 1,
+            'minDuration': 5,
             'name': 'keys'
         },
         'access_card': {
