@@ -79,7 +79,7 @@ var Character = (function(Entity, StateMachine) {
         if (this.animUpdate) {
             this.animUpdate();
         }
-    }
+    };
 
     Character.prototype.animate = function(direction, callback) {
         this.animSpeed = Character.ANIM_SPEED;

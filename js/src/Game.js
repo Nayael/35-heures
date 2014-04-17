@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager) {
     'use strict';
 
     /**
@@ -130,6 +130,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
         // Initalizaing Client Manager
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
+        ClientManager.instance.addListener(ClientManager.CLIENT_SPEAK, this.onClientSpeak, this);
 
         this.initScreens();
 
@@ -335,9 +336,16 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         }
     };
 
+    Game.prototype.onClientSpeak = function(title, sentence) {
+        console.log('title, sentence: ', title, sentence);
+        var notif = NotificationManager.instance.showNotif(title, sentence);
+        this.addEntity(notif);
+        this.stage.addChild(notif);
+    };
+
     // Singleton
     Game.instance = new Game();
     return Game;
 
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager);
