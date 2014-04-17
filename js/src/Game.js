@@ -267,9 +267,9 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         book.x = 105;                
         book.y = 543;                
 
-        _screenOffice.addChild(backgroundOffice, true);
-        _screenOffice.addChild(desk, true);            
+        _screenOffice.addChild(backgroundOffice, false);
         _screenOffice.addChild(middle_window, true);   
+        _screenOffice.addChild(desk, true);          
         _screenOffice.addChild(keys, true);
         _screenOffice.addChild(telephone, true);
         _screenOffice.addChild(access_card, true);
@@ -412,7 +412,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
             previousClient.animate(-1, onClientOutAnimComplete);
         } else {
-            _screenOffice.addChild(newClient, true, 0);
+            _screenOffice.addChild(newClient, true, 1);
             newClient.animate(1, onClientInAnimComplete);
         }
 
@@ -421,7 +421,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             Game.instance.removeEntity(client);
             _screenOffice.removeChild(client);
             setTimeout(function(){                
-                _screenOffice.addChild(newClient, true, 0);
+                _screenOffice.addChild(newClient, true, 1);
                 newClient.animate(1, onClientInAnimComplete);
             },800);
         }
