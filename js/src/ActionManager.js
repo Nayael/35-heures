@@ -32,7 +32,7 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
         }
         this.currentAction = this.actions[action];
         _dispatchAction(action);
-        TimeManager.instance.resetTimeSinceAction();
+        TimeManager.instance.newAction();
     }
 
     ////////////
