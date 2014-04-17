@@ -4,7 +4,7 @@ var clients = (function() {
     var clients = {
         "young_woman": {
             "name": "young_woman",
-            "displayname": "Jeune femme",
+            "displayName": "Jeune femme",
             "intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
             "neededtime" : 3,
             "vulnerability": {
@@ -42,7 +42,7 @@ var clients = (function() {
         },
         "old_woman": {
             "name": "old_woman",
-            "displayname": "Vieille femme",
+            "displayName": "Vieille femme",
             "intro" : "Bonjour mon petit, je voudrais poster cette lettre.",
             "neededtime" : 3,
             "vulnerability": {
@@ -77,7 +77,7 @@ var clients = (function() {
         },
         "woman": {
             "name": "woman",
-            "displayname": "Mère de famille",
+            "displayName": "Mère de famille",
             "intro" : "Bonjour, je souhaiterai envoyer ce colis",
             "neededtime" : 3,
             "vulnerability": {
@@ -114,7 +114,7 @@ var clients = (function() {
         },
         "young_man": {
             "name": "young_man",
-            "displayname": "Roi Paul",
+            "displayName": "Roi Paul",
             "intro" : "Bonjour, j'ai besoin de photocopie jeune péon",
             "neededtime" : 3,
             "vulnerability": {
@@ -149,7 +149,7 @@ var clients = (function() {
         },
         "old_man": {
             "name": "old_man",
-            "displayname": "Jean-Jacques",
+            "displayName": "Jean-Jacques",
             "intro" : "J'ai un colis urgent à récupérer.",
             "neededtime" : 3,
             "vulnerability": {
