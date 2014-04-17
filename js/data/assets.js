@@ -15,6 +15,12 @@ var assets = (function() {
             "woman-idle"       : ["assets/img/game/characters/woman-idle.png", "game"],
             "woman-happy"      : ["assets/img/game/characters/woman-happy.png", "game"],
             "woman-angry"      : ["assets/img/game/characters/woman-angry.png", "game"],
+            "young_man-idle"   : ["assets/img/game/characters/young-man-idle.png", "game"],
+            "young_man-happy"  : ["assets/img/game/characters/young-man-happy.png", "game"],
+            "young_man-angry"  : ["assets/img/game/characters/young-man-angry.png", "game"],
+            "old_man-idle"     : ["assets/img/game/characters/old-man-idle.png", "game"],
+            "old_man-happy"    : ["assets/img/game/characters/old-man-happy.png", "game"],
+            "old_man-angry"    : ["assets/img/game/characters/old-man-angry.png", "game"],
             
             "access_card"  : ["assets/img/game/items/access_card.png", "game"],
             "computer"     : ["assets/img/game/items/computer.png", "game"],
