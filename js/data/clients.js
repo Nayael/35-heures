@@ -74,9 +74,9 @@ var clients = (function() {
                 "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
             }
         },
-        "henryIV": {
-            "Name": "henryIV",
-            "DisplayName": "Henry IV",
+        "woman": {
+            "Name": "woman",
+            "DisplayName": "Mère de famille",
             "Intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
             "Vulnerability": {
                 "technology": 0.5,

@@ -35,7 +35,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         var previousClient = this.currentClient;
         do {
             this.currentClient = Utils.getRandomElement( ClientManager.instance.clients );
-        } while (this.currentClient == previousClient);
+        } while (this.currentClient == previousClient || !this.currentClient);
         this.globalPatience = 200;
         this.currentVulnerability = 3;
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
