@@ -22,6 +22,7 @@ var Screen = (function() {
     // PRIVATE ATTRIBUTES
     //
     var _children = [];
+    var _bufferChildren = [];
 
 
     ////////////
@@ -41,13 +42,16 @@ var Screen = (function() {
      * Adds a new child to the display list
      * @param  {Object} child The child to add
      */
-    Screen.prototype.addChild = function(child, index) {
+    Screen.prototype.addChild = function(child, addToBuffer, index) {
         if (index === undefined || index > _children.length) {
             index = _children.length;
         }
         _children.splice(index, 0, child);
+        if (addToBuffer) {
+            _bufferChildren.push(child);
+        }
         if (this.stage && !this.stage.containsChild(child)) {
-            this.stage.addChild(child, index);
+            this.stage.addChild(child, addToBuffer, index);
         }
     };
 
@@ -62,6 +66,10 @@ var Screen = (function() {
             return;
         }
         _children.splice(index, 1);
+        var bufferIndex;
+        if ( (bufferIndex = _bufferChildren.indexOf(_bufferChildren)) != -1) {
+            _bufferChildren.splice(bufferIndex, 1);
+        }
         if (this.stage && this.stage.containsChild(child)) {
             this.stage.removeChild(child);
         }
@@ -69,7 +77,11 @@ var Screen = (function() {
 
     Screen.prototype.getChildren = function() {
         return _children;
-    }
+    };
+
+    Screen.prototype.getBufferChildren = function() {
+        return _bufferChildren;
+    };
 
     return Screen;
 

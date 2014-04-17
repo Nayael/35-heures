@@ -24,7 +24,6 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
         this.canvas.height   = stageHeight;
         this.backgroundColor = backgroundColor || null;
 
-
         if (this.backgroundColor) {
             this.context.fillStyle = this.backgroundColor;
             this.context.fillRect(0, 0, stageWidth, stageHeight);
@@ -59,6 +58,14 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
         // Listen to input
         MakeEventDispatcher(this.canvas);
         this.canvas.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onTouchClicked, this);
+
+        // Canvas Buffer
+        this.canvasBuffer = document.createElement('canvas');
+        this.canvasBuffer.scaleFactor = width / stageWidth;
+        this.canvasBuffer.width    = stageWidth;
+        this.canvasBuffer.height   = stageHeight;
+        this.canvasBuffer.style.width  = width + 'px';
+        this.canvasBuffer.style.height = height + 'px';
     }
 
 
@@ -66,6 +73,7 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
     // PRIVATE ATTRIBUTES
     //
     var _children = [];
+    var _bufferChildren = [];
 
 
     ////////////
@@ -75,11 +83,15 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
      * Adds a new child to the display list
      * @param  {Object} child The child to add
      */
-    Stage.prototype.addChild = function(child, index) {
+    Stage.prototype.addChild = function(child, addToBuffer, index) {
         if (index === undefined || index > _children.length) {
             index = _children.length;
         }
         _children.splice(index, 0, child);
+        if (addToBuffer) {
+            _bufferChildren.push(child);
+            this.updateBuffer();
+        }
     };
 
 
@@ -93,7 +105,25 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
             return;
         }
         _children.splice(index, 1);
+        var bufferIndex;
+        if ( (bufferIndex = _bufferChildren.indexOf(_bufferChildren)) != -1) {
+            _bufferChildren.splice(bufferIndex, 1);
+            this.updateBuffer();
+        }
     };
+
+    Stage.prototype.updateBuffer = function() {
+        // Clearing the canvas
+        var context = this.canvasBuffer.getContext('2d');
+
+        // Updating all the children
+        for (var i = 0, child = null; i < _bufferChildren.length; i++) {
+            child = _bufferChildren[i];
+            if (child.view) {
+                child.view.draw(context);
+            }
+        }
+    }
 
     Stage.prototype.containsChild = function(child) {
         return (_children.indexOf(child) != -1);
@@ -109,6 +139,8 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
             return;
         }
         _children = stageScreen.getChildren();
+        _bufferChildren = _bufferChildren.concat(stageScreen.getBufferChildren());
+        this.updateBuffer();
         stageScreen.stage = this;
         this.screen = stageScreen;
     };
@@ -121,8 +153,14 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
         // Updating all the children
         for (var i = 0, child = null; i < _children.length; i++) {
             child = _children[i];
-            if (child.view) {
-                child.view.draw(this.context);
+            if (child.render) {
+                child.render(this.context);
+            } else if (child.view) {
+                if ( _bufferChildren.indexOf(child) != -1) {
+                    this.context.drawImage(this.canvasBuffer, child.view.stageX, child.view.stageY, child.view.spriteWidth, child.view.spriteHeight, child.view.stageX, child.view.stageY, child.view.spriteWidth, child.view.spriteHeight);
+                } else {
+                    child.view.draw(this.context);
+                }
             }
         }
     };
@@ -135,8 +173,8 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
         var touchedChild = null;
         // Parse all the children (ordered by index), and get the one that was touched that is the most on top of the list
         for (var i = 0, child = null; i < _children.length; i++) {
-            child = _children[i].view;
-            if (!child.touchable || child.stageX > e.stageX || child.stageY > e.stageY || child.stageX + child.spriteWidth < e.stageX || child.stageY + child.spriteHeight < e.stageY) {
+            child = _children[i].view || _children[i];
+            if (!child || !child.touchable || child.stageX > e.stageX || child.stageY > e.stageY || child.stageX + child.spriteWidth < e.stageX || child.stageY + child.spriteHeight < e.stageY) {
                 continue;
             }
             touchedChild = child;

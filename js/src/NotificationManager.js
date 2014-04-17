@@ -42,16 +42,16 @@ var NotificationManager = (function(Notif, InputManager) {
         notif.animate(-1, onAnimInComplete);
         var self = this;
         function onAnimInComplete () {
-            notif.view.addListener(InputManager.InputEvent.TOUCH_CLICKED, self.onNotifClicked, self);
-        }
+            notif.addListener(InputManager.InputEvent.TOUCH_CLICKED, self.onNotifClicked, self);
+        }   
     };
 
     NotificationManager.prototype.onNotifClicked = function(e) {
         var notif = _stack[0];
+        notif.removeListener(InputManager.InputEvent.TOUCH_CLICKED, this.onNotifClicked);
         notif.animate(1, onAnimInComplete);
         var self = this;
         function onAnimInComplete () {
-            notif.view.removeListener(InputManager.InputEvent.TOUCH_CLICKED, self.onNotifClicked);
             _stack.shift();
             self.updateStack();
         }
