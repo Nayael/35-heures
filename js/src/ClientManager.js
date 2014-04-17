@@ -13,11 +13,11 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         this.clients = clients;
         this.currentClient = null;
         this.currentPhase = 0;
-        this.globalPatience = 100;
+        this.globalPatience = 200;
         this.currentPatience = null;
-        this.currentVulnerability = 1.5;
+        this.currentVulnerability = 3;
         this.currentAction = null;
-        this.maxVulnerability = 4;
+        this.maxVulnerability = 8;
 
         MakeEventDispatcher(this);
     };
@@ -37,7 +37,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             this.currentClient = Utils.getRandomElement( ClientManager.instance.clients );
         } while (this.currentClient == previousClient);
         this.globalPatience = 200;
-        this.currentVulnerability = 2;
+        this.currentVulnerability = 3;
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
     }
 
@@ -92,12 +92,12 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             this.currentVulnerability += Time.deltaTime;
         }
 
-        if(this.globalPatience < 60 && this.globalPatience > 30 && previousPatience >= 60) {
+        if(this.globalPatience < 120 && this.globalPatience > 60 && previousPatience >= 120) {
             console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
         }
 
-        if(this.globalPatience < 30 && previousPatience >= 30) {
+        if(this.globalPatience < 60 && previousPatience >= 60) {
             console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
         }
