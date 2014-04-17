@@ -19,7 +19,8 @@ var ScoreManager = (function(TimeManager) {
 
 	ScoreManager.prototype.init = function() {
 		TimeManager.instance.addListener(TimeManager.END_OF_DAY, this.endOfDay, this);
-		ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.endOfClient, this);
+		TimeManager.instance.addListener(TimeManager.END_OF_WEEK, this.endOfWeek, this);
+		ClientManager.instance.addListener(ClientManager.END_CLIENT, this.endOfClient, this);
 	}
 
 	// TODO call when end of day. event
