@@ -1,4 +1,4 @@
-var ClientManager = (function(clients, TimeManager, ActionManager) {
+var ClientManager = (function(clients, TimeManager, ActionManager, Utils) {
     'use strict';
 
     function ClientManager() {
@@ -31,11 +31,14 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
 
     ClientManager.prototype.newClient = function() {
         
-        //Pick new client
-        this.currentClient = ClientManager.instance.clients["Pro"];
-        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
+        // Pick new client
+        var previousClient = this.currentClient;
+        do {
+            this.currentClient = Utils.getRandomElement( ClientManager.instance.clients );
+        } while (this.currentClient == previousClient);
         this.globalPatience = 100;
         this.currentVulnerability = 1;
+        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
     }
 
     ClientManager.prototype.startClient = function() {
@@ -99,4 +102,4 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
     ClientManager.instance = new ClientManager();
     return ClientManager;
 
-})(clients, TimeManager, ActionManager);
+})(clients, TimeManager, ActionManager, Utils);

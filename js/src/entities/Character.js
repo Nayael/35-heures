@@ -24,7 +24,7 @@ var Character = (function(Entity, StateMachine) {
     // STATIC ATTRIBUTES
     //
     Character.STATES = ['idle', 'happy', 'angry'];
-    Character.START_X = -300;
+    Character.START_X = -500;
     Character.END_X = 170;
     Character.ANIM_SPEED = 10;
     Character.ANIM_ACCELERATION = 0.5;
