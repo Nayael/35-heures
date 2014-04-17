@@ -63,6 +63,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
     // We get a new action ---> update parametters
     ClientManager.prototype.actionHasChange = function(action) {
+        console.log(action);
         if (this.currentAction != action.name) {
             this.currentAction = action.name;
         } else {
@@ -96,7 +97,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         } else {
             answer = this.currentClient["Scenario"]["default"]["default"];
         }
-        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"],answer);
+        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], answer);
     }
 
     // Call when a client is end
@@ -135,13 +136,24 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
             return;
         }
         this.previousPatience = this.currentPatience;
-        this.currentPatience -= (5 / 3) * Time.deltaTime * this.actionVulnerability;
+        this.currentPatience -= (5 / 3) * Time.deltaTime * this.currentVulnerability;
 
         this.timeSinceAction = TimeManager.instance.getTimeSinceAction();
 
         // End client : patience or out of time
         if (this.currentPatience <= 0 || this.timeSinceAction > 10) {
             this.endClient(false);
+        }
+
+        // Check Answer
+        if (this.timeSinceAction > this.responseDelay) {
+            this.getAnswer();
+        } else if (this.timeSinceAction > this.actionDuration) {
+            this.getAnswer();
+            this.actionHasChange({
+                name: "time",
+                minDuration: 5
+            });
         }
 
         this.updateClientFace();
