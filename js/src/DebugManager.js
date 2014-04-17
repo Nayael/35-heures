@@ -24,7 +24,7 @@ var DebugManager = (function() {
 		ctx.fillStyle = 'black';
 		ctx.fillRect(50, 50, 250, 20);
 		ctx.fillStyle = 'green';
-		ctx.fillRect(50, 50, (ClientManager.instance.globalPatience/200)*250 || 0, 20);
+		ctx.fillRect(50, 50, (ClientManager.instance.globalPatience/100)*250 || 0, 20);
 	};
 
 	// Singleton

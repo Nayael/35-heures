@@ -13,11 +13,11 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         this.clients = clients;
         this.currentClient = null;
         this.currentPhase = 0;
-        this.globalPatience = 200;
+        this.globalPatience = 100;
         this.currentPatience = null;
-        this.currentVulnerability = 3;
+        this.currentVulnerability = 1.5;
         this.currentAction = null;
-        this.maxVulnerability = 8;
+        this.maxVulnerability = 4;
 
         MakeEventDispatcher(this);
     };
@@ -31,18 +31,22 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
 
 
     ClientManager.prototype.newClient = function() {
-        
-        //Pick new client
-        this.currentClient = ClientManager.instance.clients["Pro"];
-        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
+        // Pick new client
+        var previousClient = this.currentClient;
+        do {
+            this.currentClient = Utils.getRandomElement( ClientManager.instance.clients );
+        } while (this.currentClient == previousClient);
         this.globalPatience = 200;
         this.currentVulnerability = 2;
+        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
     }
+
 
     ClientManager.prototype.startClient = function() {
 
         console.log(this.currentClient["Intro"]);
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
+        this.currentPhase = 0;
         this.currentTime = 0;
     }
 
@@ -53,15 +57,12 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             this.currentAction = action;
             ClientManager.instance.updateCurrentAction();
         }
-
-        // TODO Get current things linked to action
     }
 
     ClientManager.prototype.updateCurrentAction = function() {
-        console.log(this.currentAction);
-        console.log(this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
 
-        if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase]["success"]["keys"] !== "undefined") {
+        if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
+            console.log(this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
             this.currentPhase++;
         } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
             console.log(this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
@@ -86,16 +87,17 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             console.log("New Client Enter");
             ClientManager.instance.newClient();
         }
+        
         if(this.timeSinceAction > 10 && this.currentVulnerability < this.maxVulnerability) {
             this.currentVulnerability += Time.deltaTime;
         }
 
-        if(this.globalPatience < 120 && this.globalPatience > 60 && previousPatience >= 120) {
+        if(this.globalPatience < 60 && this.globalPatience > 30 && previousPatience >= 60) {
             console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
         }
 
-        if(this.globalPatience < 60 && previousPatience >= 60) {
+        if(this.globalPatience < 30 && previousPatience >= 30) {
             console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
         }
