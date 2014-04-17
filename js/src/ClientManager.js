@@ -31,7 +31,9 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     ClientManager.PATIENCE_IDLE = "ClientManager.PATIENCE_IDLE";
     ClientManager.PATIENCE_ANGRY = "ClientManager.PATIENCE_ANGRY";
     ClientManager.END_CLIENT = "ClientManager.END_CLIENT";
-    
+    ClientManager.CLIENT_SPEAK = "ClientManager.CLIENT_SPEAK";
+
+
 
 
     ClientManager.prototype.newClient = function() {
@@ -50,7 +52,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
     ClientManager.prototype.startClient = function() {
 
-        console.log(this.currentClient["Intro"]);
+        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Intro"]);
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
         this.currentPhase = 0;
         this.currentTime = 0;
@@ -75,9 +77,9 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
                 this.clientSucceed = true;
             }
         } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
+            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"],this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
         } else {
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["Scenario"]["default"]["default"]);
+            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["default"]["default"]);
         }
     }
 
@@ -92,7 +94,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
 
         if (this.globalPatience <= 0) {
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["Scenario"]["fail"]);
+            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"],this.currentClient["Scenario"]["fail"]);
             ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient);
             TimeManager.instance.newClient();
             console.log("New Client Enter");
