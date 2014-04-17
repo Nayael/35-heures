@@ -55,7 +55,7 @@ var ScoreManager = (function(TimeManager) {
 
 	// TODO call when end of client. event
 	ScoreManager.prototype.endOfClient = function(client) {
-		this.currClient.push({
+		this.clientsScore.push({
 			totalTime: client.totalTime,
 			neededTime: client.neededTime
 		});
