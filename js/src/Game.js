@@ -325,12 +325,12 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         for (var i = 0, entity = null; i < _entities.length; i++) {
             entity = _entities[i];
             if (entity.update) {
-                //entity.update();
+                entity.update();
             }
         }
 
         this.stage.update();
-        //ClientManager.instance.update();
+        ClientManager.instance.update();
     };
 
     /**
