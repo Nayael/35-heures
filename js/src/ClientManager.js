@@ -35,7 +35,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         this.currentClient = ClientManager.instance.clients["Pro"];
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
         this.globalPatience = 100;
-
+        this.currentVulnerability = 1;
     }
 
     ClientManager.prototype.startClient = function() {
@@ -57,21 +57,16 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
             this.currentPhase++;
             return this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction];
-
         } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
             console.log(this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
-
-
         } else {
-
             console.log(this.currentClient["Scenario"]["default"]["default"]);
         }
     }
 
     ClientManager.prototype.update = function() {
 
-        if(!this.currentClient)
-        {
+        if (!this.currentClient) {
             return;
         }
         var previousPatience = this.globalPatience;
@@ -85,19 +80,16 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             console.log("New Client Enter");
             ClientManager.instance.newClient();
         }
-        if(this.timeSinceAction > 7)
-        {
+        if(this.timeSinceAction > 7) {
             this.currentVulnerability += Time.deltaTime;
         }
 
-        if(this.globalPatience < 60 && this.globalPatience > 30 && previousPatience >= 60)
-        {
+        if(this.globalPatience < 60 && this.globalPatience > 30 && previousPatience >= 60) {
             console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
         }
 
-        if(this.globalPatience < 30 && previousPatience >= 30)
-        {
+        if(this.globalPatience < 30 && previousPatience >= 30) {
             console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
         }
