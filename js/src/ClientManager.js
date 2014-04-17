@@ -30,6 +30,8 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     ClientManager.NEW_CLIENT = "ClientManager.NEW_CLIENT";
     ClientManager.PATIENCE_IDLE = "ClientManager.PATIENCE_IDLE";
     ClientManager.PATIENCE_ANGRY = "ClientManager.PATIENCE_ANGRY";
+    ClientManager.END_CLIENT = "ClientManager.END_CLIENT";
+    
 
 
     ClientManager.prototype.newClient = function() {
