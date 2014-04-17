@@ -3,11 +3,11 @@ var actions = (function() {
 
     var actions = {
         'computer': {
-            'minDuration': 1,
+            'minDuration': 3,
             'name': 'computer'
         },
         'crayons': {
-            'minDuration': 1,
+            'minDuration': 2,
             'name': 'crayons'
         },
         'envelope': {
@@ -19,15 +19,15 @@ var actions = (function() {
             'name': 'envelope_2'
         },
         'id_card': {
-            'minDuration': 1,
+            'minDuration': 2,
             'name': 'id_card'
         },
         'bad_package': {
-            'minDuration': 1,
+            'minDuration': 2,
             'name': 'bad_package'
         },
         'bad_package_2': {
-            'minDuration': 1,
+            'minDuration': 2,
             'name': 'bad_package_2'
         },
         'tampon': {
@@ -39,15 +39,15 @@ var actions = (function() {
             'name': 'tampon_2'
         },
         'telephone': {
-            'minDuration': 1,
+            'minDuration': 5,
             'name': 'telephone'
         },
         'sweets': {
-            'minDuration': 1,
+            'minDuration': 2,
             'name': 'sweets'
         },
         'stapler': {
-            'minDuration': 1,
+            'minDuration': 2,
             'name': 'stapler'
         },
         'keys': {

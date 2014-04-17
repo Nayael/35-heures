@@ -77,21 +77,21 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             }],
             callbacks: {
                 onload: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
+                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = null;
                     // Game.instance.currentUpdateLoop = Game.instance.loadingLoop;
                 },
                 onplay: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
+                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.gameLoop;
                     Game.instance.stage.setScreen(_screenOffice);
                 },
                 onpause: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
+                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.gamePause;
                 },
                 ongoToBreak: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
+                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.breakPeriodLoop;
                 }
             }
@@ -160,7 +160,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.startGamePhase = function() {
-        console.log('startGamePhase');
+        // console.log('startGamePhase');
         this.stage.touchable = false;
 
         // We launch the main game loop
@@ -169,10 +169,10 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         // The current period is the night : we are about to start the day
         TimeManager.instance.running = false;
 
-        console.log(TimeManager.instance.currentPeriod == TimeManager.PERIODS[0] ? 'La journée est sur le point de commencer...' : "L'après-midi va commencer...");
+        // console.log(TimeManager.instance.currentPeriod == TimeManager.PERIODS[0] ? 'La journée est sur le point de commencer...' : "L'après-midi va commencer...");
 
         setTimeout(function() {
-            console.log("C'est parti.");
+            // console.log("C'est parti.");
             TimeManager.instance.running = true;
             ClientManager.instance.newClient();
         }, TimeManager.TIME_BEFORE_PERIOD_STARTS);
@@ -314,11 +314,11 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * The game loop called during the noon break
      */
     Game.prototype.breakPeriodLoop = function() {
-        console.log("C'est la pause...");
+        // console.log("C'est la pause...");
     }
 
     Game.prototype.onEndMorning = function() {
-        console.log('La matinée est terminée...');
+        // console.log('La matinée est terminée...');
         NotificationManager.instance.clearStack();
         this.fsm.goToBreak();
 
@@ -328,13 +328,13 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.onEndOfDay = function() {
-        console.log('La journée est finie');
+        // console.log('La journée est finie');
         TimeManager.instance.running = false;
         this.fsm.goToBreak();
     };
 
     Game.prototype.onEndOfWeek = function() {
-        console.log('La semaine est finie');
+        // console.log('La semaine est finie');
         TimeManager.instance.running = false;
         this.fsm.goToBreak();
     };
@@ -390,9 +390,10 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         NotificationManager.instance.clearStack();
             Game.instance.removeEntity(client);
             _screenOffice.removeChild(client);
-
-            _screenOffice.addChild(newClient, true, 0);
-            newClient.animate(1, onClientInAnimComplete);
+            setTimeout(function(){                
+                _screenOffice.addChild(newClient, true, 0);
+                newClient.animate(1, onClientInAnimComplete);
+            },800);
         }
 
         function onClientInAnimComplete (client) {
