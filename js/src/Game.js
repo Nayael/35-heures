@@ -277,7 +277,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.onEntityActionned = function(target) {
         ActionManager.instance.makeAction(target.action);
-        ClientManager.instance.updateCurrentAction();
+        ClientManager.instance.actionHasChange(target.action);
     };
 
     /**

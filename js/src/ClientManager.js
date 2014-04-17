@@ -13,10 +13,11 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         this.clients = clients;
         this.currentClient = null;
         this.currentPhase = 0;
-        this.globalPatience = 100;
+        this.globalPatience = 200;
         this.currentPatience = null;
-        this.currentVulnerability = 1;
+        this.currentVulnerability = 3;
         this.currentAction = null;
+        this.maxVulnerability = 8;
 
         MakeEventDispatcher(this);
     };
@@ -34,8 +35,8 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         //Pick new client
         this.currentClient = ClientManager.instance.clients["Pro"];
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
-        this.globalPatience = 100;
-        this.currentVulnerability = 1;
+        this.globalPatience = 200;
+        this.currentVulnerability = 2;
     }
 
     ClientManager.prototype.startClient = function() {
@@ -45,18 +46,23 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         this.currentTime = 0;
     }
 
-    ClientManager.prototype.actionHasChange = function() {
+    ClientManager.prototype.actionHasChange = function(action) {
 
-        this.currentAction = ActionManager.instance.getCurrentAction();
+        if(this.currentAction != action)
+        {
+            this.currentAction = action;
+            ClientManager.instance.updateCurrentAction();
+        }
 
         // TODO Get current things linked to action
     }
 
     ClientManager.prototype.updateCurrentAction = function() {
+        console.log(this.currentAction);
+        console.log(this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
 
-        if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
+        if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase]["success"]["keys"] !== "undefined") {
             this.currentPhase++;
-            return this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction];
         } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
             console.log(this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
         } else {
@@ -80,16 +86,16 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             console.log("New Client Enter");
             ClientManager.instance.newClient();
         }
-        if(this.timeSinceAction > 7) {
+        if(this.timeSinceAction > 10 && this.currentVulnerability < this.maxVulnerability) {
             this.currentVulnerability += Time.deltaTime;
         }
 
-        if(this.globalPatience < 60 && this.globalPatience > 30 && previousPatience >= 60) {
+        if(this.globalPatience < 120 && this.globalPatience > 60 && previousPatience >= 120) {
             console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
         }
 
-        if(this.globalPatience < 30 && previousPatience >= 30) {
+        if(this.globalPatience < 60 && previousPatience >= 60) {
             console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
         }
