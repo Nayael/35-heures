@@ -132,6 +132,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     };
 
     ClientManager.prototype.update = function() {
+        // console.log(this.actionDuration, this.timeSinceAction);
         if (!this.running)
             return;
         if (!this.currentClient) {
