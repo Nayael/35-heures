@@ -118,14 +118,16 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     ClientManager.prototype.updateClientFace = function() {
         if (this.currentPatience < 120 && this.currentPatience > 60 && this.previousPatience >= 120) {
             console.log("Idle");
-            ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
+            this.getAnswer();
+            // ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
+            // ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
 
         if (this.currentPatience < 60 && this.previousPatience >= 60) {
             console.log("Angry");
-            ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
+            this.getAnswer();
+            // ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
+            // ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
     };
 
@@ -142,6 +144,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
         // End client : patience or out of time
         if (this.currentPatience <= 0 || this.timeSinceAction > 10) {
+            console.log('fail :', this.timeSinceAction);
             this.endClient(false);
         }
 
