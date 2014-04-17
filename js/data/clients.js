@@ -43,7 +43,7 @@ var clients = (function() {
         "old_woman": {
             "Name": "old_woman",
             "DisplayName": "Vieille femme",
-            "Intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
+            "Intro" : "Bonjour mon petit, je voudrais poster cette lettre.",
             "NeededTime" : 3,
             "Vulnerability": {
                 "technology": 0.5,
@@ -59,8 +59,8 @@ var clients = (function() {
             },
             "Scenario": {
                 "default": {
-                    "computerFakbok": "Vous faites quoi là !?",
-                    "default": "Vous croyez que c'est le moment de faire ça"
+                    "computer": "Je n'y connais rien à ces trucs.",
+                    "default": "Mais qu'est-ce que vous faites ?"
                 },
                 "phase_0": {
                     "intro": "Je viens retirer une commande! tenez voici le recommandé ainsi que ma carte d’identité. et vite ...SVP!",

@@ -15,11 +15,10 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         this.currentPhase = 0;
         this.globalPatience = 200;
         this.currentPatience = null;
-        this.currentVulnerability = 3;
         this.currentAction = null;
         this.maxVulnerability = 8;
         this.clientSucceed = false;
-        this.actionVulnerability = 1;
+        this.actionVulnerability = 3;
 
         MakeEventDispatcher(this);
     };
@@ -55,7 +54,6 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Intro"]);
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
         this.currentPhase = 0;
-        this.currentTime = 0;
         this.neededTime = this.currentClient["NeededTime"];
     }
 
@@ -90,7 +88,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
             return;
         }
         var previousPatience = this.globalPatience;
-        this.globalPatience -= (5/3) * Time.deltaTime * this.currentVulnerability * this.actionVulnerability;
+        this.globalPatience -= (5/3) * Time.deltaTime * this.actionVulnerability;
         
         this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
         this.timeSinceClient = Math.floor(TimeManager.instance.getTimeSinceClient());
@@ -120,11 +118,13 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         if(this.globalPatience < 120 && this.globalPatience > 60 && previousPatience >= 120) {
             console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
+            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
 
         if(this.globalPatience < 60 && previousPatience >= 60) {
             console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
+            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
     }
 
