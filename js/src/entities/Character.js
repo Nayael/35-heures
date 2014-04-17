@@ -13,7 +13,7 @@ var Character = (function(Entity, StateMachine) {
         this.initViews();
         this.initFsm();
         this.animUpdate = null;
-        this.animSpeed = Character.ANIM_SPEED;
+        this.animSpeed = Character.ANIM_IN_SPEED;
 
         this.x = Character.START_X;
         this.y = 15;
@@ -26,7 +26,8 @@ var Character = (function(Entity, StateMachine) {
     Character.STATES = ['idle', 'happy', 'angry'];
     Character.START_X = -500;
     Character.END_X = 170;
-    Character.ANIM_SPEED = 10;
+    Character.ANIM_IN_SPEED = 10;
+    Character.ANIM_OUT_SPEED = 5;
     Character.ANIM_ACCELERATION = 0.5;
     Character.DELAY_AFTER_ANIM = 500;
 
@@ -82,7 +83,7 @@ var Character = (function(Entity, StateMachine) {
     };
 
     Character.prototype.animate = function(direction, callback) {
-        this.animSpeed = Character.ANIM_SPEED;
+        this.animSpeed = direction > 0 ? Character.ANIM_IN_SPEED : Character.ANIM_OUT_SPEED;
         this.animUpdate = anim;
         function anim () {
             var prevX = this.x;
