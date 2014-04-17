@@ -54,12 +54,13 @@ var ScoreManager = (function(TimeManager) {
 	};
 
 	// TODO call when end of client. event
-	ScoreManager.prototype.endOfClient = function(client) {
+	ScoreManager.prototype.endOfClient = function(client, clientSucceed, totalTime, neededTime) {
 		this.clientsScore.push({
-			totalTime: client.totalTime,
-			neededTime: client.neededTime
+			"succed": clientSucceed,
+			"totalTime": totalTime,
+			"neededTime": neededTime
 		});
-		console.log('Productivité Client : ' + (client.neededTime / client.totalTime));
+		console.log('Productivité Client : ' + ((100*neededTime / totalTime)|0) + '%');
 	};
 
 	// Singleton
