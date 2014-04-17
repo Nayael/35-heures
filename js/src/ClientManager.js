@@ -55,7 +55,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
     // Start update client
     ClientManager.prototype.startClient = function() {
-        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Intro"]);
+        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["intro"]);
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
         TimeManager.instance.newClient();
         this.running = true;
@@ -77,39 +77,39 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
     // ======= Utils ====== //
     ClientManager.prototype.updateVulnerability = function() {
-        this.currentVulnerability = this.currentClient["Vulnerability"][this.currentAction] || this.currentClient["Vulnerability"]['default'];
+        this.currentVulnerability = this.currentClient.vulnerability[this.currentAction] || this.currentClient.vulnerability['default'];
     }
 
     ClientManager.prototype.updateResponseDelay = function() {
-        this.responseDelay = this.currentClient["ResponseDelay"][this.currentAction] || this.currentClient["ResponseDelay"]["default"];
+        this.responseDelay = this.currentClient["responseDelay"][this.currentAction] || this.currentClient["responseDelay"]["default"];
     }
 
     ClientManager.prototype.getAnswer = function() {
         var answer = "";
-        if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
-            answer = this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction];
+        if (typeof this.currentClient["scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
+            answer = this.currentClient["scenario"]["phase_" + this.currentPhase][this.currentAction];
             // this.currentPhase++;
             // if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase] === "undefined") {
             //     this.endClient(true);
             // }
-        } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
-            answer = this.currentClient["Scenario"]["default"][this.currentAction];
+        } else if (typeof this.currentClient["scenario"]["default"][this.currentAction] !== "undefined") {
+            answer = this.currentClient["scenario"]["default"][this.currentAction];
         } else {
-            answer = this.currentClient["Scenario"]["default"]["default"];
+            answer = this.currentClient["scenario"]["default"]["default"];
         }
-        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], answer);
+        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], answer);
     }
 
     // Call when a client is end
     ClientManager.prototype.endClient = function(succeed) {
         if (!succeed)
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["fail"]);
+            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["fail"]);
 
         // Compute data
         this.timeSinceClient = TimeManager.instance.getTimeSinceClient();
 
         this.running = false;
-        ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, succeed, this.timeSinceClient, this.currentClient["NeededTime"]);
+        ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, succeed, this.timeSinceClient, this.currentClient["neededTime"]);
         TimeManager.instance.newClient();
         console.log("New Client Enter");
         ClientManager.instance.newClient();

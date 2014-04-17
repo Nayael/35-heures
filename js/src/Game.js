@@ -313,7 +313,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.onNewClient = function(client) {
         var previousClient = this.currentClient;
-        var newClient = new Character(client.Name);
+        var newClient = new Character(client.name);
         this.currentClient = newClient;
         this.addEntity(newClient);
         ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
