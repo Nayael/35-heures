@@ -92,10 +92,12 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         this.globalPatience -= (5/3) * Time.deltaTime * this.currentVulnerability * this.actionVulnerability;
         
         this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
+        this.timeSinceClient = Math.floor(TimeManager.instance.getTimeSinceClient());
+
 
         if (this.globalPatience <= 0) {
             ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"],this.currentClient["Scenario"]["fail"]);
-            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient);
+            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, this.clientSucceed, this.timeSinceClient);
             TimeManager.instance.newClient();
             console.log("New Client Enter");
             ClientManager.instance.newClient();
@@ -104,7 +106,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
         if(this.clientSucceed == true)
         {
-            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient);
+            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, this.clientSucceed, this.timeSinceClient);
             TimeManager.instance.newClient();
             console.log("New Client Enter");
             ClientManager.instance.newClient();
