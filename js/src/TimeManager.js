@@ -46,8 +46,7 @@ var TimeManager = (function(MakeEventDispatcher) {
         }
         // Update hour of days
         _timeOfDay += Time.deltaTime;
-        if (_timeOfDay > 120 && this.currentPeriod == TimeManager.PERIODS[0]) {
-            this.currentPeriod = TimeManager.PERIODS[1];
+        if (_timeOfDay > 15 && this.currentPeriod == TimeManager.PERIODS[0]) {
             this.running = false;
             this.dispatch(TimeManager.END_PERIOD_MORNING);
 
@@ -55,8 +54,7 @@ var TimeManager = (function(MakeEventDispatcher) {
                 TimeManager.instance.startAfternoon();
             }, TimeManager.TIME_BETWEEN_PERIODS);
 
-        } else if (_timeOfDay > 210) {
-            this.currentPeriod = TimeManager.PERIODS[2];
+        } else if (_timeOfDay > 20) {
             this.running = false;
             this.endDay();
         }
@@ -68,7 +66,11 @@ var TimeManager = (function(MakeEventDispatcher) {
 
     // Start a new Day
     TimeManager.prototype.startDay = function() {
+        _timeOfDay = 0;
+        _timeSinceAction = 0;
+        _timeSinceClient = 0;
         this.currentDay++;
+        console.log('this.getDay(): ', this.getDay());
         this.currentPeriod = TimeManager.PERIODS[0];
         this.dispatch(TimeManager.START_PERIOD_MORNING);
     };
@@ -78,6 +80,9 @@ var TimeManager = (function(MakeEventDispatcher) {
         if (this.currentPeriod != TimeManager.PERIODS[0]) {
             return;
         }
+        _timeSinceAction = 0;
+        _timeSinceClient = 0;
+        this.currentPeriod = TimeManager.PERIODS[1];
         this.dispatch(TimeManager.START_PERIOD_AFTERNOON);
     };
 
@@ -123,6 +128,10 @@ var TimeManager = (function(MakeEventDispatcher) {
     // Return current day
     TimeManager.prototype.getDay = function() {
         return TimeManager.DAYS[this.currentDay];
+    }
+
+    TimeManager.prototype.isLastDay = function() {
+        return this.currentDay == TimeManager.DAYS.length - 1;
     }
 
     // return time since last client

@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager, ScoreManager) {
+var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager, ScoreManager) {
     'use strict';
 
     /**
@@ -13,6 +13,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         if (!(this instanceof Game)) {
             return new Game();
         }
+
+        MakeEventDispatcher(this);
         
         this.assets = assets;
         this.currentClient = null;
@@ -31,6 +33,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     Game.STATE_MENU    = 'menu';
     Game.STATE_PLAYING = 'playing';
     Game.STATE_PAUSED  = 'paused';
+    Game.DAY_SHEET_VALIDATED = "Game.DAY_SHEET_VALIDATED";
+    Game.WEEK_SHEET_VALIDATED = "Game.WEEK_SHEET_VALIDATED";
 
     ////////////
     // PRIVATE ATTRIBUTES
@@ -50,6 +54,9 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         AssetManager.instance.addListener(AssetManager.LOADING_COMPLETE, this.onAssetsLoadingComplete, this);
         AssetManager.instance.loadAll();
 
+        Game.instance.addListener(Game.DAY_SHEET_VALIDATED, this.onDaySheetValidated);
+        Game.instance.addListener(Game.WEEK_SHEET_VALIDATED, this.onWeekSheetValidated);
+
         onEachFrame(this.update, 'game', this);
     };
 
@@ -64,22 +71,30 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
                 to: 'loading'
             }, {
                 name: 'play',
-                from: ['none', 'break', 'loading'],
+                from: ['none', 'break', 'loading', 'night'],
                 to: 'playing'
             }, {
                 name: 'pause',
-                from: ['playing', 'break'],
+                from: ['playing', 'break', 'night'],
                 to: 'paused'
             }, {
                 name: 'goToBreak',
                 from: 'playing',
                 to: 'break'
+            }, {
+                name: 'goToNight',
+                from: 'playing',
+                to: 'night'
             }],
             callbacks: {
                 onload: function (e) {
                     console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = null;
                     // Game.instance.currentUpdateLoop = Game.instance.loadingLoop;
+                },
+                onentermenu: function (e) {
+                    Game.instance.currentUpdateLoop = Game.instance.menuLoop;
+                    // Game.instance.stage.setScreen(_screenMenu);
                 },
                 onplay: function (e) {
                     console.log('Game state: ', Game.instance.fsm.current);
@@ -93,6 +108,12 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
                 ongoToBreak: function (e) {
                     console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.breakPeriodLoop;
+                },
+                ongoToNight: function (e) {
+                    console.log('Game state: ', Game.instance.fsm.current);
+                    Game.instance.currentUpdateLoop = Game.instance.nightPeriodLoop;
+                    // TODO anim
+                    Game.instance.showDaySheet();
                 }
             }
         });
@@ -160,7 +181,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.startGamePhase = function() {
-        console.log('startGamePhase');
         this.stage.touchable = false;
 
         // We launch the main game loop
@@ -315,28 +335,68 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.breakPeriodLoop = function() {
         console.log("C'est la pause...");
-    }
+    };
+
+    /**
+     * The game loop called during the night break
+     */
+    Game.prototype.nightPeriodLoop = function() {
+        console.log("La journée est finie...");
+    };
+
+    /**
+     * Loop called during the menu
+     */
+    Game.prototype.menuLoop = function() {
+        
+    };
 
     Game.prototype.onEndMorning = function() {
         console.log('La matinée est terminée...');
         NotificationManager.instance.clearStack();
         this.fsm.goToBreak();
-
-        setTimeout(function () {
-            Game.instance.startGamePhase();
-        }, TimeManager.TIME_BETWEEN_PERIODS);
     };
 
     Game.prototype.onEndOfDay = function() {
         console.log('La journée est finie');
         TimeManager.instance.running = false;
-        this.fsm.goToBreak();
+        this.fsm.goToNight();
     };
 
     Game.prototype.onEndOfWeek = function() {
         console.log('La semaine est finie');
         TimeManager.instance.running = false;
-        this.fsm.goToBreak();
+        this.fsm.goToNight();
+    };
+
+    Game.prototype.showDaySheet = function() {
+        console.log('showDaySheet');
+        //var sheet = new 
+        // TEMPORARY
+        setTimeout(function () {
+            Game.instance.dispatch(Game.DAY_SHEET_VALIDATED);
+        }, 1500);
+    };
+
+    Game.prototype.onDaySheetValidated = function() {
+        // If it was the last day of the week, show the end of week sheet
+        if (TimeManager.instance.isLastDay()) {
+            this.showWeekSheet();
+        } else {
+            TimeManager.instance.startDay();
+        }
+    };
+
+    Game.prototype.showWeekSheet = function() {
+        console.log('showWeekSheet');
+        // TEMPORARY
+        setTimeout(function () {
+            Game.instance.dispatch(Game.WEEK_SHEET_VALIDATED);
+        }, 1500);
+    };
+
+    Game.prototype.onWeekSheetValidated = function() {
+        TimeManager.instance.startWeek();
     };
 
     /**
@@ -412,4 +472,4 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     return Game;
 
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager, ScoreManager);
+})(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager, ScoreManager);

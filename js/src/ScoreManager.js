@@ -16,33 +16,48 @@ var ScoreManager = (function(TimeManager) {
         }
 
         this.clientsScore = [];
-        this.daysScore = [];
-        this.weeksScore = [];
+        this.daysScore    = [];
+        this.weeksScore   = [];
     };
 
     ScoreManager.prototype.init = function() {
+        ClientManager.instance.addListener(ClientManager.END_CLIENT, this.endOfClient, this);
         TimeManager.instance.addListener(TimeManager.END_OF_DAY, this.endOfDay, this);
         TimeManager.instance.addListener(TimeManager.END_OF_WEEK, this.endOfWeek, this);
-        ClientManager.instance.addListener(ClientManager.END_CLIENT, this.endOfClient, this);
     }
 
-    // TODO call when end of day. event
-    ScoreManager.prototype.endOfDay = function() {
-        var totalTime = 0;
-        var neededTime = 0;
-        for (var i = 0; i < this.clientsScore.length; i++) {
-            totalTime += this.clientsScore[i].totalTime;
-            neededTime += this.clientsScore[i].neededTime;
-        };
-        this.daysScore.push({
+    ScoreManager.prototype.endOfClient = function(client, clientSucceed, totalTime, neededTime) {
+        console.log('ScoreManager.prototype.endOfClient');
+        this.clientsScore.push({
+            "succeed": clientSucceed,
             "totalTime": totalTime,
             "neededTime": neededTime
         });
-        console.log('Productivité de ce jour : ' + (neededTime / totalTime));
+        console.log('Productivité Client : ' + ( (100 * neededTime / totalTime + 0.5) |0) + '%');
     };
 
-    // TODO call when end of week.
+    ScoreManager.prototype.endOfDay = function() {
+        console.log('ScoreManager.prototype.endOfDay');
+        var totalTime = 0;
+        var neededTime = 0;
+        var succeededClients = 0;
+        for (var i = 0; i < this.clientsScore.length; i++) {
+            totalTime += this.clientsScore[i].totalTime;
+            neededTime += this.clientsScore[i].neededTime;
+            if (this.clientsScore[i].succeed) {
+                succeededClients++;
+            }
+        };
+        this.daysScore.push({
+            "totalTime": totalTime,
+            "neededTime": neededTime,
+            "succeededClients": succeededClients
+        });
+        console.log('Productivité de ce jour : ' + (totalTime != 0 ? (neededTime / totalTime) : 0) );
+    };
+
     ScoreManager.prototype.endOfWeek = function() {
+        console.log('ScoreManager.prototype.endOfWeek');
         var totalTime = 0;
         var neededTime = 0;
         for (var i = 0; i < this.daysScore.length; i++) {
@@ -53,21 +68,11 @@ var ScoreManager = (function(TimeManager) {
             "totalTime": totalTime,
             "neededTime": neededTime
         });
-        console.log('Productivité de la semaine : ' + (neededTime / totalTime));
-    };
-
-    // TODO call when end of client. event
-    ScoreManager.prototype.endOfClient = function(client, clientSucceed, totalTime, neededTime) {
-        this.clientsScore.push({
-            "succed": clientSucceed,
-            "totalTime": totalTime,
-            "neededTime": neededTime
-        });
-        console.log('Productivité Client : ' + ((100*neededTime / totalTime)|0) + '%');
+        console.log('Productivité de la semaine : ' + (totalTime != 0 ? (neededTime / totalTime) : 0) );
     };
 
     // Singleton
     ScoreManager.instance = new ScoreManager();
     return ScoreManager;
 
-}(TimeManager));
+})(TimeManager);
