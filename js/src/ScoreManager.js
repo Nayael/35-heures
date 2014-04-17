@@ -1,4 +1,4 @@
-var ScoreManager = (function() {
+var ScoreManager = (function(TimeManager) {
 	'use strict';
 
 	function ScoreManager() {
@@ -12,34 +12,55 @@ var ScoreManager = (function() {
 			return new ScoreManager();
 		}
 
-		this.clients = [];
-		this.days = [];
-		this.weeks = [];
+		this.clientsScore = [];
+		this.daysScore = [];
+		this.weeksScore = [];
 	};
 
+	ScoreManager.prototype.init = function() {
+		TimeManager.instance.addListener(TimeManager.END_OF_DAY, this.endOfDay, this);
+		ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.endOfClient, this);
+	}
+
+	// TODO call when end of day. event
 	ScoreManager.prototype.endOfDay = function() {
 		var totalTime = 0;
 		var neededTime = 0;
-		for (var i = 0; i < this.clients.length; i++) {
-			totalTime += this.clients[i].totalTime;
-			neededTime += this.clients[i].neededTime;
+		for (var i = 0; i < this.clientsScore.length; i++) {
+			totalTime += this.clientsScore[i].totalTime;
+			neededTime += this.clientsScore[i].neededTime;
 		};
-		this.days.push({});
+		this.daysScore.push({
+			totalTime, neededTime
+		});
+		console.log('Productivité de ce jour : ' + (neededTime / totalTime));
 	};
 
+	// TODO call when end of week.
 	ScoreManager.prototype.endOfWeek = function() {
-
+		var totalTime = 0;
+		var neededTime = 0;
+		for (var i = 0; i < this.daysScore.length; i++) {
+			totalTime += this.daysScore[i].totalTime;
+			neededTime += this.daysScore[i].neededTime;
+		};
+		this.weeksScore.push({
+			totalTime, neededTime
+		});
+		console.log('Productivité de la semaine : ' + (neededTime / totalTime));
 	};
 
+	// TODO call when end of client. event
 	ScoreManager.prototype.endOfClient = function(client) {
 		this.currClient.push({
 			totalTime: client.totalTime,
 			neededTime: client.neededTime
 		});
+		console.log('Productivité Client : ' + (client.neededTime / client.totalTime));
 	};
 
 	// Singleton
 	ScoreManager.instance = new ScoreManager();
 	return ScoreManager;
 
-}());
+}(TimeManager));
