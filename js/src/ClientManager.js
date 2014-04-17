@@ -74,6 +74,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         {
             return;
         }
+        var previousPatience = this.globalPatience;
         this.globalPatience -= (5/3) * Time.deltaTime * this.currentVulnerability;
         
         this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
@@ -89,13 +90,13 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
             this.currentVulnerability += Time.deltaTime;
         }
 
-        if(this.globalPatience < 60 && this.globalPatience > 30)
+        if(this.globalPatience < 60 && this.globalPatience > 30 && previousPatience >= 60)
         {
             console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
         }
 
-        if(this.globalPatience < 30)
+        if(this.globalPatience < 30 && previousPatience >= 30)
         {
             console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
