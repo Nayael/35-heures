@@ -1,4 +1,4 @@
-var ClientManager = (function(clients, TimeManager, ActionManager) {
+var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDispatcher) {
     'use strict';
 
     function ClientManager() {
@@ -18,6 +18,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         this.currentVulnerability = 3;
         this.currentAction = null;
         this.maxVulnerability = 8;
+        this.clientSucceed = false;
 
         MakeEventDispatcher(this);
     };
@@ -38,6 +39,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         } while (this.currentClient == previousClient || !this.currentClient);
         this.globalPatience = 200;
         this.currentVulnerability = 3;
+        this.clientSucceed = false;
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
     }
 
@@ -64,6 +66,10 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
         if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
             console.log(this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
             this.currentPhase++;
+            if(typeof this.currentClient["Scenario"]["phase_" + this.currentPhase] === "undefined")
+            {
+                this.clientSucceed = true;
+            }
         } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
             console.log(this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
         } else {
@@ -83,6 +89,16 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
 
         if (this.globalPatience <= 0) {
             console.log(this.currentClient["Scenario"]["fail"]);
+            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient);
+            TimeManager.instance.newClient();
+            console.log("New Client Enter");
+            ClientManager.instance.newClient();
+
+        }
+
+        if(this.clientSucceed == true)
+        {
+            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient);
             TimeManager.instance.newClient();
             console.log("New Client Enter");
             ClientManager.instance.newClient();
@@ -107,4 +123,4 @@ var ClientManager = (function(clients, TimeManager, ActionManager) {
     ClientManager.instance = new ClientManager();
     return ClientManager;
 
-})(clients, TimeManager, ActionManager);
+})(clients, TimeManager, ActionManager, MakeEventDispatcher);
