@@ -57,6 +57,7 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
 
         // Listen to input
         MakeEventDispatcher(this.canvas);
+        this.touchable = true;
         this.canvas.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onTouchClicked, this);
 
         // Canvas Buffer
@@ -170,6 +171,9 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
      * @param  {InputEvent} e The touch InputEvent
      */
     Stage.prototype.onTouchClicked = function(e) {
+        if (!this.touchable) {
+            return;
+        }
         var touchedChild = null;
         // Parse all the children (ordered by index), and get the one that was touched that is the most on top of the list
         for (var i = 0, child = null; i < _children.length; i++) {

@@ -312,6 +312,9 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * @param  {String} client The new client
      */
     Game.prototype.onNewClient = function(client) {
+        this.stage.touchable = false;
+        NotificationManager.instance.clearStack();
+
         var previousClient = this.currentClient;
         var newClient = new Character(client.name);
         this.currentClient = newClient;
@@ -338,11 +341,11 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
 
         function onClientInAnimComplete (client) {
             ClientManager.instance.startClient();
+            Game.instance.stage.touchable = true;
         }
     };
 
     Game.prototype.onClientSpeak = function(title, sentence) {
-        console.log('title, sentence: ', title, sentence);
         var notif = NotificationManager.instance.showNotif(title, sentence);
         this.addEntity(notif);
         this.stage.addChild(notif);

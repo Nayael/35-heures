@@ -29,11 +29,11 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
     //
     ActionManager.prototype.makeAction = function(action) {
         if (this.currentAction) {
+            if (TimeManager.instance.getTimeSinceAction() > 0 && TimeManager.instance.getTimeSinceAction() < this.currentAction.minDuration) {
+                return;
+            }
             if (action == this.currentAction.name) {
                 return _endAction();
-            }
-            if (TimeManager.instance.getTimeSinceAction() < this.currentAction.minDuration) {
-                return;
             }
         }
         this.currentAction = this.actions[action];

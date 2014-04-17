@@ -21,6 +21,9 @@ var Notif = (function(Globals, AssetManager, MakeEventDispatcher, Utils) {
         this.spriteWidth = this.background.width;
         this.spriteHeight = this.background.height;
         this.touchable = true;
+        this.animation = 0;
+        this.animDirection = 0;
+        this.displayTimer = 0;
 
         MakeEventDispatcher(this);
 
@@ -30,10 +33,10 @@ var Notif = (function(Globals, AssetManager, MakeEventDispatcher, Utils) {
         });
         view.draw(ctx);
 
-        ctx.font = "28px Helvetica bold";
-        Utils.wrapText(ctx, title, 50, 50, this.spriteWidth - 50, 30);
-        ctx.font = "20px Helvetica";
-        Utils.wrapText(ctx, content, 50, 90, this.spriteWidth - 50, 25);
+        ctx.font = "28px Courier bold justify";
+        Utils.wrapText(ctx, title, 50, 50, this.spriteWidth, 30);
+        ctx.font = "20px Courier justify";
+        Utils.wrapText(ctx, content, 50, 80, this.spriteWidth, 25);
     }
 
     ////////////
@@ -41,9 +44,12 @@ var Notif = (function(Globals, AssetManager, MakeEventDispatcher, Utils) {
     //
     Notif.START_Y = Globals.CANVAS_HEIGHT + 20;
     Notif.END_Y = 500;
-    Notif.ANIM_SPEED = 10;
-    Notif.ANIM_ACCELERATION = 0.5;
+    Notif.ANIM_SPEED = 20;
+    Notif.ANIM_ACCELERATION = 0.75;
     Notif.DELAY_AFTER_ANIM = 500;
+    Notif.DISPLAY_DURATION = 2000;
+    Notif.ANIMATION_COMPLETE = "Notif.ANIMATION_COMPLETE";
+    Notif.DESTROY = "Notif.DESTROY";
 
     ////////////
     // PUBLIC METHODS
@@ -61,21 +67,55 @@ var Notif = (function(Globals, AssetManager, MakeEventDispatcher, Utils) {
     Notif.prototype.animate = function(direction, callback) {
         this.animSpeed = Notif.ANIM_SPEED;
         this.animUpdate = anim;
+        this.animDirection = direction;
 
         function anim() {
             var prevY = this.stageY;
             this.stageY += this.animSpeed * direction;
             this.animSpeed += Notif.ANIM_ACCELERATION;
-            if ((direction > 0 && this.stageY >= Notif.START_Y && prevY < Notif.START_Y) || (direction < 0 && this.stageY <= Notif.END_Y && prevY > Notif.END_Y)) {
+            if ((direction > 0 && this.stageY >= Notif.START_Y && prevY < Notif.START_Y)
+            ||  (direction < 0 && this.stageY <= Notif.END_Y   && prevY > Notif.END_Y)) {
                 this.animUpdate = null;
                 var self = this;
 
                 // Trigger the callback after the delay at the end of the animation
-                setTimeout(function() {
-                    callback(self);
+                this.animation = setTimeout(function() {
+                    clearTimeout(self.animation);
+                    self.animDirection = 0;
+                    if (callback) {
+                        callback(self);
+                    }
+                    self.dispatch(Notif.ANIMATION_COMPLETE);
+
+                    if (direction == -1) {
+                        self.displayTimer = setTimeout(function () {
+                            self.destroy();
+                        }, Notif.DISPLAY_DURATION);
+                    }
                 }, Notif.DELAY_AFTER_ANIM);
             }
         }
+    };
+
+    Notif.prototype.stopAnim = function() {
+        if (!this.animation || this.animDirection > 0) {
+            return;
+        }
+        clearTimeout(this.animation);
+    };
+
+    Notif.prototype.stopDisplayTimer = function() {
+        if (!this.displayTimer) {
+            return;
+        }
+        clearTimeout(this.displayTimer);
+    };
+
+    Notif.prototype.destroy = function() {
+        this.stopAnim();
+        console.log('destroy');
+        this.stopDisplayTimer();
+        this.dispatch(Notif.DESTROY, this);
     };
 
     return Notif;

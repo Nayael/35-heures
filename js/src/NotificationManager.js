@@ -25,8 +25,17 @@ var NotificationManager = (function(Notif, InputManager) {
     ////////////
     // PUBLIC METHODS
     //
-    NotificationManager.prototype.showNotif = function(title, content) {
+    NotificationManager.prototype.showNotif = function(title, content, stackDisplay) {
+        if (!title) {
+            title = '';
+        }
+        if (!content) {
+            content = '';
+        }
         var notif = new Notif(title, content);
+        if (!stackDisplay) {
+            this.clearStack();
+        }
         _stack.push(notif);
         if (_stack.length == 1) {
             this.updateStack();
@@ -39,21 +48,37 @@ var NotificationManager = (function(Notif, InputManager) {
             return;
         }
         var notif = _stack[0];
-        notif.animate(-1, onAnimInComplete);
-        var self = this;
-        function onAnimInComplete () {
-            notif.addListener(InputManager.InputEvent.TOUCH_CLICKED, self.onNotifClicked, self);
-        }   
+        notif.addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onNotifClicked, this);
+        notif.addListener(Notif.DESTROY, this.onNotifCallDestroy, this);
+        notif.animate(-1);
+    };
+
+    NotificationManager.prototype.clearStack = function() {
+        console.log('_stack: ', _stack);
+        for (var i = 0; i < _stack.length; i++) {
+            _stack[i].destroy();
+            _stack.splice(i, 1);
+            i--;
+        }
     };
 
     NotificationManager.prototype.onNotifClicked = function(e) {
-        var notif = _stack[0];
-        notif.removeListener(InputManager.InputEvent.TOUCH_CLICKED, this.onNotifClicked);
-        notif.animate(1, onAnimInComplete);
+        e.target.removeListener(InputManager.InputEvent.TOUCH_CLICKED, this.onNotifClicked);
+        this.onNotifCallDestroy(e.target);
+    };
+
+    NotificationManager.prototype.onNotifCallDestroy = function(notif) {
         var self = this;
+        notif = notif || _stack[0];
+        notif.stopDisplayTimer();
+        notif.removeListener(InputManager.InputEvent.TOUCH_CLICKED, this.onNotifClicked);
+        notif.removeListener(Notif.DESTROY, this.onNotifCallDestroy);
+        notif.addListener(Notif.ANIMATION_COMPLETE, onAnimInComplete);
+        notif.animate(1);
         function onAnimInComplete () {
-            _stack.shift();
-            self.updateStack();
+            notif.removeListener(Notif.ANIMATION_COMPLETE, onAnimInComplete);
+            // _stack.shift();
+            // self.updateStack();
         }
     };
 
