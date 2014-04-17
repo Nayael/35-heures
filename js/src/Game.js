@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager) {
+var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager, ScoreManager) {
     'use strict';
 
     /**
@@ -124,9 +124,11 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * Starts a new game
      */
     Game.prototype.startGame = function() {
-
-        // Initializing Input manager
+        // Initializing Input Manager
         InputManager.instance.init();
+        
+        // Initializing Score Manager
+        ScoreManager.instance.init();
 
         // Initalizaing Client Manager
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
@@ -348,4 +350,4 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     return Game;
 
 
-})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager);
+})(onEachFrame, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager, ScoreManager);

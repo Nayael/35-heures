@@ -32,7 +32,8 @@ var ScoreManager = (function(TimeManager) {
 			neededTime += this.clientsScore[i].neededTime;
 		};
 		this.daysScore.push({
-			totalTime, neededTime
+			"totalTime": totalTime,
+			"neededTime": neededTime
 		});
 		console.log('Productivité de ce jour : ' + (neededTime / totalTime));
 	};
@@ -46,7 +47,8 @@ var ScoreManager = (function(TimeManager) {
 			neededTime += this.daysScore[i].neededTime;
 		};
 		this.weeksScore.push({
-			totalTime, neededTime
+			"totalTime": totalTime,
+			"neededTime": neededTime
 		});
 		console.log('Productivité de la semaine : ' + (neededTime / totalTime));
 	};
