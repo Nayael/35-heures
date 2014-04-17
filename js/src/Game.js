@@ -307,28 +307,32 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.onNewClient = function(client) {
         var previousClient = this.currentClient;
-        if (previousClient) {
-            previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
-            // setTimeout(function () {
-                Game.instance.removeEntity(previousClient);
-                _screenOffice.removeChild(previousClient);
-            // }, 1000);
-        }
         var newClient = new Character(client.Name);
         this.currentClient = newClient;
         this.addEntity(newClient);
-        _screenOffice.addChild(newClient, 0);
         ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
         ClientManager.instance.addListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState, this);
         ClientManager.instance.addListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState, this);
-
-
-        // TODO Anim Character
-
-        setTimeout(function () {
-            ClientManager.instance.startClient();
-        }, 1000);
         
+        if (previousClient) {
+            previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
+            previousClient.animate(-1, onClientOutAnimComplete);
+        } else {
+            _screenOffice.addChild(newClient, 0);
+            newClient.animate(1, onClientInAnimComplete);
+        }
+
+        function onClientOutAnimComplete (client) {
+            Game.instance.removeEntity(client);
+            _screenOffice.removeChild(client);
+
+            _screenOffice.addChild(newClient, 0);
+            newClient.animate(1, onClientInAnimComplete);
+        }
+
+        function onClientInAnimComplete (client) {
+            ClientManager.instance.startClient();
+        }
     };
 
     // Singleton

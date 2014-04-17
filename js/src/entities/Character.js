@@ -12,8 +12,10 @@ var Character = (function(Entity, StateMachine) {
 
         this.initViews();
         this.initFsm();
+        this.animUpdate = null;
+        this.animSpeed = Character.ANIM_SPEED;
 
-        this.x = 170;
+        this.x = Character.START_X;
         this.y = 15;
     }
     Character.inheritsFrom(Entity);
@@ -22,6 +24,11 @@ var Character = (function(Entity, StateMachine) {
     // STATIC ATTRIBUTES
     //
     Character.STATES = ['idle', 'happy', 'angry'];
+    Character.START_X = -300;
+    Character.END_X = 170;
+    Character.ANIM_SPEED = 10;
+    Character.ANIM_ACCELERATION = 0.5;
+    Character.DELAY_AFTER_ANIM = 500;
 
     ////////////
     // PRIVATE ATTRIBUTES
@@ -40,7 +47,7 @@ var Character = (function(Entity, StateMachine) {
             });
             _views[stateName].addListener(InputManager.InputEvent.TOUCH_CLICKED, this.onViewTouchClicked, this);
         }
-    }
+    };
 
     Character.prototype.initFsm = function() {
         var self = this;
@@ -66,6 +73,32 @@ var Character = (function(Entity, StateMachine) {
                 }
             }
         });
+    };
+
+    Character.prototype.update = function() {
+        if (this.animUpdate) {
+            this.animUpdate();
+        }
+    }
+
+    Character.prototype.animate = function(direction, callback) {
+        this.animSpeed = Character.ANIM_SPEED;
+        this.animUpdate = anim;
+        function anim () {
+            var prevX = this.x;
+            this.x += this.animSpeed * direction;
+            this.animSpeed += Character.ANIM_ACCELERATION;
+            if ( (direction < 0 && this.x <= Character.START_X && prevX > Character.START_X)
+            ||   (direction > 0 && this.x >= Character.END_X   && prevX < Character.END_X) ) {
+                this.animUpdate = null;
+                var self = this;
+
+                // Trigger the callback after the delay at the end of the animation
+                setTimeout(function () {
+                    callback(self);
+                }, Character.DELAY_AFTER_ANIM);
+            }
+        }
     };
 
     return Character;
