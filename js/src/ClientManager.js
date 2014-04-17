@@ -56,6 +56,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
         this.currentPhase = 0;
         this.currentTime = 0;
+        this.neededTime = this.currentClient["NeededTime"];
     }
 
     ClientManager.prototype.actionHasChange = function(action) {
@@ -97,7 +98,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
         if (this.globalPatience <= 0) {
             ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"],this.currentClient["Scenario"]["fail"]);
-            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, this.clientSucceed, this.timeSinceClient);
+            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, this.clientSucceed, this.timeSinceClient, this.neededTime);
             TimeManager.instance.newClient();
             console.log("New Client Enter");
             ClientManager.instance.newClient();
@@ -106,7 +107,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
         if(this.clientSucceed == true)
         {
-            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, this.clientSucceed, this.timeSinceClient);
+            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, this.clientSucceed, this.timeSinceClient, this.neededTime);
             TimeManager.instance.newClient();
             console.log("New Client Enter");
             ClientManager.instance.newClient();

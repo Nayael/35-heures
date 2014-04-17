@@ -6,6 +6,7 @@ var clients = (function() {
             "Name": "young_woman",
             "DisplayName": "Jeune femme",
             "Intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
+            "NeededTime" : 3,
             "Vulnerability": {
                 "technology": 0.5,
                 "paperwork": 1.5,
@@ -43,6 +44,7 @@ var clients = (function() {
             "Name": "old_woman",
             "DisplayName": "Vieille femme",
             "Intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
+            "NeededTime" : 3,
             "Vulnerability": {
                 "technology": 0.5,
                 "paperwork": 1.5,
@@ -79,6 +81,7 @@ var clients = (function() {
             "Name": "woman",
             "DisplayName": "Mère de famille",
             "Intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
+            "NeededTime" : 3,
             "Vulnerability": {
                 "technology": 0.5,
                 "paperwork": 1.5,
