@@ -213,24 +213,24 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         stamps.x = 1000;
         stamps.y = 510;
 
-        _screenOffice.addChild(desk);
-        _screenOffice.addChild(wall);
-        _screenOffice.addChild(computer);
-        _screenOffice.addChild(crayons);
-        _screenOffice.addChild(envelope);
-        _screenOffice.addChild(envelope_2);
+        _screenOffice.addChild(desk, true);
+        _screenOffice.addChild(wall, true);
+        _screenOffice.addChild(computer, true);
+        _screenOffice.addChild(crayons, true);
+        _screenOffice.addChild(envelope, true);
+        _screenOffice.addChild(envelope_2, true);
+        _screenOffice.addChild(keys, true);
+        _screenOffice.addChild(tampon, true);
+        _screenOffice.addChild(tampon_2, true);
+        _screenOffice.addChild(telephone, true);
+        _screenOffice.addChild(sweets, true);
+        _screenOffice.addChild(stapler, true);
+        _screenOffice.addChild(monitor, true);
+        _screenOffice.addChild(access_card, true);
+        _screenOffice.addChild(stamps, true);
         // _screenOffice.addChild(id_card);
-        _screenOffice.addChild(keys);
         // _screenOffice.addChild(bad_package);
         // _screenOffice.addChild(bad_package_2);
-        _screenOffice.addChild(tampon);
-        _screenOffice.addChild(tampon_2);
-        _screenOffice.addChild(telephone);
-        _screenOffice.addChild(sweets);
-        _screenOffice.addChild(stapler);
-        _screenOffice.addChild(monitor);
-        _screenOffice.addChild(access_card);
-        _screenOffice.addChild(stamps);
     };
 
     /**
@@ -324,7 +324,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
             previousClient.animate(-1, onClientOutAnimComplete);
         } else {
-            _screenOffice.addChild(newClient, 0);
+            _screenOffice.addChild(newClient, true, 0);
             newClient.animate(1, onClientInAnimComplete);
         }
 
@@ -332,7 +332,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             Game.instance.removeEntity(client);
             _screenOffice.removeChild(client);
 
-            _screenOffice.addChild(newClient, 0);
+            _screenOffice.addChild(newClient, true, 0);
             newClient.animate(1, onClientInAnimComplete);
         }
 
