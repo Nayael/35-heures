@@ -64,12 +64,16 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
                 to: 'loading'
             }, {
                 name: 'play',
-                from: ['none', 'loading'],
+                from: ['none', 'break', 'loading'],
                 to: 'playing'
             }, {
                 name: 'pause',
-                from: 'playing',
+                from: ['playing', 'break'],
                 to: 'paused'
+            }, {
+                name: 'goToBreak',
+                from: 'playing',
+                to: 'break'
             }],
             callbacks: {
                 onload: function (e) {
@@ -85,12 +89,17 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
                 onpause: function (e) {
                     console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.gamePause;
+                },
+                ongoToBreak: function (e) {
+                    console.log('Game state: ', Game.instance.fsm.current);
+                    Game.instance.currentUpdateLoop = Game.instance.breakPeriodLoop;
                 }
             }
         });
     };
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
+
         this.startGame();
     };
 
@@ -105,7 +114,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         _entities.splice(index, 0, entity);
         return entity;
     };
-
 
     /**
      * Removes an entity from the entities list
@@ -136,15 +144,38 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         // Initalizaing Client Manager
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
         ClientManager.instance.addListener(ClientManager.CLIENT_SPEAK, this.onClientSpeak, this);
+        ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
+        ClientManager.instance.addListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState, this);
+        ClientManager.instance.addListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState, this);
+
+        // Initalizaing Time Manager
+        TimeManager.instance.addListener(TimeManager.START_PERIOD_MORNING, this.startGamePhase, this);
+        TimeManager.instance.addListener(TimeManager.END_PERIOD_MORNING, this.onEndMorning, this);
+        TimeManager.instance.addListener(TimeManager.START_PERIOD_AFTERNOON, this.startGamePhase, this);
+        TimeManager.instance.addListener(TimeManager.END_OF_DAY, this.onEndOfDay, this);
+        TimeManager.instance.addListener(TimeManager.END_OF_WEEK, this.onEndOfWeek, this);
 
         this.initScreens();
+        TimeManager.instance.startDay();
+    };
+
+    Game.prototype.startGamePhase = function() {
+        console.log('startGamePhase');
+        this.stage.touchable = false;
 
         // We launch the main game loop
         this.fsm.play();
+        
+        // The current period is the night : we are about to start the day
+        TimeManager.instance.running = false;
 
-        setTimeout(function () {
+        console.log(TimeManager.instance.currentPeriod == TimeManager.PERIODS[0] ? 'La journée est sur le point de commencer...' : "L'après-midi va commencer...");
+
+        setTimeout(function() {
+            console.log("C'est parti.");
+            TimeManager.instance.running = true;
             ClientManager.instance.newClient();
-        },1000);
+        }, TimeManager.TIME_BEFORE_PERIOD_STARTS);
     };
 
     Game.prototype.initScreens = function() {
@@ -248,7 +279,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     };
 
     Game.prototype.update = function() {
-        TimeManager.instance.update();
         if (this.currentUpdateLoop) {
             this.currentUpdateLoop();
         }
@@ -259,6 +289,8 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      * The main game loop
      */
     Game.prototype.gameLoop = function() {
+        TimeManager.instance.update();
+
         // Updating all the entities
         for (var i = 0, entity = null; i < _entities.length; i++) {
             entity = _entities[i];
@@ -276,6 +308,35 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.gamePauseLoop = function() {
         
+    };
+
+    /**
+     * The game loop called during the noon break
+     */
+    Game.prototype.breakPeriodLoop = function() {
+        console.log("C'est la pause...");
+    }
+
+    Game.prototype.onEndMorning = function() {
+        console.log('La matinée est terminée...');
+        NotificationManager.instance.clearStack();
+        this.fsm.goToBreak();
+
+        setTimeout(function () {
+            Game.instance.startGamePhase();
+        }, TimeManager.TIME_BETWEEN_PERIODS);
+    };
+
+    Game.prototype.onEndOfDay = function() {
+        console.log('La journée est finie');
+        TimeManager.instance.running = false;
+        this.fsm.goToBreak();
+    };
+
+    Game.prototype.onEndOfWeek = function() {
+        console.log('La semaine est finie');
+        TimeManager.instance.running = false;
+        this.fsm.goToBreak();
     };
 
     /**
@@ -303,8 +364,6 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
             this.currentClient.fsm.makeHappy();
             ClientManager.instance.removeListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState);
         }
-        
-
     };
 
     /**
@@ -313,15 +372,11 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.onNewClient = function(client) {
         this.stage.touchable = false;
-        NotificationManager.instance.clearStack();
 
         var previousClient = this.currentClient;
         var newClient = new Character(client.name);
         this.currentClient = newClient;
         this.addEntity(newClient);
-        ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
-        ClientManager.instance.addListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState, this);
-        ClientManager.instance.addListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState, this);
         
         if (previousClient) {
             previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
@@ -332,6 +387,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
         }
 
         function onClientOutAnimComplete (client) {
+        NotificationManager.instance.clearStack();
             Game.instance.removeEntity(client);
             _screenOffice.removeChild(client);
 
