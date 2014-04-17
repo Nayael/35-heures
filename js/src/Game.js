@@ -470,7 +470,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
             previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
             previousClient.animate(-1, onClientOutAnimComplete);
         } else {
-            _screenOffice.addChild(newClient, true, 1);
+            _screenOffice.addChild(newClient, false, 1);
             newClient.animate(1, onClientInAnimComplete);
         }
 
@@ -479,7 +479,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
             Game.instance.removeEntity(client);
             _screenOffice.removeChild(client);
             setTimeout(function(){                
-                _screenOffice.addChild(newClient, true, 1);
+                _screenOffice.addChild(newClient, false, 1);
                 newClient.animate(1, onClientInAnimComplete);
             },800);
         }
