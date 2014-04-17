@@ -19,9 +19,15 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
     }
 
     ////////////
+    // STATIC ATTRIBUTES
+    //
+    ActionManager.ACTION_DISPATCHED = "ActionManager.ACTION_DISPATCHED";
+    ActionManager.ACTION_END = "ActionManager.ACTION_END";
+
+    ////////////
     // PUBLIC METHODS
     //
-    ActionManager.prototype.makeAction = function (action) {
+    ActionManager.prototype.makeAction = function(action) {
         if (this.currentAction) {
             if (action == this.currentAction.name) {
                 return _endAction();
@@ -31,8 +37,7 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
             }
         }
         this.currentAction = this.actions[action];
-        _dispatchAction(action);
-        TimeManager.instance.newAction();
+        _dispatchAction(this.actions[action]);
     }
 
     ////////////

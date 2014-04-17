@@ -126,6 +126,9 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
     Game.prototype.startGame = function() {
         // Initializing Input Manager
         InputManager.instance.init();
+
+        // Initializing Client Manager
+        ClientManager.instance.init();
         
         // Initializing Score Manager
         ScoreManager.instance.init();
@@ -280,7 +283,7 @@ var Game = (function(onEachFrame, StateMachine, Keyboard, AssetManager, InputMan
      */
     Game.prototype.onEntityActionned = function(target) {
         ActionManager.instance.makeAction(target.action);
-        ClientManager.instance.actionHasChange(target.action);
+        // ClientManager.instance.actionHasChange(target.action);
     };
 
     /**

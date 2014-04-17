@@ -10,15 +10,16 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         if (!(this instanceof ClientManager)) {
             return new ClientManager();
         }
+        // Clients Data
         this.clients = clients;
+
         this.currentClient = null;
         this.currentPhase = 0;
-        this.globalPatience = 200;
-        this.currentPatience = null;
+        this.currentPatience = 100;
         this.currentAction = null;
-        this.maxVulnerability = 8;
-        this.clientSucceed = false;
-        this.actionVulnerability = 3;
+        this.currentVulnerability = 1;
+
+        this.running = false;
 
         MakeEventDispatcher(this);
     };
@@ -27,106 +28,124 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     // STATIC ATTRIBUTES
     //
     ClientManager.NEW_CLIENT = "ClientManager.NEW_CLIENT";
+    ClientManager.END_CLIENT = "ClientManager.END_CLIENT";
     ClientManager.PATIENCE_IDLE = "ClientManager.PATIENCE_IDLE";
     ClientManager.PATIENCE_ANGRY = "ClientManager.PATIENCE_ANGRY";
-    ClientManager.END_CLIENT = "ClientManager.END_CLIENT";
     ClientManager.CLIENT_SPEAK = "ClientManager.CLIENT_SPEAK";
 
+    // init
+    ClientManager.prototype.init = function() {
+        ActionManager.instance.addListener(ActionManager.ACTION_DISPATCHED, this.actionHasChange, this);
+    }
 
-
-
+    // initialize a new client
     ClientManager.prototype.newClient = function() {
-        // Pick new client
         var previousClient = this.currentClient;
         do {
-            this.currentClient = Utils.getRandomElement( ClientManager.instance.clients );
+            this.currentClient = Utils.getRandomElement(ClientManager.instance.clients);
         } while (this.currentClient == previousClient || !this.currentClient);
-        this.globalPatience = 200;
-        this.currentVulnerability = this.currentClient["Vulnerability"]["time"];
-        this.clientSucceed = false;
-        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
 
+        // Init Client
+        this.currentPhase = 0;
+        this.currentPatience = 100;
+        this.currentAction = "time";
+        this.updateVulnerability();
+        ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
     }
 
-
+    // Start update client
     ClientManager.prototype.startClient = function() {
-
         ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Intro"]);
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
-        this.currentPhase = 0;
-        this.neededTime = this.currentClient["NeededTime"];
+        TimeManager.instance.newClient();
+        this.running = true;
     }
 
+    // We get a new action ---> update parametters
     ClientManager.prototype.actionHasChange = function(action) {
-
-        if(this.currentAction != action)
-        {
-            this.currentAction = action;
-            ClientManager.instance.updateCurrentAction();
-        }
-    }
-
-    ClientManager.prototype.updateCurrentAction = function() {
-
-        if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
-            this.currentPhase++;
-            if(typeof this.currentClient["Scenario"]["phase_" + this.currentPhase] === "undefined")
-            {
-                this.clientSucceed = true;
-            }
-        } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"],this.currentClient["Scenario"]["default"][this.currentAction]["phrase"]);
+        if (this.currentAction != action.name) {
+            this.currentAction = action.name;
         } else {
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["default"]["default"]);
+            this.currentAction = 'time';
         }
+        this.updateVulnerability();
+        this.updateResponseDelay();
+        this.actionDuration = action.minDuration;
+        TimeManager.instance.newAction();
     }
 
-    ClientManager.prototype.update = function() {
+    // ======= Utils ====== //
+    ClientManager.prototype.updateVulnerability = function() {
+        this.currentVulnerability = this.currentClient["Vulnerability"][this.currentAction] || this.currentClient["Vulnerability"]['default'];
+    }
 
-        if (!this.currentClient) {
-            return;
+    ClientManager.prototype.updateResponseDelay = function() {
+        this.responseDelay = this.currentClient["ResponseDelay"][this.currentAction] || this.currentClient["ResponseDelay"]["default"];
+    }
+
+    ClientManager.prototype.getAnswer = function() {
+        var answer = "";
+        if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction] !== "undefined") {
+            answer = this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction];
+            // this.currentPhase++;
+            // if (typeof this.currentClient["Scenario"]["phase_" + this.currentPhase] === "undefined") {
+            //     this.endClient(true);
+            // }
+        } else if (typeof this.currentClient["Scenario"]["default"][this.currentAction] !== "undefined") {
+            answer = this.currentClient["Scenario"]["default"][this.currentAction];
+        } else {
+            answer = this.currentClient["Scenario"]["default"]["default"];
         }
-        var previousPatience = this.globalPatience;
-        this.globalPatience -= (5/3) * Time.deltaTime * this.actionVulnerability;
-        
-        this.timeSinceAction = Math.floor(TimeManager.instance.getTimeSinceAction());
-        this.timeSinceClient = Math.floor(TimeManager.instance.getTimeSinceClient());
+        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"],answer);
+    }
 
+    // Call when a client is end
+    ClientManager.prototype.endClient = function(succeed) {
+        if (!succeed)
+            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["fail"]);
 
-        if (this.globalPatience <= 0) {
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"],this.currentClient["Scenario"]["fail"]);
-            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, this.clientSucceed, this.timeSinceClient, this.neededTime);
-            TimeManager.instance.newClient();
-            console.log("New Client Enter");
-            ClientManager.instance.newClient();
+        // Compute data
+        this.timeSinceClient = TimeManager.instance.getTimeSinceClient();
 
-        }
+        this.running = false;
+        ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, succeed, this.timeSinceClient, this.currentClient["NeededTime"]);
+        TimeManager.instance.newClient();
+        console.log("New Client Enter");
+        ClientManager.instance.newClient();
+    };
 
-        if(this.clientSucceed == true)
-        {
-            ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, this.clientSucceed, this.timeSinceClient, this.neededTime);
-            TimeManager.instance.newClient();
-            console.log("New Client Enter");
-            ClientManager.instance.newClient();
-        }
-        
-        if(this.timeSinceAction > 10 && this.currentVulnerability < this.maxVulnerability) {
-            this.currentVulnerability += Time.deltaTime;
-        }
-
-        if(this.globalPatience < 120 && this.globalPatience > 60 && previousPatience >= 120) {
+    ClientManager.prototype.updateClientFace = function() {
+        if (this.currentPatience < 120 && this.currentPatience > 60 && this.previousPatience >= 120) {
             console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
             ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
 
-        if(this.globalPatience < 60 && previousPatience >= 60) {
+        if (this.currentPatience < 60 && this.previousPatience >= 60) {
             console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
             ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
-    }
+    };
+
+    ClientManager.prototype.update = function() {
+        if (!this.running)
+            return;
+        if (!this.currentClient) {
+            return;
+        }
+        this.previousPatience = this.currentPatience;
+        this.currentPatience -= (5 / 3) * Time.deltaTime * this.actionVulnerability;
+
+        this.timeSinceAction = TimeManager.instance.getTimeSinceAction();
+
+        // End client : patience or out of time
+        if (this.currentPatience <= 0 || this.timeSinceAction > 10) {
+            this.endClient(false);
+        }
+
+        this.updateClientFace();
+    };
 
     // Singleton
     ClientManager.instance = new ClientManager();
