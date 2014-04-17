@@ -31,7 +31,9 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     ClientManager.PATIENCE_IDLE = "ClientManager.PATIENCE_IDLE";
     ClientManager.PATIENCE_ANGRY = "ClientManager.PATIENCE_ANGRY";
     ClientManager.END_CLIENT = "ClientManager.END_CLIENT";
-    
+    ClientManager.CLIENT_SPEAK = "ClientManager.CLIENT_SPEAK";
+
+
 
 
     ClientManager.prototype.newClient = function() {
@@ -49,8 +51,8 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
 
     ClientManager.prototype.startClient = function() {
-
-        console.log(this.currentClient["Intro"]);
+        
+        ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Intro"]);
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
         this.currentPhase = 0;
         this.currentTime = 0;
