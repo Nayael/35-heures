@@ -54,7 +54,6 @@ var NotificationManager = (function(Notif, InputManager) {
     };
 
     NotificationManager.prototype.clearStack = function() {
-        console.log('_stack: ', _stack);
         for (var i = 0; i < _stack.length; i++) {
             _stack[i].destroy();
             _stack.splice(i, 1);

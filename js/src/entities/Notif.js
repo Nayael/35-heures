@@ -113,7 +113,6 @@ var Notif = (function(Globals, AssetManager, MakeEventDispatcher, Utils) {
 
     Notif.prototype.destroy = function() {
         this.stopAnim();
-        console.log('destroy');
         this.stopDisplayTimer();
         this.dispatch(Notif.DESTROY, this);
     };
