@@ -17,6 +17,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         this.currentPhase = 0;
         this.currentPatience = 100;
         this.currentAction = null;
+        this.reactToAction = false;
         this.currentVulnerability = 1;
 
         this.running = false;
@@ -49,7 +50,10 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         this.currentPhase = 0;
         this.currentPatience = 100;
         this.currentAction = "time";
+        this.actionDuration = 5;
+        this.reactToAction = false;
         this.updateVulnerability();
+        this.updateResponseDelay();
         ClientManager.instance.dispatch(ClientManager.NEW_CLIENT, this.currentClient);
     }
 
@@ -57,7 +61,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     ClientManager.prototype.startClient = function() {
         ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["intro"]);
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
-        TimeManager.instance.newClient();
+        TimeManager.instance.startClient();
         this.running = true;
     }
 
@@ -69,6 +73,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         } else {
             this.currentAction = 'time';
         }
+        this.reactToAction = false;
         this.updateVulnerability();
         this.updateResponseDelay();
         this.actionDuration = action.minDuration;
@@ -102,31 +107,30 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
     // Call when a client is end
     ClientManager.prototype.endClient = function(succeed) {
-        if (!succeed)
+        if (!succeed) {
+            console.log(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["fail"]);
             ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["fail"]);
+            console.log(this.currentClient["scenario"]["fail"]);
+        }
 
         // Compute data
         this.timeSinceClient = TimeManager.instance.getTimeSinceClient();
 
         this.running = false;
         ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, succeed, this.timeSinceClient, this.currentClient["neededTime"]);
-        TimeManager.instance.newClient();
-        console.log("New Client Enter");
         ClientManager.instance.newClient();
     };
 
     ClientManager.prototype.updateClientFace = function() {
-        if (this.currentPatience < 120 && this.currentPatience > 60 && this.previousPatience >= 120) {
+        if (this.currentPatience < 60 && this.previousPatience >= 60) {
             console.log("Idle");
-            this.getAnswer();
-            // ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
+            ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
             // ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
 
-        if (this.currentPatience < 60 && this.previousPatience >= 60) {
+        if (this.currentPatience < 30 && this.previousPatience >= 30) {
             console.log("Angry");
-            this.getAnswer();
-            // ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
+            ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
             // ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
     };
@@ -150,9 +154,11 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         }
 
         // Check Answer
-        if (this.timeSinceAction > this.responseDelay) {
-            this.getAnswer();
-        } else if (this.timeSinceAction > this.actionDuration) {
+        // if (this.timeSinceAction > this.responseDelay && !this.reactToAction) {
+        //     this.reactToAction = true;
+        //     this.getAnswer();
+        // }
+        if (this.timeSinceAction > this.actionDuration) {
             this.getAnswer();
             this.actionHasChange({
                 name: "time",
