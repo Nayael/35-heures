@@ -46,7 +46,7 @@ var TimeManager = (function(MakeEventDispatcher) {
         }
         // Update hour of days
         _timeOfDay += Time.deltaTime;
-        if (_timeOfDay > 15 && this.currentPeriod == TimeManager.PERIODS[0]) {
+        if (_timeOfDay > 120 && this.currentPeriod == TimeManager.PERIODS[0]) {
             this.currentPeriod = TimeManager.PERIODS[1];
             this.running = false;
             this.dispatch(TimeManager.END_PERIOD_MORNING);
@@ -55,7 +55,7 @@ var TimeManager = (function(MakeEventDispatcher) {
                 TimeManager.instance.startAfternoon();
             }, TimeManager.TIME_BETWEEN_PERIODS);
 
-        } else if (_timeOfDay > 25) {
+        } else if (_timeOfDay > 210) {
             this.currentPeriod = TimeManager.PERIODS[2];
             this.running = false;
             this.endDay();
