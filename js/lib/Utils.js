@@ -14,7 +14,7 @@ var Utils = (function() {
     };
 
     Utils.getRandomElement = function (obj) {
-        var randomIndex = (Math.random() * Utils.objectLength(obj) + 0.5) | 0;
+        var randomIndex = (Math.random() * Utils.objectLength(obj)) | 0;
         var i = 0;
         for (var prop in obj) {
             if (obj.hasOwnProperty(prop) && i == randomIndex) {

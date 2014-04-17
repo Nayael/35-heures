@@ -88,7 +88,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
             }],
             callbacks: {
                 onload: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
+                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = null;
                     // Game.instance.currentUpdateLoop = Game.instance.loadingLoop;
                 },
@@ -97,16 +97,16 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                     // Game.instance.stage.setScreen(_screenMenu);
                 },
                 onplay: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
+                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.gameLoop;
                     Game.instance.stage.setScreen(_screenOffice);
                 },
                 onpause: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
+                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.gamePause;
                 },
                 ongoToBreak: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
+                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.breakPeriodLoop;
                 },
                 ongoToNight: function (e) {
@@ -189,10 +189,10 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         // The current period is the night : we are about to start the day
         TimeManager.instance.running = false;
 
-        console.log(TimeManager.instance.currentPeriod == TimeManager.PERIODS[0] ? 'La journée est sur le point de commencer...' : "L'après-midi va commencer...");
+        // console.log(TimeManager.instance.currentPeriod == TimeManager.PERIODS[0] ? 'La journée est sur le point de commencer...' : "L'après-midi va commencer...");
 
         setTimeout(function() {
-            console.log("C'est parti.");
+            // console.log("C'est parti.");
             TimeManager.instance.running = true;
             ClientManager.instance.newClient();
         }, TimeManager.TIME_BEFORE_PERIOD_STARTS);
@@ -201,84 +201,114 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     Game.prototype.initScreens = function() {
         _screenOffice = new Screen();
         
-        var computer      = new Entity('computer');
-        var crayons       = new Entity('crayons');
-        var envelope      = new Entity('envelope');
-        var envelope_2    = new Entity('envelope_2');
-        var id_card       = new Entity('id_card');
-        var bad_package   = new Entity('bad_package');
-        var bad_package_2 = new Entity('bad_package_2');
-        var tampon        = new Entity('tampon');
-        var tampon_2      = new Entity('tampon_2');
-        var telephone     = new Entity('telephone');
-        var sweets        = new Entity('sweets');
-        var stapler       = new Entity('stapler');
-        var desk          = new Entity('desk');
-        var wall          = new Entity('wall');
-        var keys          = new Entity('keys');
-        var access_card   = new Entity('access_card');
-        var monitor       = new Entity('monitor');
-        var stamps        = new Entity('stamps');
+        var backgroundOffice     = new Entity('background');
+        var template             = new Entity('template');
+        var computer             = new Entity('computer');
+        var crayons              = new Entity('crayons');
+        var bad_package          = new Entity('bad_package');
+        var bad_package_2        = new Entity('bad_package_2');
+        var tampon               = new Entity('tampon');
+        var tampon_2             = new Entity('tampon_2');
+        var telephone            = new Entity('telephone');
+        var desk                 = new Entity('desk');
+        var wall                 = new Entity('wall');
+        var keys                 = new Entity('keys');
+        var access_card          = new Entity('access_card');
+        var monitor              = new Entity('monitor');
+        var stamps               = new Entity('stamps');
+        var window_middle_poster = new Entity('window_middle_poster');
+        var toffee_bowl          = new Entity('toffee_bowl');
+        var small_envelope       = new Entity('small_envelope');
+        var post_it_computer     = new Entity('post_it_computer');
+        var pen                  = new Entity('pen');
+        var payslip              = new Entity('payslip');
+        var middle_window        = new Entity('middle_window');
+        var envelope_under_box   = new Entity('envelope_under_box');
+        var envelope_big         = new Entity('envelope_big');
+        var box_files            = new Entity('box_files');
+        var books_under_tampon   = new Entity('books_under_tampon');
+        var book                 = new Entity('book');
 
         computer.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         crayons.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
-        envelope.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
-        envelope_2.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
-        id_card.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        small_envelope.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        envelope_big.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         bad_package.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         bad_package_2.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         tampon.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         tampon_2.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         telephone.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
-        sweets.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
-        stapler.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+        toffee_bowl.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         keys.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         access_card.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         stamps.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
 
-        computer.x = -90;
-        computer.y = 250;
-        crayons.x = 220;
-        crayons.y = 460;
-        envelope.x = 270;
-        envelope.y = 490;
-        envelope_2.x = 245;
-        envelope_2.y = 540;
-        tampon.x = 295;
-        tampon.y = 570;
-        tampon_2.x = 335;
-        tampon_2.y = 615;
-        telephone.x = 585;
-        telephone.y = 435;
-        sweets.x = 620;
-        sweets.y = 585;
-        stapler.x = 720;
-        stapler.y = 595;
+        backgroundOffice.x = 0;
+        backgroundOffice.y = 0;
+        computer.x = 0;
+        computer.y = 342;
+        tampon.x = 643;
+        tampon.y = 537;
+        tampon_2.x = 710;
+        tampon_2.y = 571;
+        telephone.x = 429;
+        telephone.y = 618;
         wall.x = Globals.CANVAS_WIDTH - wall.view.spriteWidth;
         desk.y = Globals.CANVAS_HEIGHT - desk.view.spriteHeight;
-        keys.x = 1100;
-        keys.y = 255;
-        access_card.x = 930;
-        access_card.y = 260;
+        keys.x = 1038;
+        keys.y = 623;
+        access_card.x = 1003;
+        access_card.y = 180;
         monitor.x = Globals.CANVAS_WIDTH - monitor.view.spriteWidth;
-        stamps.x = 1000;
-        stamps.y = 510;
+        stamps.x = 795;
+        stamps.y = 569;
+        window_middle_poster.x = 701;
+        window_middle_poster.y = 186;
+        toffee_bowl.x = 522;         
+        toffee_bowl.y = 374;         
+        small_envelope.x = 829;      
+        small_envelope.y = 657;      
+        post_it_computer.x = 56;    
+        post_it_computer.y = 367;    
+        pen.x = 696;                 
+        pen.y = 424;                 
+        payslip.x = 0;             
+        payslip.y = 0;             
+        middle_window.x = -3;       
+        middle_window.y = 52;       
+        envelope_under_box.x = 861;  
+        envelope_under_box.y = 594;  
+        envelope_big.x = 349;        
+        envelope_big.y = 531;        
+        box_files.x = 820;           
+        box_files.y = 465;           
+        books_under_tampon.x = 603;  
+        books_under_tampon.y = 566;  
+        book.x = 105;                
+        book.y = 543;                
 
-        _screenOffice.addChild(desk, true);
-        _screenOffice.addChild(wall, true);
-        _screenOffice.addChild(computer, true);
-        _screenOffice.addChild(crayons, true);
-        _screenOffice.addChild(envelope, true);
-        _screenOffice.addChild(envelope_2, true);
+        _screenOffice.addChild(backgroundOffice, false);
+        _screenOffice.addChild(middle_window, true);   
+        _screenOffice.addChild(desk, true);          
         _screenOffice.addChild(keys, true);
-        _screenOffice.addChild(tampon, true);
-        _screenOffice.addChild(tampon_2, true);
         _screenOffice.addChild(telephone, true);
-        _screenOffice.addChild(sweets, true);
-        _screenOffice.addChild(stapler, true);
-        _screenOffice.addChild(monitor, true);
         _screenOffice.addChild(access_card, true);
         _screenOffice.addChild(stamps, true);
+        _screenOffice.addChild(window_middle_poster, true);
+        _screenOffice.addChild(toffee_bowl, true);         
+        _screenOffice.addChild(small_envelope, true);                
+        _screenOffice.addChild(computer, true);        
+        _screenOffice.addChild(post_it_computer, true);    
+        _screenOffice.addChild(pen, true);                 
+        //_screenOffice.addChild(payslip, true);        
+        _screenOffice.addChild(envelope_under_box, true);  
+        _screenOffice.addChild(envelope_big, true);       
+        _screenOffice.addChild(box_files, true);           
+        _screenOffice.addChild(books_under_tampon, true);  
+        _screenOffice.addChild(book, true);        
+        _screenOffice.addChild(tampon, true);
+        _screenOffice.addChild(tampon_2, true);                
+        //_screenOffice.addChild(template, true);
         // _screenOffice.addChild(id_card);
         // _screenOffice.addChild(bad_package);
         // _screenOffice.addChild(bad_package_2);
@@ -302,7 +332,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         if (this.currentUpdateLoop) {
             this.currentUpdateLoop();
         }
-        DebugManager.instance.update();
+        //DebugManager.instance.update();
     };
 
     /**
@@ -352,19 +382,19 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     };
 
     Game.prototype.onEndMorning = function() {
-        console.log('La matinée est terminée...');
+        // console.log('La matinée est terminée...');
         NotificationManager.instance.clearStack();
         this.fsm.goToBreak();
     };
 
     Game.prototype.onEndOfDay = function() {
-        console.log('La journée est finie');
+        // console.log('La journée est finie');
         TimeManager.instance.running = false;
         this.fsm.goToNight();
     };
 
     Game.prototype.onEndOfWeek = function() {
-        console.log('La semaine est finie');
+        // console.log('La semaine est finie');
         TimeManager.instance.running = false;
         this.fsm.goToNight();
     };
@@ -442,7 +472,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
             previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
             previousClient.animate(-1, onClientOutAnimComplete);
         } else {
-            _screenOffice.addChild(newClient, true, 0);
+            _screenOffice.addChild(newClient, true, 1);
             newClient.animate(1, onClientInAnimComplete);
         }
 
@@ -450,9 +480,10 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         NotificationManager.instance.clearStack();
             Game.instance.removeEntity(client);
             _screenOffice.removeChild(client);
-
-            _screenOffice.addChild(newClient, true, 0);
-            newClient.animate(1, onClientInAnimComplete);
+            setTimeout(function(){                
+                _screenOffice.addChild(newClient, true, 1);
+                newClient.animate(1, onClientInAnimComplete);
+            },800);
         }
 
         function onClientInAnimComplete (client) {
