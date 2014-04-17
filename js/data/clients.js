@@ -6,14 +6,14 @@ var clients = (function() {
             "name": "young_woman",
             "displayName": "Jeune femme",
             "intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
-            "neededtime" : 3,
+            "neededTime" : 3,
             "vulnerability": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
                 "default": 2
             },
-            "responsedelay": {
+            "responseDelay": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
@@ -44,14 +44,14 @@ var clients = (function() {
             "name": "old_woman",
             "displayName": "Vieille femme",
             "intro" : "Bonjour mon petit, je voudrais poster cette lettre.",
-            "neededtime" : 3,
+            "neededTime" : 3,
             "vulnerability": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
                 "default": 2
             },
-            "responsedelay": {
+            "responseDelay": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
@@ -79,14 +79,14 @@ var clients = (function() {
             "name": "woman",
             "displayName": "Mère de famille",
             "intro" : "Bonjour, je souhaiterai envoyer ce colis",
-            "neededtime" : 3,
+            "neededTime" : 3,
             "vulnerability": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
                 "default": 2
             },
-            "responsedelay": {
+            "responseDelay": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
@@ -115,15 +115,15 @@ var clients = (function() {
         "young_man": {
             "name": "young_man",
             "displayName": "Roi Paul",
-            "intro" : "Bonjour, j'ai besoin de photocopie jeune péon",
-            "neededtime" : 3,
+            "intro" : "Bonjour, j'ai besoin de photocopies jeune péon",
+            "neededTime" : 3,
             "vulnerability": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
                 "default": 2
             },
-            "responsedelay": {
+            "responseDelay": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
@@ -131,7 +131,7 @@ var clients = (function() {
             },
             "scenario": {
                 "default": {
-                    "computer": "Roi Paul est sur FaKebok, il porte sa mighty couronne",
+                    "computer": "Roi Paul est sur FaKebok, il porte sa mighty crown",
                     "default": "Tu crois que c'est le moment de faire ça ?"
                 },
                 "phase_0": {
@@ -151,14 +151,14 @@ var clients = (function() {
             "name": "old_man",
             "displayName": "Jean-Jacques",
             "intro" : "J'ai un colis urgent à récupérer.",
-            "neededtime" : 3,
+            "neededTime" : 3,
             "vulnerability": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
                 "default": 2
             },
-            "responsedelay": {
+            "responseDelay": {
                 "technology": 0.5,
                 "paperwork": 1.5,
                 "time": 3,
