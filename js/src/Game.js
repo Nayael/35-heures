@@ -368,15 +368,18 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * The game loop called during the noon break
      */
     Game.prototype.breakPeriodLoop = function() {
-        // console.log("C'est la pause...");
+        
     };
 
     /**
      * The game loop called during the night break
      */
     Game.prototype.nightPeriodLoop = function() {
-        // this.payslip.render();
-        // console.log("La journée est finie...");
+        // if (TimeManager.instance.isLastDay()) {
+        //     this.payslipWeek.render();
+        // } else {
+        //     this.payslip.render();
+        // }
     };
 
     /**
@@ -389,7 +392,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
     Game.prototype.onEndMorning = function() {
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
-        // console.log('La matinée est terminée...');
+        console.log('La matinée est terminée...');
         NotificationManager.instance.clearStack();
         // End the current client
         if (!TimeManager.instance.isJustBeforeBreak() && !TimeManager.instance.isJustBeforeNight()) {
@@ -421,10 +424,11 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     };
 
     Game.prototype.showDaySheet = function() {
+        this.payslip.render();
         setTimeout(function () {
             Game.instance.payslip.displayInfo(ScoreManager.instance.getLastDayScore());
         }, 100);
-        setTimeout(function() {
+        var sheetTimeout = setTimeout(function() {
             Game.instance.dispatch(Game.DAY_SHEET_VALIDATED);
         }, 10000);
     };
@@ -432,6 +436,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     Game.prototype.onDaySheetValidated = function() {
         // If it was the last day of the week, show the end of week sheet
         if (TimeManager.instance.isLastDay()) {
+            this.payslip.reset();
             this.showWeekSheet();
         } else {
             TimeManager.instance.startDay();
@@ -439,12 +444,13 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     };
 
     Game.prototype.showWeekSheet = function() {
+        this.payslipWeek.render();
         setTimeout(function () {
             Game.instance.payslipWeek.displayInfoWeek(ScoreManager.instance.getLastWeekScore());
         }, 100);
-        setTimeout(function() {
+        var sheetTimeout = setTimeout(function() {
             Game.instance.dispatch(Game.WEEK_SHEET_VALIDATED);
-        }, 1500);
+        }, 10000);
     };
 
     Game.prototype.onWeekSheetValidated = function() {
