@@ -154,7 +154,8 @@ var clients = (function() {
                     "computer": "Franchement mec, tu crois vraiment que c'est le moment d'aller sur FaKebok",
                     "envelope_big": "Cette enveloppe est bien trop grande",
                     "toffee_bowl": "Mec, les bonbons c'est pour les gamins.",
-                    "default": "Tu crois que c'est le moment de faire ça ?"
+                    "default": "Tu crois que c'est le moment de faire ça ?",
+                    "tampon_2": "C'est pas le bon tampon mec !"
                 },
                 "phase_0": {
                     "succeed": "access_card",
