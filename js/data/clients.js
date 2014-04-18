@@ -8,34 +8,34 @@ var clients = (function() {
             "intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé",
             "neededTime" : 5,
             "vulnerability": {
-                "computer": 2,
+                "computer": 5,
                 "crayons": 2,
                 "small_envelope": 2,
                 "envelope_big": 2,
                 "tampon": 2,
                 "tampon_2": 2,
-                "telephone": 2,
-                "toffee_bowl": 2,
+                "telephone": 5,
+                "toffee_bowl": 0.5,
                 "keys": 2,
                 "access_card": 2,
                 "stamps": 2,
-                "time": 5
+                "time": 7
             },
             "scenario": {
                 "default": {
-                    "time":"Vous ne voulez pas agir au lieu de ne rien faire !",
-                    "computer": "Vous faites quoi là !?",
-                    "default": "Vous croyez que c'est le moment de faire ça"
+                    "time":"Pff, je n'ai pas toute la journée, j'ai du shopping à faire moi",
+                    "computer": "Vous vous foutez de moi ! Vous traînez sur FaKebok au lieu de me filer mon colis ! J'en parlerai à la direction !",
+                    "default": "Mais qu'est-ce que vous foutez !"
                 },
                 "phase_0": {
                     "succeed": "computer",
-                    "computer": "Tenez voici mes papiers, c'est la commande n° 16546842 elle est arrivé hier"
+                    "computer": "Tenez voici mes papiers, c'est la commande n° 16546842."
                 },
                 "phase_1": {
                     "succeed": "keys",
-                    "keys": "Merci, bonne journée"
+                    "keys": "Merci, salut."
                 },
-                "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
+                "fail": "Mon après-midi shopping n'attend pas, je ne vais pas passer ma journée avec des incompétents."
             }
         },
         "old_woman": {
@@ -48,19 +48,19 @@ var clients = (function() {
                 "crayons": 2,
                 "small_envelope": 2,
                 "envelope_big": 2,
-                "tampon": 2,
-                "tampon_2": 2,
-                "telephone": 2,
+                "tampon": 4,
+                "tampon_2": 4,
+                "telephone": 3,
                 "toffee_bowl": 2,
                 "keys": 2,
                 "access_card": 2,
                 "stamps": 2,
-                "time": 5
+                "time": 2
             },
             "scenario": {
                 "default": {
-                    "default": "J'ai pas toute la journée",
-                    "time":"Vous ne voulez pas agir au lieu de ne rien faire !",
+                    "default": "Je ne peux pas laisser Bibiche dehors trop longtemps",
+                    "time":"Je ne peux pas laisser Bibiche dehors trop longtemps",
                     "computer": "Je n'y connais rien à ces trucs.",
                     "toffee_bowl": "Merci pour les bonbons mais ça ne va pas m'aider",
                     "envelope_big": "Cette enveloppe est bien trop grande",
@@ -83,24 +83,27 @@ var clients = (function() {
             "intro" : "Bonjour, je souhaiterai envoyer ces papiers, faites moi des photocopies",
             "neededTime" : 3,
             "vulnerability": {
-                "computer": 2,
+                "computer": 5,
                 "crayons": 2,
-                "small_envelope": 2,
-                "envelope_big": 2,
-                "tampon": 2,
+                "small_envelope": 6,
+                "envelope_big": 3,
+                "tampon": 4,
                 "tampon_2": 2,
                 "telephone": 2,
-                "toffee_bowl": 2,
-                "keys": 2,
+                "toffee_bowl": 1,
+                "keys": 5,
                 "access_card": 2,
-                "stamps": 2,
+                "stamps": 5,
                 "time": 5
             },
             "scenario": {
                 "default": {
-                    "time":"Vous ne voulez pas agir au lieu de ne rien faire !",
+                    "time":"Je dois allez chercher mon fils à l'école, faites vite",
                     "computer": "Vous foutez quoi ?",
-                    "default": "Vous croyez que c'est le moment de faire ça ?"
+                    "default": "Vous croyez que c'est le moment de faire ça ?",
+                    "toffee_bowl": "Merci pour les bonbons, je les donnerai à mon fils.",
+                    "small_envelope": "Vous êtes idiot ? Ca ne tiendra jamais dans cette enveloppe."
+
                 },
                 "phase_0": {
                     "succeed": "access_card",
@@ -117,43 +120,48 @@ var clients = (function() {
                 },
                 "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
             }
-        }/*,
+        },
         "young_man": {
             "name": "young_man",
-            "displayName": "Roi Paul",
-            "intro" : "Bonjour, j'ai besoin de photocopies jeune péon",
-            "neededTime" : 3,
+            "displayName": "Paul",
+            "intro" : "Salut, j'ai besoin de photocopies",
+            "neededTime" : 3,            
             "vulnerability": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 3,
-                "default": 2
-            },
-            "responseDelay": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 8,
-                "default": 2
+                "computer": 5,
+                "crayons": 2,
+                "small_envelope": 3,
+                "envelope_big": 6,
+                "tampon": 2,
+                "tampon_2": 4,
+                "telephone": 2,
+                "toffee_bowl": 1,
+                "keys": 5,
+                "access_card": 2,
+                "stamps": 5,
+                "time": 3
             },
             "scenario": {
                 "default": {
-                    "time":"Vous ne voulez pas agir au lieu de ne rien faire !",
-                    "computer": "Roi Paul est sur FaKebok, il porte sa mighty crown",
+                    "time":"Mec, j'aimerai juste en finir le plus vite possible, alors dépêches-toi.",
+                    "computer": "Franchement mec, tu crois vraiment que j'ai le temps pour ça.",
+                    "envelope_big": "Cette enveloppe est bien trop grande",
                     "default": "Tu crois que c'est le moment de faire ça ?"
                 },
                 "phase_0": {
-                    "intro": "Magnes-toi de faire ces photocopies jeune péon, il m'en faut cinq",
                     "succeed": "access_card",
-                    "access_card": "Merci pour ces photocopies jeune péon",
+                    "access_card": "Merci pour ces photocopies mon gars. Tu peux me les mettre dans une petite enveloppe ?",
                 },
                 "phase_1": {
-                    "intro": "J'ai encore un colis pour toi jeune péon",
-                    "succeed": "bad_package",
-                    "bad_package": "Il a un blème mon colis ?"
+                    "succeed": "small_envelope",
+                    "small_envelope": "Merci vieux, un tampon pour le Brésil et c'est nickel"
                 },
-                "fail": "Je me casse, t'es vraiment trop lent."
+                "phase_2": {
+                    "succeed": "tampon",
+                    "tampon": "Merci vieux, peace !"
+                },
+                "fail": "Je me casse, t'es vraiment trop lent mec."
             }
-        },
+        }/*,
         "old_man": {
             "name": "old_man",
             "displayName": "Jean-Jacques",
@@ -189,7 +197,7 @@ var clients = (function() {
                 },
                 "fail": "Vous êtes nul, un véritable incapable, de mon temps on n'aurait jamais vu ça"
             }
-        },*/
+        }*/
     };
 
     return clients;
