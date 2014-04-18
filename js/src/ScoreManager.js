@@ -42,7 +42,7 @@ var ScoreManager = (function(TimeManager) {
         // If the client was failed, the boss knows you lost this time
         if (!clientSucceed) {
             this.workedTimeForBoss -= totalTime;
-            console.log('Blame : tu as fait fuir ce client !');
+            // console.log('Blame : tu as fait fuir ce client !');
         }
         this.clientsScore.push({
             "name": client.name,
@@ -74,9 +74,9 @@ var ScoreManager = (function(TimeManager) {
         var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(this.workedTimeForBoss);
         var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(actualWorkedTime);
 
-        console.log("Aujourd'hui, le boss croit que tu as travaillé " + gameTimeWorkedForBoss.h + " heures, et " + gameTimeWorkedForBoss.m + " minutes !\nAlors que tu n'en a fait que " + gameTimeActuallyWorked.h + " et " + gameTimeActuallyWorked.m + " minutes !",
-            "\nProductivité: " + dayScore.productivity,
-            "Nombre de blames: " + dayScore.nbFailed);
+        // console.log("Aujourd'hui, le boss croit que tu as travaillé " + gameTimeWorkedForBoss.h + " heures, et " + gameTimeWorkedForBoss.m + " minutes !\nAlors que tu n'en a fait que " + gameTimeActuallyWorked.h + " et " + gameTimeActuallyWorked.m + " minutes !",
+        //     "\nProductivité: " + dayScore.productivity,
+        //     "Nombre de blames: " + dayScore.nbFailed);
     };
 
     ScoreManager.prototype.onEndOfWeek = function() {
@@ -93,7 +93,7 @@ var ScoreManager = (function(TimeManager) {
         });
         var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(workedTimeForBoss);
         var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(actualWorkedTime);
-        console.log("Cette semaine, le boss croit que tu as travaillé " + gameTimeWorkedForBoss.h + " heures, et " + gameTimeWorkedForBoss.m + " minutes !\nAlors que tu n'en a fait que " + gameTimeActuallyWorked.h + " et " + gameTimeActuallyWorked.m + " minutes !");
+        // console.log("Cette semaine, le boss croit que tu as travaillé " + gameTimeWorkedForBoss.h + " heures, et " + gameTimeWorkedForBoss.m + " minutes !\nAlors que tu n'en a fait que " + gameTimeActuallyWorked.h + " et " + gameTimeActuallyWorked.m + " minutes !");
     };
 
     ScoreManager.prototype.getLastDayScore = function() {

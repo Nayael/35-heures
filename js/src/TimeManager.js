@@ -32,8 +32,8 @@ var TimeManager = (function(MakeEventDispatcher) {
     TimeManager.END_OF_DAY             = "TimeManager.END_OF_DAY";
     TimeManager.START_WEEK             = "TimeManager.START_WEEK";
     TimeManager.END_OF_WEEK            = "TimeManager.END_OF_WEEK";
-    TimeManager.MORNING_DURATION       = 10;
-    TimeManager.DAY_DURATION           = 30;
+    TimeManager.MORNING_DURATION       = 120;
+    TimeManager.DAY_DURATION           = 210;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
 

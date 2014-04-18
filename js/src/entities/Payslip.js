@@ -15,7 +15,6 @@ var Payslip = (function(AssetManager) {
         this.context = this.canvas.getContext('2d');
         this.canvas.width = 1280;
         this.canvas.height = 720;
-        console.log(AssetManager.instance.assets);
         this.img = AssetManager.instance.assets.images['payslip'];
         this.reset();
     }
@@ -23,7 +22,7 @@ var Payslip = (function(AssetManager) {
     Payslip.prototype.reset = function() {
         this.canvas.width += 0; // clear
         var ctx = this.context;
-        ctx.globalAlpha = .9;
+        ctx.globalAlpha = .8;
         ctx.fillRect(0, 0, 1280, 720);
         ctx.globalAlpha = 1;
         ctx.drawImage(this.img, 400, 20);

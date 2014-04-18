@@ -28,16 +28,16 @@ var clients = (function() {
                     "default": "Vous croyez que c'est le moment de faire ça"
                 },
                 "phase_0": {
-                    "success": "computer",
+                    "succeed": "computer",
                     "computer": "Tenez voici mes papiers, c'est la commande n° 16546842 elle est arrivé hier"
                 },
                 "phase_1": {
-                    "success": "keys",
+                    "succeed": "keys",
                     "keys": "Merci, bonne journée"
                 },
                 "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
             }
-        }/*,
+        },
         "old_woman": {
             "name": "old_woman",
             "displayName": "Vieille femme",
@@ -103,15 +103,15 @@ var clients = (function() {
                     "default": "Vous croyez que c'est le moment de faire ça ?"
                 },
                 "phase_0": {
-                    "success": "access_card",
+                    "succeed": "access_card",
                     "access_card": "Parfait je voudrais une enveloppe aussi svp",
                 },
                 "phase_1": {
-                    "success": "envelope_big",
+                    "succeed": "envelope_big",
                     "envelope_big": "Merci, un tampon et c'est poster",
                 },
                 "phase_2": {
-                    "success": "tampon_2",
+                    "succeed": "tampon_2",
                     "tampon_2": "Merci bonne fin de journée",
                     "tampon": "Ce n'est pas le bon tampon",
                 },
@@ -143,12 +143,12 @@ var clients = (function() {
                 },
                 "phase_0": {
                     "intro": "Magnes-toi de faire ces photocopies jeune péon, il m'en faut cinq",
-                    "success": "access_card",
+                    "succeed": "access_card",
                     "access_card": "Merci pour ces photocopies jeune péon",
                 },
                 "phase_1": {
                     "intro": "J'ai encore un colis pour toi jeune péon",
-                    "success": "bad_package",
+                    "succeed": "bad_package",
                     "bad_package": "Il a un blème mon colis ?"
                 },
                 "fail": "Je me casse, t'es vraiment trop lent."
@@ -179,12 +179,12 @@ var clients = (function() {
                 },
                 "phase_0": {
                     "intro": "Faites attention, c'est un colis fragile, dépéchez vous de me l'apporter",
-                    "success": "access_card",
+                    "succeed": "access_card",
                     "access_card": "Le colis est cassé !?"
                 },
                 "phase_1": {
                     "intro": "Je veux faire une réclamation, je veux pas de ce colis",
-                    "success": "telephone",
+                    "succeed": "telephone",
                     "telephone": "C'est toujours pareil avec la Pauste aujourd'hui, vous êtes des incapables.",
                 },
                 "fail": "Vous êtes nul, un véritable incapable, de mon temps on n'aurait jamais vu ça"

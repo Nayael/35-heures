@@ -6,7 +6,7 @@ var Character = (function(Entity, StateMachine) {
         if (!(this instanceof Character)) {
             return new Character(name);
         }
-
+        
         this.parent.constructor.apply(this);
         this.name = name;
 

@@ -187,10 +187,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         // The current period is the night : we are about to start the day
         TimeManager.instance.running = false;
 
-        // console.log(TimeManager.instance.currentPeriod == TimeManager.PERIODS[0] ? 'La journée est sur le point de commencer...' : "L'après-midi va commencer...");
-
         setTimeout(function() {
-            console.log("C'est parti.");
             TimeManager.instance.running = true;
             ClientManager.instance.newClient();
         }, TimeManager.TIME_BEFORE_PERIOD_STARTS);
@@ -200,33 +197,33 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         _screenOffice = new Screen();
         _screenMenu = new Screen();
 
-        var backgroundOffice = new Entity('background');
-        var template = new Entity('template');
-        var computer = new Entity('computer');
-        var crayons = new Entity('crayons');
-        var bad_package = new Entity('bad_package');
-        var bad_package_2 = new Entity('bad_package_2');
-        var tampon = new Entity('tampon');
-        var tampon_2 = new Entity('tampon_2');
-        var telephone = new Entity('telephone');
-        var desk = new Entity('desk');
-        var wall = new Entity('wall');
-        var keys = new Entity('keys');
-        var access_card = new Entity('access_card');
-        var monitor = new Entity('monitor');
-        var stamps = new Entity('stamps');
+        var backgroundOffice     = new Entity('background');
+        var template             = new Entity('template');
+        var computer             = new Entity('computer');
+        var crayons              = new Entity('crayons');
+        var bad_package          = new Entity('bad_package');
+        var bad_package_2        = new Entity('bad_package_2');
+        var tampon               = new Entity('tampon');
+        var tampon_2             = new Entity('tampon_2');
+        var telephone            = new Entity('telephone');
+        var desk                 = new Entity('desk');
+        var wall                 = new Entity('wall');
+        var keys                 = new Entity('keys');
+        var access_card          = new Entity('access_card');
+        var monitor              = new Entity('monitor');
+        var stamps               = new Entity('stamps');
         var window_middle_poster = new Entity('window_middle_poster');
-        var toffee_bowl = new Entity('toffee_bowl');
-        var small_envelope = new Entity('small_envelope');
-        var post_it_computer = new Entity('post_it_computer');
-        var pen = new Entity('pen');
-        var payslip = new Entity('payslip');
-        var middle_window = new Entity('middle_window');
-        var envelope_under_box = new Entity('envelope_under_box');
-        var envelope_big = new Entity('envelope_big');
-        var box_files = new Entity('box_files');
-        var books_under_tampon = new Entity('books_under_tampon');
-        var book = new Entity('book');
+        var toffee_bowl          = new Entity('toffee_bowl');
+        var small_envelope       = new Entity('small_envelope');
+        var post_it_computer     = new Entity('post_it_computer');
+        var pen                  = new Entity('pen');
+        var payslip              = new Entity('payslip');
+        var middle_window        = new Entity('middle_window');
+        var envelope_under_box   = new Entity('envelope_under_box');
+        var envelope_big         = new Entity('envelope_big');
+        var box_files            = new Entity('box_files');
+        var books_under_tampon   = new Entity('books_under_tampon');
+        var book                 = new Entity('book');
 
         post_it_computer.setTouchable(false);
 
@@ -350,7 +347,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         this.stage.update();
         ClientManager.instance.update();
-        this.payslip.render();
     };
 
     /**
@@ -364,14 +360,15 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * The game loop called during the noon break
      */
     Game.prototype.breakPeriodLoop = function() {
-        console.log("C'est la pause...");
+        // console.log("C'est la pause...");
     };
 
     /**
      * The game loop called during the night break
      */
     Game.prototype.nightPeriodLoop = function() {
-        console.log("La journée est finie...");
+        // this.payslip.render();
+        // console.log("La journée est finie...");
     };
 
     /**
@@ -396,7 +393,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
     Game.prototype.onEndOfDay = function() {
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
-        // console.log('La journée est finie');
+        console.log('La journée est finie');
         TimeManager.instance.running = false;
         if (!TimeManager.instance.isJustBeforeBreak() && !TimeManager.instance.isJustBeforeNight()) {
             ClientManager.instance.endClient(false, false);
@@ -413,18 +410,17 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
     Game.prototype.onEndOfWeek = function() {
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
-        // console.log('La semaine est finie');
+        console.log('La semaine est finie');
         TimeManager.instance.running = false;
         this.fsm.goToNight();
     };
 
     Game.prototype.showDaySheet = function() {
-        console.log('showDaySheet');
         //var sheet = new 
         // TEMPORARY
         setTimeout(function() {
             Game.instance.dispatch(Game.DAY_SHEET_VALIDATED);
-        }, 2000);
+        }, 10000);
     };
 
     Game.prototype.onDaySheetValidated = function() {
@@ -437,7 +433,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     };
 
     Game.prototype.showWeekSheet = function() {
-        console.log('showWeekSheet');
+        // console.log('showWeekSheet');
         // TEMPORARY
         setTimeout(function() {
             Game.instance.dispatch(Game.WEEK_SHEET_VALIDATED);
@@ -496,7 +492,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
             _screenOffice.removeChild(client);
 
             if (createClient) {
-                Game.instance.onNewClient( Game.instance.currentClient );
+                Game.instance.onNewClient( ClientManager.instance.currentClient );
             } else if (TimeManager.instance.isJustBeforeBreak()) {
                 TimeManager.instance.endMorning();  // Take the break
             } else if (TimeManager.instance.isJustBeforeNight()) {

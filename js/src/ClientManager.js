@@ -43,9 +43,9 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     // initialize a new client
     ClientManager.prototype.newClient = function() {
         var previousClient = this.currentClient;
+        do {
             this.currentClient = Utils.getRandomElement(ClientManager.instance.clients);
-        // do {
-        // } while (this.currentClient == previousClient || !this.currentClient);
+        } while (this.currentClient == previousClient || !this.currentClient);
 
         // Init Client
         this.currentPhase = 0;
@@ -61,7 +61,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
     // Start update client
     ClientManager.prototype.startClient = function() {
-        console.log("display intro");
+        // console.log("display intro");
         ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["intro"]);
         ClientManager.instance.dispatch(ClientManager.PATIENCE_HAPPY, ClientManager.PATIENCE_HAPPY);
         TimeManager.instance.startClient();
@@ -111,7 +111,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
             createClient = true;
         }
         if (!succeed) {
-            console.log("display fail");
+            // console.log("display fail");
             ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["fail"]);
         }
         
@@ -133,13 +133,13 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
 
     ClientManager.prototype.updateClientFace = function() {
         if (this.currentPatience < 60 && this.previousPatience >= 60) {
-            console.log("Idle");
+            // console.log("Idle");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_IDLE, ClientManager.PATIENCE_IDLE);
             // ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
 
         if (this.currentPatience < 30 && this.previousPatience >= 30) {
-            console.log("Angry");
+            // console.log("Angry");
             ClientManager.instance.dispatch(ClientManager.PATIENCE_ANGRY, ClientManager.PATIENCE_ANGRY);
             // ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["DisplayName"], this.currentClient["Scenario"]["phase_" + this.currentPhase][this.currentAction]);
         }
