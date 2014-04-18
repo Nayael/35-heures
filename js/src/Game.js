@@ -86,6 +86,10 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                 name: 'goToNight',
                 from: 'playing',
                 to: 'night'
+            }, {
+                name: 'showmenu',
+                from: ['none','load'],
+                to: 'menu'
             }],
             callbacks: {
                 onload: function(e) {
@@ -375,6 +379,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * Loop called during the menu
      */
     Game.prototype.menuLoop = function() {
+        this.stage.update();
 
     };
 
