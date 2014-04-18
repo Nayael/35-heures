@@ -6,6 +6,10 @@ var assets = (function() {
 
         },
         "images": {
+            "background_menu" : ["assets/img/menu/background_menu.png", "menu"],
+            "menu_play_button": ["assets/img/menu/menu_play_button.png", "menu"],
+            "logo_isart_digital": ["assets/img/menu/logo_isart_digital.png", "menu"],
+
             "young_woman-idle" : ["assets/img/game/characters/young_woman-idle.png", "game"],
             "young_woman-happy": ["assets/img/game/characters/young_woman-happy.png", "game"],
             "young_woman-angry": ["assets/img/game/characters/young_woman-angry.png", "game"],

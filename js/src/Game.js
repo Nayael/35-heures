@@ -72,7 +72,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                 to: 'loading'
             }, {
                 name: 'play',
-                from: ['none', 'break', 'loading', 'night'],
+                from: ['none', 'menu', 'break', 'loading', 'night'],
                 to: 'playing'
             }, {
                 name: 'pause',
@@ -87,8 +87,8 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                 from: 'playing',
                 to: 'night'
             }, {
-                name: 'showmenu',
-                from: ['none','load'],
+                name: 'showMenu',
+                from: ['none', 'load'],
                 to: 'menu'
             }],
             callbacks: {
@@ -96,7 +96,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                     Game.instance.currentUpdateLoop = null;
                     // Game.instance.currentUpdateLoop = Game.instance.loadingLoop;
                 },
-                onentermenu: function(e) {
+                onshowMenu: function(e) {
                     Game.instance.currentUpdateLoop = Game.instance.menuLoop;
                     Game.instance.stage.setScreen(_screenMenu);
                 },
@@ -127,7 +127,12 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         this.payslip = new Payslip('payslip');
         this.payslipWeek = new Payslip('folder');
-        this.startGame();
+        this.initScreens();
+
+        // Initializing Input Manager
+        InputManager.instance.init();
+
+        this.fsm.showMenu();
     };
 
     /**
@@ -159,8 +164,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * Starts a new game
      */
     Game.prototype.startGame = function() {
-        // Initializing Input Manager
-        InputManager.instance.init();
 
         // Initializing Client Manager
         ClientManager.instance.init();
@@ -184,9 +187,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         TimeManager.instance.addListener(TimeManager.END_PERIOD_MORNING, this.onEndMorning, this);
         TimeManager.instance.addListener(TimeManager.START_PERIOD_AFTERNOON, this.startGamePhase, this);
         TimeManager.instance.addListener(TimeManager.END_OF_DAY, this.onEndOfDay, this);
-        // TimeManager.instance.addListener(TimeManager.END_OF_WEEK, this.onEndOfWeek, this);
 
-        this.initScreens();
         TimeManager.instance.startDay();
     };
 
@@ -208,6 +209,10 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     Game.prototype.initScreens = function() {
         _screenOffice = new Screen();
         _screenMenu = new Screen();
+
+        var background_menu  = new Entity('background_menu');
+        var menu_play_button = new Entity('menu_play_button');
+        var logo_isart_digital = new Entity('logo_isart_digital');
 
         var backgroundOffice     = new Entity('background');
         var template             = new Entity('template');
@@ -251,6 +256,12 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         keys.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         access_card.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         stamps.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
+
+        menu_play_button.x = 700;
+        menu_play_button.y = 520;
+        logo_isart_digital.x = 40;
+        logo_isart_digital.y = 650;
+        menu_play_button.addListener(Entity.ACTIONNED, this.onPlayButton, this);
 
         backgroundOffice.x = 0;
         backgroundOffice.y = 0;
@@ -316,6 +327,15 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         // _screenOffice.addChild(id_card);
         // _screenOffice.addChild(bad_package);
         // _screenOffice.addChild(bad_package_2);
+
+        _screenMenu.addChild(background_menu);
+        _screenMenu.addChild(menu_play_button);
+        _screenMenu.addChild(logo_isart_digital);
+    };
+
+    Game.prototype.onPlayButton = function(target) {
+        target.removeListener(Entity.ACTIONNED, this.onPlayButton);
+        this.startGame();
     };
 
     /**

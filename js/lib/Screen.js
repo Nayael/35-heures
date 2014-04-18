@@ -7,22 +7,18 @@ var Screen = (function() {
             return new Screen(entities);
         }
         this.stage = null;
+        this.children = [];
+        this.bufferChildren = [];
 
         if (entities) {
             for (var i = 0, entity; i < entities.length; i++) {
                 entity = entities[i];
                 if (entity.view) {
-                    _children.push(entity);
+                    this.children.push(entity);
                 }
             }
         }
     }
-
-    ////////////
-    // PRIVATE ATTRIBUTES
-    //
-    var _children = [];
-    var _bufferChildren = [];
 
 
     ////////////
@@ -43,12 +39,12 @@ var Screen = (function() {
      * @param  {Object} child The child to add
      */
     Screen.prototype.addChild = function(child, addToBuffer, index) {
-        if (index === undefined || index > _children.length) {
-            index = _children.length;
+        if (index === undefined || index > this.children.length) {
+            index = this.children.length;
         }
-        _children.splice(index, 0, child);
+        this.children.splice(index, 0, child);
         if (addToBuffer) {
-            _bufferChildren.push(child);
+            this.bufferChildren.push(child);
         }
         if (this.stage && !this.stage.containsChild(child)) {
             this.stage.addChild(child, addToBuffer, index);
@@ -61,14 +57,14 @@ var Screen = (function() {
      * @param  {Object} child The child to remove
      */
     Screen.prototype.removeChild = function(child) {
-        var index = _children.indexOf(child);
+        var index = this.children.indexOf(child);
         if (index == -1) {
             return;
         }
-        _children.splice(index, 1);
+        this.children.splice(index, 1);
         var bufferIndex;
-        if ( (bufferIndex = _bufferChildren.indexOf(_bufferChildren)) != -1) {
-            _bufferChildren.splice(bufferIndex, 1);
+        if ( (bufferIndex = this.bufferChildren.indexOf(this.bufferChildren)) != -1) {
+            this.bufferChildren.splice(bufferIndex, 1);
         }
         if (this.stage && this.stage.containsChild(child)) {
             this.stage.removeChild(child);
@@ -76,11 +72,11 @@ var Screen = (function() {
     };
 
     Screen.prototype.getChildren = function() {
-        return _children;
+        return this.children;
     };
 
     Screen.prototype.getBufferChildren = function() {
-        return _bufferChildren;
+        return this.bufferChildren;
     };
 
     return Screen;

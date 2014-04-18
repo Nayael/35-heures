@@ -131,6 +131,10 @@ var Stage = (function(MakeEventDispatcher, InputManager) {
     }
 
     Stage.prototype.setScreen = function(stageScreen) {
+        // Clearing the canvas
+        this.context.fillStyle = this.backgroundColor || 'rgb(255, 255, 255)';
+        this.context.fillRect(0, 0, this.stageWidth, this.stageHeight);
+        
         if (this.screen) {
             this.screen.stage = null;
             this.screen = null;
