@@ -116,12 +116,10 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
             {
                 ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["pause"]);
 
-
             }else if (TimeManager.instance.isNight) {
 
                 ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["endDay"]);
 
-                
             }else{
                 
                 ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["fail"]);
