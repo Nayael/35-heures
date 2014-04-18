@@ -41,6 +41,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     //
     var _entities = [];
     var _screenOffice;
+    var _screenMenu;
 
     ////////////
     // PUBLIC METHODS
@@ -94,7 +95,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                 },
                 onentermenu: function (e) {
                     Game.instance.currentUpdateLoop = Game.instance.menuLoop;
-                    // Game.instance.stage.setScreen(_screenMenu);
+                    Game.instance.stage.setScreen(_screenMenu);
                 },
                 onplay: function (e) {
                     // console.log('Game state: ', Game.instance.fsm.current);
@@ -200,6 +201,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
     Game.prototype.initScreens = function() {
         _screenOffice = new Screen();
+        _screenMenu = new Screen();
         
         var backgroundOffice     = new Entity('background');
         var template             = new Entity('template');
@@ -228,6 +230,8 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         var box_files            = new Entity('box_files');
         var books_under_tampon   = new Entity('books_under_tampon');
         var book                 = new Entity('book');
+
+        post_it_computer.setTouchable(false);
 
         computer.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
         crayons.addListener(Entity.ACTIONNED, this.onEntityActionned, this);
@@ -287,11 +291,9 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         _screenOffice.addChild(backgroundOffice, false);
         _screenOffice.addChild(middle_window, true);   
-        _screenOffice.addChild(desk, true);          
-        _screenOffice.addChild(keys, true);
+        _screenOffice.addChild(desk, true);  
         _screenOffice.addChild(telephone, true);
         _screenOffice.addChild(access_card, true);
-        _screenOffice.addChild(stamps, true);
         _screenOffice.addChild(window_middle_poster, true);
         _screenOffice.addChild(toffee_bowl, true);         
         _screenOffice.addChild(small_envelope, true);                
@@ -299,13 +301,15 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         _screenOffice.addChild(post_it_computer, true);    
         _screenOffice.addChild(pen, true);                 
         //_screenOffice.addChild(payslip, true);        
-        _screenOffice.addChild(envelope_under_box, true);  
-        _screenOffice.addChild(envelope_big, true);       
-        _screenOffice.addChild(box_files, true);           
-        _screenOffice.addChild(books_under_tampon, true);  
-        _screenOffice.addChild(book, true);        
+        _screenOffice.addChild(envelope_under_box, true);   
+        _screenOffice.addChild(box_files, true);
+        _screenOffice.addChild(books_under_tampon, true);
+        _screenOffice.addChild(book, true);    
         _screenOffice.addChild(tampon, true);
-        _screenOffice.addChild(tampon_2, true);                
+        _screenOffice.addChild(tampon_2, true);     
+        _screenOffice.addChild(stamps, true);        
+        _screenOffice.addChild(envelope_big, true);                
+        _screenOffice.addChild(keys, true);               
         //_screenOffice.addChild(template, true);
         // _screenOffice.addChild(id_card);
         // _screenOffice.addChild(bad_package);

@@ -90,7 +90,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     }
 
     ClientManager.prototype.updateResponseDelay = function() {
-        this.responseDelay = this.currentClient["responseDelay"][this.currentAction] || this.currentClient["responseDelay"]["default"];
+        //this.responseDelay = this.currentClient["responseDelay"][this.currentAction] || this.currentClient["responseDelay"]["default"];
     }
 
     ClientManager.prototype.getAnswer = function() {
@@ -149,8 +149,14 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
                 });
             }
         } else {
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["phase_" + this.currentPhase]["intro"]);
-            this.actionIsEnd = true;
+            // ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["phase_" + this.currentPhase]["intro"]);
+            this.getAnswer();
+            this.actionIsEnd = false;
+                this.actionHasChange({
+                    name: "time",
+                    minDuration: 5
+                });
+            // this.actionIsEnd = true;
         }
     }
 
@@ -162,21 +168,22 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
             return;
         }
         this.previousPatience = this.currentPatience;
-        this.currentPatience -= (5 / 3) * Time.deltaTime * this.currentVulnerability;
+        this.currentPatience -= Time.deltaTime * this.currentVulnerability;
 
         this.timeSinceAction = TimeManager.instance.getTimeSinceAction();
 
         // End client : patience or out of time
-        if (this.currentPatience <= 0 || this.timeSinceAction > 10) {
+        if (this.currentPatience <= 0) {
             this.endClient(false);
             return;
         }
 
-        if (this.timeSinceAction > this.responseDelay && !this.reactToAction) {
-            this.reactToAction = true;
-            console.log("responseDelay");
-            this.getAnswer();
-        }
+        // if (this.timeSinceAction > this.responseDelay && !this.reactToAction) {
+        //     this.reactToAction = true;
+        //     console.log("responseDelay");
+        //     this.getAnswer();
+        // }
+
         if (this.timeSinceAction > this.actionDuration && !this.actionIsEnd) {
             console.log("actionDuration");
             this.checkAnswer();

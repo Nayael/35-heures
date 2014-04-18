@@ -2,74 +2,75 @@ var clients = (function() {
     'use strict';
 
     var clients = {
-        /*"young_woman": {
+        "young_woman": {
             "name": "young_woman",
             "displayName": "Jeune femme",
-            "intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé ainsi que ma carte d'identité",
-            "neededTime" : 3,
+            "intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé",
+            "neededTime" : 5,
             "vulnerability": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 3,
-                "default": 2
-            },
-            "responseDelay": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 8,
-                "default": 2
+                "computer": 2,
+                "crayons": 2,
+                "small_envelope": 2,
+                "envelope_big": 2,
+                "tampon": 2,
+                "tampon_2": 2,
+                "telephone": 2,
+                "toffee_bowl": 2,
+                "keys": 2,
+                "access_card": 2,
+                "stamps": 2,
+                "time": 5
             },
             "scenario": {
                 "default": {
                     "time":"Vous ne voulez pas agir au lieu de ne rien faire !",
-                    "computerFakbok": "Vous faites quoi là !?",
+                    "computer": "Vous faites quoi là !?",
                     "default": "Vous croyez que c'est le moment de faire ça"
                 },
                 "phase_0": {
-                    "intro": "Je viens retirer une commande! tenez voici le recommandé ainsi que ma carte d’identité. et vite ...SVP!",
-                    "success": "id_card",
-                    "id_card": "Tenez voici mes papiers, c'est la commande n° 16546842 elle est arrivé hier",
-                    "keys": "Vous ne vérifier pas mon identité ?"
+                    "success": "computer",
+                    "computer": "Tenez voici mes papiers, c'est la commande n° 16546842 elle est arrivé hier"
                 },
                 "phase_1": {
-                    "intro": "Bon maintenant que vous avez vérifier mes papiers je veux bien ma commande",
                     "success": "keys",
-                    "id_card": "Je vous est déjà donner les papiers",
                     "keys": "Merci, bonne journée"
                 },
                 "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
             }
-        },*/
+        },
         "old_woman": {
             "name": "old_woman",
             "displayName": "Vieille femme",
             "intro" : "Bonjour mon petit, je voudrais poster cette lettre.",
-            "neededTime" : 3,
+            "neededTime" : 5,
             "vulnerability": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 4,
-                "default": 2
-            },
-            "responseDelay": {
-                "technology": 6,
-                "paperwork": 2,
-                "time": 8,
-                "default": 7
+                "computer": 2,
+                "crayons": 2,
+                "small_envelope": 2,
+                "envelope_big": 2,
+                "tampon": 2,
+                "tampon_2": 2,
+                "telephone": 2,
+                "toffee_bowl": 2,
+                "keys": 2,
+                "access_card": 2,
+                "stamps": 2,
+                "time": 5
             },
             "scenario": {
                 "default": {
+                    "default": "J'ai pas toute la journée",
                     "time":"Vous ne voulez pas agir au lieu de ne rien faire !",
                     "computer": "Je n'y connais rien à ces trucs.",
-                    "default": "J'ai pas toute la journée"
+                    "toffee_bowl": "Merci pour les bonbons mais ça ne va pas m'aider",
+                    "envelope_big": "Cette enveloppe est bien trop grande",
+                    "telephone": "Raccrochez et donnez-moi mon enveloppe"
                 },
                 "phase_0": {
-                    "intro": "Il vous faut tout ce temps pour une enveloppe !?",
-                    "succeed": "envelope",
-                    "envelope": "Merci mon petit, Je voudrais aussi quelques timbres"
+                    "succeed": "small_envelope",
+                    "small_envelope": "Merci mon petit, Je voudrais aussi quelques timbres"
                 },
                 "phase_1": {
-                    "intro": "Et ces timbres, c'est pour aujourd'hui ou pour demain",
                     "succeed": "stamps",
                     "stamps": "Merci, aurevoir"
                 },
