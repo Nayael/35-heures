@@ -112,7 +112,21 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
         }
         if (!succeed) {
             // console.log("display fail");
-            ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["fail"]);
+            if(TimeManager.instance.isBreak)
+            {
+                ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["pause"]);
+
+
+            }else if (TimeManager.instance.isNight) {
+
+                ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["endDay"]);
+
+                
+            }else{
+                
+                ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["fail"]);
+            }
+                
         }
         
         // If there is only a few before a period end, we don't create a new client, and trigger the break
@@ -156,7 +170,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
                 this.actionIsEnd = false;
                 this.actionHasChange({
                     name: "time",
-                    minDuration: 5
+                    minDuration: 20
                 });
             }
         } else {
@@ -165,7 +179,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
             this.actionIsEnd = false;
                 this.actionHasChange({
                     name: "time",
-                    minDuration: 5
+                    minDuration: 20
                 });
             // this.actionIsEnd = true;
         }

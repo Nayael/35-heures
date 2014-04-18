@@ -447,6 +447,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         this.payslip.render();
         setTimeout(function () {
             Game.instance.payslip.displayInfo(ScoreManager.instance.getLastDayScore());
+            Game.instance.payslip.render();
         }, 100);
         var sheetTimeout = setTimeout(function() {
             Game.instance.dispatch(Game.DAY_SHEET_VALIDATED);
@@ -467,6 +468,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         this.payslipWeek.render();
         setTimeout(function () {
             Game.instance.payslipWeek.displayInfoWeek(ScoreManager.instance.getLastWeekScore());
+            Game.instance.payslipWeek.render();
         }, 100);
         var sheetTimeout = setTimeout(function() {
             Game.instance.dispatch(Game.WEEK_SHEET_VALIDATED);

@@ -34,7 +34,7 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
                 return;
             }
             if (action == this.currentAction.name) {
-                return thisendAction();
+                return this.endAction();
             }
         }
         this.currentAction = this.actions[action];

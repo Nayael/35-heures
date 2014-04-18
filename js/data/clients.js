@@ -26,7 +26,8 @@ var clients = (function() {
                     "time":"Pff, je n'ai pas toute la journée, j'ai du shopping à faire moi",
                     "computer": "Vous vous foutez de moi ! Vous traînez sur FaKebok au lieu de me filer mon colis ! J'en parlerai à la direction !",
                     "default": "Mais qu'est-ce que vous foutez !",
-                    "toffee_bowl":"Merci pour les bonbons"
+                    "toffee_bowl":"Merci pour les bonbons.",
+                    "access_card": "Je n'ai pas besoin de photocopies."
                 },
                 "phase_0": {
                     "succeed": "computer",
@@ -36,7 +37,9 @@ var clients = (function() {
                     "succeed": "keys",
                     "keys": "Merci, salut."
                 },
-                "fail": "Mon après-midi shopping n'attend pas, je ne vais pas passer ma journée avec des incompétents."
+                "fail": "Mon après-midi shopping n'attend pas, je ne vais pas passer ma journée avec des incompétents.",
+                "pause": "Quoi, c'est déjà votre pause !?",
+                "endDay": "Vous êtes déjà fermé ?"
             }
         },
         "old_woman": {
@@ -75,7 +78,9 @@ var clients = (function() {
                     "succeed": "stamps",
                     "stamps": "Merci, aurevoir"
                 },
-                "fail": "Vous êtes trop lent, Bibiche m'attend dehors, j'espère pour vous qu'il n'a pas pris froid"
+                "fail": "Vous êtes trop lent, Bibiche m'attend dehors, j'espère pour vous qu'il n'a pas pris froid",
+                "pause": "Quoi, c'est déjà votre pause !?",
+                "endDay": "Vous pouvez bien faire une petite exception pour une vieille dame."
             }
         },
         "woman": {
@@ -119,7 +124,9 @@ var clients = (function() {
                     "tampon_2": "Merci bonne fin de journée",
                     "tampon": "Ce n'est pas le bon tampon",
                 },
-                "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
+                "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur",
+                "pause": "Je repasserai dans l'après-midi.",
+                "endDay": "J'ai pas le temps d'aller à la Pauste plus tôt, c'est vraiment chiant."
             }
         },
         "young_man": {
@@ -132,10 +139,10 @@ var clients = (function() {
                 "crayons": 2,
                 "small_envelope": 3,
                 "envelope_big": 6,
-                "tampon": -1,
+                "tampon": 1,
                 "tampon_2": 4,
                 "telephone": 2,
-                "toffee_bowl": -1,
+                "toffee_bowl": 5,
                 "keys": 5,
                 "access_card": 2,
                 "stamps": 5,
@@ -144,8 +151,9 @@ var clients = (function() {
             "scenario": {
                 "default": {
                     "time":"Mec, j'aimerai juste en finir le plus vite possible, alors dépêches-toi.",
-                    "computer": "Franchement mec, tu crois vraiment que j'ai le temps pour ça.",
+                    "computer": "Franchement mec, tu crois vraiment que c'est le moment d'aller sur FaKebok",
                     "envelope_big": "Cette enveloppe est bien trop grande",
+                    "toffee_bowl": "Mec, les bonbons c'est pour les gamins.",
                     "default": "Tu crois que c'est le moment de faire ça ?"
                 },
                 "phase_0": {
@@ -160,7 +168,9 @@ var clients = (function() {
                     "succeed": "tampon",
                     "tampon": "Merci vieux, peace !"
                 },
-                "fail": "Je me casse, t'es vraiment trop lent mec."
+                "fail": "Je me casse, t'es vraiment trop lent mec.",
+                "pause": "Je reviendrais plus tard, marre d'avoir attendu pour rien.",
+                "endDay": "Merde, déjà fermé"
             }
         },
         "old_man": {
@@ -176,7 +186,7 @@ var clients = (function() {
                 "tampon": 2,
                 "tampon_2": 4,
                 "telephone": 8,
-                "toffee_bowl": 1,
+                "toffee_bowl": 3,
                 "keys": 5,
                 "access_card": 2,
                 "stamps": 5,
@@ -186,17 +196,20 @@ var clients = (function() {
                 "default": {
                     "time":"Vous ne voulez pas agir au lieu de ne rien faire !",
                     "computer": "Vous foutez quoi ?",
-                    "default": "Vous croyez que c'est le moment de faire ça ?"
+                    "default": "Vous croyez que c'est le moment de faire ça ?",
+                    "toffee_bowl": "Je vais vous faire ravaler vos bonbons à coups de pompe."
                 },
                 "phase_0": {
-                    "succeed": "access_card",
-                    "access_card": "Le colis est cassé !? Contactez donc votre centre de tri."
+                    "succeed": "keys",
+                    "keys": "Le colis est cassé !? Contactez donc votre centre de tri."
                 },
                 "phase_1": {
                     "succeed": "telephone",
                     "telephone": "Mon colis n'est pas assuré !? C'est une honte ! C'est toujours pareil avec la Pauste aujourd'hui, vous êtes des incapables.",
                 },
-                "fail": "Vous êtes nul, un véritable incapable, de mon temps on n'aurait jamais vu ça"
+                "fail": "Vous êtes nul, un véritable incapable, de mon temps on n'aurait jamais vu ça",
+                "pause": "Je reviendrai",
+                "endDay": "Des vrais feignants à la Pauste"
             }
         }
     };
