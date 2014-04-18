@@ -24,7 +24,7 @@ var TimeManager = (function(MakeEventDispatcher) {
     };
 
     // Static
-    TimeManager.DAYS                   = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+    TimeManager.DAYS                   = ['Lundi',/* 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'*/];
     TimeManager.PERIODS                = ['MORNING', 'AFTERNOON', 'NIGHT'];
     TimeManager.START_PERIOD_MORNING   = "TimeManager.START_PERIOD_MORNING";
     TimeManager.END_PERIOD_MORNING     = "TimeManager.END_PERIOD_MORNING";
