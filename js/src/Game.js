@@ -89,7 +89,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
             }],
             callbacks: {
                 onload: function (e) {
-                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = null;
                     // Game.instance.currentUpdateLoop = Game.instance.loadingLoop;
                 },
@@ -98,20 +97,16 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                     Game.instance.stage.setScreen(_screenMenu);
                 },
                 onplay: function (e) {
-                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.gameLoop;
                     Game.instance.stage.setScreen(_screenOffice);
                 },
                 onpause: function (e) {
-                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.gamePause;
                 },
                 ongoToBreak: function (e) {
-                    // console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.breakPeriodLoop;
                 },
                 ongoToNight: function (e) {
-                    console.log('Game state: ', Game.instance.fsm.current);
                     Game.instance.currentUpdateLoop = Game.instance.nightPeriodLoop;
                     // TODO anim
                     Game.instance.showDaySheet();
@@ -175,7 +170,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         TimeManager.instance.addListener(TimeManager.END_PERIOD_MORNING, this.onEndMorning, this);
         TimeManager.instance.addListener(TimeManager.START_PERIOD_AFTERNOON, this.startGamePhase, this);
         TimeManager.instance.addListener(TimeManager.END_OF_DAY, this.onEndOfDay, this);
-        TimeManager.instance.addListener(TimeManager.END_OF_WEEK, this.onEndOfWeek, this);
+        // TimeManager.instance.addListener(TimeManager.END_OF_WEEK, this.onEndOfWeek, this);
 
         this.initScreens();
         TimeManager.instance.startDay();
@@ -193,7 +188,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         // console.log(TimeManager.instance.currentPeriod == TimeManager.PERIODS[0] ? 'La journée est sur le point de commencer...' : "L'après-midi va commencer...");
 
         setTimeout(function() {
-            // console.log("C'est parti.");
+            console.log("C'est parti.");
             TimeManager.instance.running = true;
             ClientManager.instance.newClient();
         }, TimeManager.TIME_BEFORE_PERIOD_STARTS);
@@ -272,8 +267,8 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         small_envelope.y = 637;      
         post_it_computer.x = 20;    
         post_it_computer.y = 346;    
-        pen.x = 684;                 
-        pen.y = 405;                 
+        pen.x = 684;
+        pen.y = 405;
         payslip.x = 0;             
         payslip.y = 0;             
         middle_window.x = 0;       
@@ -299,7 +294,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         _screenOffice.addChild(small_envelope, true);                
         _screenOffice.addChild(computer, true);        
         _screenOffice.addChild(post_it_computer, true);    
-        _screenOffice.addChild(pen, true);                 
+        _screenOffice.addChild(pen, true);
         //_screenOffice.addChild(payslip, true);        
         _screenOffice.addChild(envelope_under_box, true);   
         _screenOffice.addChild(box_files, true);

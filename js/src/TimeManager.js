@@ -24,15 +24,17 @@ var TimeManager = (function(MakeEventDispatcher) {
     };
 
     // Static
-    TimeManager.DAYS                      = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
-    TimeManager.PERIODS                   = ['MORNING', 'AFTERNOON', 'NIGHT'];
-    TimeManager.START_PERIOD_MORNING      = "TimeManager.START_PERIOD_MORNING";
-    TimeManager.END_PERIOD_MORNING        = "TimeManager.END_PERIOD_MORNING";
-    TimeManager.START_PERIOD_AFTERNOON    = "TimeManager.START_PERIOD_AFTERNOON";
-    TimeManager.END_OF_DAY                = "TimeManager.END_OF_DAY";
-    TimeManager.END_OF_WEEK               = "TimeManager.END_OF_WEEK";
-    TimeManager.TIME_BEFORE_PERIOD_STARTS = 1500;
-    TimeManager.TIME_BETWEEN_PERIODS      = 3500;
+    TimeManager.DAYS                   = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+    TimeManager.PERIODS                = ['MORNING', 'AFTERNOON', 'NIGHT'];
+    TimeManager.START_PERIOD_MORNING   = "TimeManager.START_PERIOD_MORNING";
+    TimeManager.END_PERIOD_MORNING     = "TimeManager.END_PERIOD_MORNING";
+    TimeManager.START_PERIOD_AFTERNOON = "TimeManager.START_PERIOD_AFTERNOON";
+    TimeManager.END_OF_DAY             = "TimeManager.END_OF_DAY";
+    TimeManager.START_WEEK             = "TimeManager.START_WEEK";
+    TimeManager.END_OF_WEEK            = "TimeManager.END_OF_WEEK";
+    TimeManager.DAY_DURATION           = 210;
+    TimeManager.TIME_BETWEEN_PERIODS   = 3500;
+    TimeManager.TIME_BETWEEN_PERIODS   = 3500;
 
     // Private
     var _timeOfDay = 0;
@@ -46,7 +48,7 @@ var TimeManager = (function(MakeEventDispatcher) {
         }
         // Update hour of days
         _timeOfDay += Time.deltaTime;
-        if (_timeOfDay > 15 && this.currentPeriod == TimeManager.PERIODS[0]) {
+        if (_timeOfDay > 12 && this.currentPeriod == TimeManager.PERIODS[0]) {
             this.running = false;
             this.dispatch(TimeManager.END_PERIOD_MORNING);
 
@@ -54,7 +56,7 @@ var TimeManager = (function(MakeEventDispatcher) {
                 TimeManager.instance.startAfternoon();
             }, TimeManager.TIME_BETWEEN_PERIODS);
 
-        } else if (_timeOfDay > 20) {
+        } else if (_timeOfDay > TimeManager.DAY_DURATION) {
             this.running = false;
             this.endDay();
         }
@@ -70,7 +72,6 @@ var TimeManager = (function(MakeEventDispatcher) {
         _timeSinceAction = 0;
         _timeSinceClient = 0;
         this.currentDay++;
-        console.log('this.getDay(): ', this.getDay());
         this.currentPeriod = TimeManager.PERIODS[0];
         this.dispatch(TimeManager.START_PERIOD_MORNING);
     };
@@ -89,16 +90,16 @@ var TimeManager = (function(MakeEventDispatcher) {
     // End a Day
     TimeManager.prototype.endDay = function() {
         this.currentPeriod = TimeManager.PERIODS[2];
+        this.dispatch(TimeManager.END_OF_DAY);
         if (this.currentDay >= TimeManager.DAYS.length - 1) {
             this.dispatch(TimeManager.END_OF_WEEK);
-        } else {
-            this.dispatch(TimeManager.END_OF_DAY);
         }
     };
 
     // Start a new Week
     TimeManager.prototype.startWeek = function() {
         this.currentDay = -1;
+        this.dispatch(TimeManager.START_WEEK);
         this.startDay();
     };
 
@@ -114,15 +115,11 @@ var TimeManager = (function(MakeEventDispatcher) {
     };
 
     // Return hour of the day format : { h:##, m:## }
-    TimeManager.prototype.getTimeHour = function() {
-        var time = {
-            h: 9 + (_timeOfDay / 30) | 0,
-            m: ((_timeOfDay % 30) * 2) | 0,
+    TimeManager.prototype.realTimeToGameTime = function(realTime) {
+        return {
+            h: (realTime / 30) | 0,
+            m: ((realTime % 30) * 2) | 0
         };
-        if (this.currPhase == TimeManager.PERIODS[1]) {
-            time.h += 1;
-        }
-        return time;
     };
 
     // Return current day

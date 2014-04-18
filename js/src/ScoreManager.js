@@ -18,57 +18,90 @@ var ScoreManager = (function(TimeManager) {
         this.clientsScore = [];
         this.daysScore    = [];
         this.weeksScore   = [];
+        this.workedTimeForBoss = 0;
     };
 
     ScoreManager.prototype.init = function() {
-        ClientManager.instance.addListener(ClientManager.END_CLIENT, this.endOfClient, this);
-        TimeManager.instance.addListener(TimeManager.END_OF_DAY, this.endOfDay, this);
-        TimeManager.instance.addListener(TimeManager.END_OF_WEEK, this.endOfWeek, this);
+        ClientManager.instance.addListener(ClientManager.END_CLIENT, this.onEndOfClient, this);
+        TimeManager.instance.addListener(TimeManager.START_PERIOD_MORNING, this.onStartOfDay, this);
+        TimeManager.instance.addListener(TimeManager.END_OF_DAY, this.onEndOfDay, this);
+        TimeManager.instance.addListener(TimeManager.START_WEEK, this.onStartWeek, this);
+        TimeManager.instance.addListener(TimeManager.END_OF_WEEK, this.onEndOfWeek, this);
+    };
+
+    ScoreManager.prototype.onStartOfDay = function() {
+        this.clientsScore.length = 0;
+        this.workedTimeForBoss = TimeManager.DAY_DURATION;
+    };
+
+    ScoreManager.prototype.onStartWeek = function() {
+        this.daysScore.length = 0;
     }
 
-    ScoreManager.prototype.endOfClient = function(client, clientSucceed, totalTime, neededTime) {
-        console.log('ScoreManager.prototype.endOfClient');
+    ScoreManager.prototype.onEndOfClient = function(client, clientSucceed, totalTime, neededTime) {
+        // If the client was failed, the boss knows you lost this time
+        if (!clientSucceed) {
+            this.workedTimeForBoss -= totalTime;
+            console.log('Blame : tu as fait fuir ce client !');
+        }
         this.clientsScore.push({
+            "name": client.name,
             "succeed": clientSucceed,
             "totalTime": totalTime,
             "neededTime": neededTime
         });
-        console.log('Productivité Client : ' + ( (100 * neededTime / totalTime + 0.5) |0) + '%');
     };
 
-    ScoreManager.prototype.endOfDay = function() {
-        console.log('ScoreManager.prototype.endOfDay');
-        var totalTime = 0;
-        var neededTime = 0;
-        var succeededClients = 0;
+    ScoreManager.prototype.onEndOfDay = function() {
+        var actualWorkedTime = 0;
+        var nbSuccess = 0;
+        // var productivity = 0;
         for (var i = 0; i < this.clientsScore.length; i++) {
-            totalTime += this.clientsScore[i].totalTime;
-            neededTime += this.clientsScore[i].neededTime;
+            actualWorkedTime += this.clientsScore[i].neededTime;
             if (this.clientsScore[i].succeed) {
-                succeededClients++;
+                ++nbSuccess;
             }
         };
-        this.daysScore.push({
-            "totalTime": totalTime,
-            "neededTime": neededTime,
-            "succeededClients": succeededClients
-        });
-        console.log('Productivité de ce jour : ' + (totalTime != 0 ? (neededTime / totalTime) : 0) );
+        var dayScore = {
+            "actualWorkedTime": actualWorkedTime,
+            "workedTimeForBoss": this.workedTimeForBoss,
+            "nbSuccess": nbSuccess,
+            "nbFailed": this.clientsScore.length - nbSuccess,
+            "productivity": actualWorkedTime / this.workedTimeForBoss,
+            "clients": this.clientsScore
+        };
+        this.daysScore.push(dayScore);
+        var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(this.workedTimeForBoss);
+        var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(actualWorkedTime);
+
+        console.log("Aujourd'hui, le boss croit que tu as travaillé " + gameTimeWorkedForBoss.h + " heures, et " + gameTimeWorkedForBoss.m + " minutes !\nAlors que tu n'en a fait que " + gameTimeActuallyWorked.h + " et " + gameTimeActuallyWorked.m + " minutes !",
+            "\nProductivité: " + dayScore.productivity,
+            "Nombre de blames: " + dayScore.nbFailed);
     };
 
-    ScoreManager.prototype.endOfWeek = function() {
-        console.log('ScoreManager.prototype.endOfWeek');
-        var totalTime = 0;
-        var neededTime = 0;
+    ScoreManager.prototype.onEndOfWeek = function() {
+        var actualWorkedTime = 0;
+        var workedTimeForBoss = 0;
         for (var i = 0; i < this.daysScore.length; i++) {
-            totalTime += this.daysScore[i].totalTime;
-            neededTime += this.daysScore[i].neededTime;
+            actualWorkedTime  += this.daysScore[i].actualWorkedTime;
+            workedTimeForBoss += this.daysScore[i].workedTimeForBoss;
         };
         this.weeksScore.push({
-            "totalTime": totalTime,
-            "neededTime": neededTime
+            "actualWorkedTime": actualWorkedTime,
+            "workedTimeForBoss": workedTimeForBoss,
+            "productivity": actualWorkedTime / workedTimeForBoss
         });
-        console.log('Productivité de la semaine : ' + (totalTime != 0 ? (neededTime / totalTime) : 0) );
+        var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(workedTimeForBoss);
+        var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(actualWorkedTime);
+        console.log("Cette semaine, le boss croit que tu as travaillé " + gameTimeWorkedForBoss.h + " heures, et " + gameTimeWorkedForBoss.m + " minutes !\nAlors que tu n'en a fait que " + gameTimeActuallyWorked.h + " et " + gameTimeActuallyWorked.m + " minutes !");
+    };
+
+    ScoreManager.prototype.getLastDayScore = function() {
+        return daysScore.length > 0 ? this.daysScore[daysScore.length - 1] : null;
+    };
+
+    ScoreManager.prototype.getLastWeekScore = function() {
+        return weeksScore.length > 0 ? this.weeksScore[weeksScore.length - 1] : null;
     };
 
     // Singleton
