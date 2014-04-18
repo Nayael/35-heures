@@ -34,7 +34,7 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
                 return;
             }
             if (action == this.currentAction.name) {
-                return _endAction();
+                return thisendAction();
             }
         }
         this.currentAction = this.actions[action];
@@ -47,15 +47,15 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
         _dispatchAction(this.actions[action]);
     }
 
+    ActionManager.prototype.endAction = function() {
+        ActionManager.instance.dispatch(ActionManager.ACTION_END);
+    }
+
     ////////////
     // PRIVATE METHODS
     //
     function _dispatchAction(action) {
         ActionManager.instance.dispatch(ActionManager.ACTION_DISPATCHED, action);
-    }
-
-    function _endAction() {
-        ActionManager.instance.dispatch(ActionManager.ACTION_END);
     }
 
     // Singleton

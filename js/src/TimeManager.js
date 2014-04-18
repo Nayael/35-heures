@@ -32,6 +32,7 @@ var TimeManager = (function(MakeEventDispatcher) {
     TimeManager.END_OF_DAY             = "TimeManager.END_OF_DAY";
     TimeManager.START_WEEK             = "TimeManager.START_WEEK";
     TimeManager.END_OF_WEEK            = "TimeManager.END_OF_WEEK";
+    TimeManager.MORNING_DURATION       = 10;
     TimeManager.DAY_DURATION           = 210;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
@@ -48,16 +49,9 @@ var TimeManager = (function(MakeEventDispatcher) {
         }
         // Update hour of days
         _timeOfDay += Time.deltaTime;
-        if (_timeOfDay > 12 && this.currentPeriod == TimeManager.PERIODS[0]) {
-            this.running = false;
-            this.dispatch(TimeManager.END_PERIOD_MORNING);
-
-            setTimeout(function() {
-                TimeManager.instance.startAfternoon();
-            }, TimeManager.TIME_BETWEEN_PERIODS);
-
+        if (_timeOfDay > TimeManager.MORNING_DURATION && this.currentPeriod == TimeManager.PERIODS[0]) {
+            this.endMorning();
         } else if (_timeOfDay > TimeManager.DAY_DURATION) {
-            this.running = false;
             this.endDay();
         }
 
@@ -76,11 +70,22 @@ var TimeManager = (function(MakeEventDispatcher) {
         this.dispatch(TimeManager.START_PERIOD_MORNING);
     };
 
+    TimeManager.prototype.endMorning = function() {
+        this.running = false;
+        _timeOfDay = TimeManager.MORNING_DURATION;
+        this.dispatch(TimeManager.END_PERIOD_MORNING);
+
+        setTimeout(function() {
+            TimeManager.instance.startAfternoon();
+        }, TimeManager.TIME_BETWEEN_PERIODS);
+    }
+
     // Start the afternoon period
     TimeManager.prototype.startAfternoon = function() {
         if (this.currentPeriod != TimeManager.PERIODS[0]) {
             return;
         }
+        _timeOfDay += 30;   // 30 seconds = 1h in game
         _timeSinceAction = 0;
         _timeSinceClient = 0;
         this.currentPeriod = TimeManager.PERIODS[1];
@@ -89,6 +94,7 @@ var TimeManager = (function(MakeEventDispatcher) {
 
     // End a Day
     TimeManager.prototype.endDay = function() {
+        this.running = false;
         this.currentPeriod = TimeManager.PERIODS[2];
         this.dispatch(TimeManager.END_OF_DAY);
         if (this.currentDay >= TimeManager.DAYS.length - 1) {
@@ -120,6 +126,14 @@ var TimeManager = (function(MakeEventDispatcher) {
             h: (realTime / 30) | 0,
             m: ((realTime % 30) * 2) | 0
         };
+    };
+
+    TimeManager.prototype.isJustBeforeBreak = function() {
+        return TimeManager.MORNING_DURATION - _timeOfDay > 0 && TimeManager.MORNING_DURATION - _timeOfDay <= 10;
+    };
+
+    TimeManager.prototype.isJustBeforeNight = function() {
+        return TimeManager.DAY_DURATION - _timeOfDay > 0 && TimeManager.DAY_DURATION - _timeOfDay <= 10;
     };
 
     // Return current day

@@ -160,6 +160,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         // Initalizaing Client Manager
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
+        ClientManager.instance.addListener(ClientManager.END_CLIENT, this.onEndClient, this);
         ClientManager.instance.addListener(ClientManager.CLIENT_SPEAK, this.onClientSpeak, this);
         ClientManager.instance.addListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState, this);
         ClientManager.instance.addListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState, this);
@@ -285,27 +286,27 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         book.y = 540;                
 
         _screenOffice.addChild(backgroundOffice, false);
-        _screenOffice.addChild(middle_window, true);   
-        _screenOffice.addChild(desk, true);  
-        _screenOffice.addChild(telephone, true);
-        _screenOffice.addChild(access_card, true);
-        _screenOffice.addChild(window_middle_poster, true);
-        _screenOffice.addChild(toffee_bowl, true);         
-        _screenOffice.addChild(small_envelope, true);                
-        _screenOffice.addChild(computer, true);        
-        _screenOffice.addChild(post_it_computer, true);    
-        _screenOffice.addChild(pen, true);
-        //_screenOffice.addChild(payslip, true);        
-        _screenOffice.addChild(envelope_under_box, true);   
-        _screenOffice.addChild(box_files, true);
-        _screenOffice.addChild(books_under_tampon, true);
-        _screenOffice.addChild(book, true);    
-        _screenOffice.addChild(tampon, true);
-        _screenOffice.addChild(tampon_2, true);     
-        _screenOffice.addChild(stamps, true);        
-        _screenOffice.addChild(envelope_big, true);                
-        _screenOffice.addChild(keys, true);               
-        //_screenOffice.addChild(template, true);
+        _screenOffice.addChild(middle_window, false);   
+        _screenOffice.addChild(desk, false);  
+        _screenOffice.addChild(telephone, false);
+        _screenOffice.addChild(access_card, false);
+        _screenOffice.addChild(window_middle_poster, false);
+        _screenOffice.addChild(toffee_bowl, false);         
+        _screenOffice.addChild(small_envelope, false);                
+        _screenOffice.addChild(computer, false);        
+        _screenOffice.addChild(post_it_computer, false);    
+        _screenOffice.addChild(pen, false);
+        //_screenOffice.addChild(payslip, false);        
+        _screenOffice.addChild(envelope_under_box, false);   
+        _screenOffice.addChild(box_files, false);
+        _screenOffice.addChild(books_under_tampon, false);
+        _screenOffice.addChild(book, false);    
+        _screenOffice.addChild(tampon, false);
+        _screenOffice.addChild(tampon_2, false);     
+        _screenOffice.addChild(stamps, false);        
+        _screenOffice.addChild(envelope_big, false);                
+        _screenOffice.addChild(keys, false);               
+        //_screenOffice.addChild(template, false);
         // _screenOffice.addChild(id_card);
         // _screenOffice.addChild(bad_package);
         // _screenOffice.addChild(bad_package_2);
@@ -379,18 +380,32 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     };
 
     Game.prototype.onEndMorning = function() {
+        ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
         // console.log('La matinée est terminée...');
         NotificationManager.instance.clearStack();
-        this.fsm.goToBreak();
+        // End the current client
+        if (!TimeManager.instance.isJustBeforeBreak() && !TimeManager.instance.isJustBeforeNight()) {
+            ClientManager.instance.endClient(false, false);
+        }
+        setTimeout(function () {
+            Game.instance.fsm.goToBreak();
+        }, 2000);
     };
 
     Game.prototype.onEndOfDay = function() {
+        ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
         // console.log('La journée est finie');
         TimeManager.instance.running = false;
-        this.fsm.goToNight();
+        if (!TimeManager.instance.isJustBeforeBreak() && !TimeManager.instance.isJustBeforeNight()) {
+            ClientManager.instance.endClient(false, false);
+        }
+        setTimeout(function () {
+            Game.instance.fsm.goToNight();
+        }, 2000);
     };
 
     Game.prototype.onEndOfWeek = function() {
+        ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
         // console.log('La semaine est finie');
         TimeManager.instance.running = false;
         this.fsm.goToNight();
@@ -402,7 +417,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         // TEMPORARY
         setTimeout(function () {
             Game.instance.dispatch(Game.DAY_SHEET_VALIDATED);
-        }, 1500);
+        }, 2000);
     };
 
     Game.prototype.onDaySheetValidated = function() {
@@ -457,31 +472,51 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * Called when a client is ended, and a new client arrives
      * @param  {String} client The new client
      */
-    Game.prototype.onNewClient = function(client) {
+    Game.prototype.onEndClient = function(client, succeed, timeSinceClient, neededTime, createClient) {
         this.stage.touchable = false;
 
+        ActionManager.instance.endAction();
+
+        // TODO get client by name
         var previousClient = this.currentClient;
-        var newClient = new Character(client.name);
-        this.currentClient = newClient;
-        this.addEntity(newClient);
         
         if (previousClient) {
             previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
             previousClient.animate(-1, onClientOutAnimComplete);
-        } else {
-            _screenOffice.addChild(newClient, false, 1);
-            newClient.animate(1, onClientInAnimComplete);
         }
 
-        function onClientOutAnimComplete (client) {
-        NotificationManager.instance.clearStack();
+        function onClientOutAnimComplete () {
+            
+            NotificationManager.instance.clearStack();
             Game.instance.removeEntity(client);
             _screenOffice.removeChild(client);
-            setTimeout(function(){                
-                _screenOffice.addChild(newClient, false, 1);
-                newClient.animate(1, onClientInAnimComplete);
-            },800);
+
+            if (createClient) {
+                Game.instance.onNewClient( Game.instance.currentClient );
+            } else if (TimeManager.instance.isJustBeforeBreak()) {
+                TimeManager.instance.endMorning();  // Take the break
+            } else if (TimeManager.instance.isJustBeforeNight()) {
+                TimeManager.instance.endDay();  // Take the break
+            }
         }
+    };
+
+    /**
+     * Called when a new client arrives
+     * @param  {String} client The new client
+     */
+    Game.prototype.onNewClient = function(client, createClient) {
+        ClientManager.instance.removeListener(ClientManager.NEW_CLIENT, this.onNewClient);
+        this.stage.touchable = false;
+
+        var newClient = new Character(client.name);
+        Game.instance.currentClient = newClient;
+        Game.instance.addEntity(newClient);
+
+        setTimeout(function(){
+            _screenOffice.addChild(newClient, false, 1);
+            newClient.animate(1, onClientInAnimComplete);
+        }, 800);
 
         function onClientInAnimComplete (client) {
             ClientManager.instance.startClient();
