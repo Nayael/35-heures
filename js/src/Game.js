@@ -114,6 +114,10 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                     Game.instance.currentUpdateLoop = Game.instance.nightPeriodLoop;
                     // TODO anim
                     Game.instance.showDaySheet();
+                },
+                onleavenight: function (e) {
+                    Game.instance.payslip.reset();
+                    Game.instance.payslipWeek.reset();
                 }
             }
         });
@@ -121,7 +125,8 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
 
-        this.payslip = new Payslip();
+        this.payslip = new Payslip('payslip');
+        this.payslipWeek = new Payslip('folder');
         this.startGame();
     };
 
@@ -221,7 +226,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         var small_envelope       = new Entity('small_envelope');
         var post_it_computer     = new Entity('post_it_computer');
         var pen                  = new Entity('pen');
-        var payslip              = new Entity('payslip');
         var middle_window        = new Entity('middle_window');
         var envelope_under_box   = new Entity('envelope_under_box');
         var envelope_big         = new Entity('envelope_big');
@@ -272,8 +276,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         post_it_computer.y = 346;
         pen.x = 684;
         pen.y = 405;
-        payslip.x = 0;
-        payslip.y = 0;
         middle_window.x = 0;
         middle_window.y = 51;
         envelope_under_box.x = 848;
@@ -298,7 +300,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         _screenOffice.addChild(computer, false);        
         _screenOffice.addChild(post_it_computer, false);    
         _screenOffice.addChild(pen, false);
-        //_screenOffice.addChild(payslip, false);        
         _screenOffice.addChild(envelope_under_box, false);   
         _screenOffice.addChild(box_files, false);
         _screenOffice.addChild(books_under_tampon, false);
@@ -332,7 +333,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         if (this.currentUpdateLoop) {
             this.currentUpdateLoop();
         }
-        //DebugManager.instance.update();
     };
 
     /**
@@ -351,6 +351,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         this.stage.update();
         ClientManager.instance.update();
+        DebugManager.instance.update();
     };
 
     /**
@@ -403,10 +404,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         if (!TimeManager.instance.isJustBeforeBreak() && !TimeManager.instance.isJustBeforeNight()) {
             ClientManager.instance.endClient(false, false);
         }
-
-        setTimeout(function () {
-            Game.instance.payslip.displayInfo(ScoreManager.instance.getLastDayScore());
-        }, 100);
         
         setTimeout(function () {
             Game.instance.fsm.goToNight();
@@ -421,8 +418,9 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     };
 
     Game.prototype.showDaySheet = function() {
-        //var sheet = new 
-        // TEMPORARY
+        setTimeout(function () {
+            Game.instance.payslip.displayInfo(ScoreManager.instance.getLastDayScore());
+        }, 100);
         setTimeout(function() {
             Game.instance.dispatch(Game.DAY_SHEET_VALIDATED);
         }, 10000);
@@ -438,8 +436,9 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     };
 
     Game.prototype.showWeekSheet = function() {
-        // console.log('showWeekSheet');
-        // TEMPORARY
+        setTimeout(function () {
+            Game.instance.payslipWeek.displayInfoWeek(ScoreManager.instance.getLastWeekScore());
+        }, 100);
         setTimeout(function() {
             Game.instance.dispatch(Game.WEEK_SHEET_VALIDATED);
         }, 1500);
