@@ -156,7 +156,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
                 this.actionIsEnd = false;
                 this.actionHasChange({
                     name: "time",
-                    minDuration: 5
+                    minDuration: 20
                 });
             }
         } else {
@@ -165,7 +165,7 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
             this.actionIsEnd = false;
                 this.actionHasChange({
                     name: "time",
-                    minDuration: 5
+                    minDuration: 20
                 });
             // this.actionIsEnd = true;
         }

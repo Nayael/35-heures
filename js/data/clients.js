@@ -26,7 +26,8 @@ var clients = (function() {
                     "time":"Pff, je n'ai pas toute la journée, j'ai du shopping à faire moi",
                     "computer": "Vous vous foutez de moi ! Vous traînez sur FaKebok au lieu de me filer mon colis ! J'en parlerai à la direction !",
                     "default": "Mais qu'est-ce que vous foutez !",
-                    "toffee_bowl":"Merci pour les bonbons"
+                    "toffee_bowl":"Merci pour les bonbons.",
+                    "access_card": "Je n'ai pas besoin de photocopies."
                 },
                 "phase_0": {
                     "succeed": "computer",
@@ -132,10 +133,10 @@ var clients = (function() {
                 "crayons": 2,
                 "small_envelope": 3,
                 "envelope_big": 6,
-                "tampon": -1,
+                "tampon": 1,
                 "tampon_2": 4,
                 "telephone": 2,
-                "toffee_bowl": -1,
+                "toffee_bowl": 5,
                 "keys": 5,
                 "access_card": 2,
                 "stamps": 5,
@@ -144,8 +145,9 @@ var clients = (function() {
             "scenario": {
                 "default": {
                     "time":"Mec, j'aimerai juste en finir le plus vite possible, alors dépêches-toi.",
-                    "computer": "Franchement mec, tu crois vraiment que j'ai le temps pour ça.",
+                    "computer": "Franchement mec, tu crois vraiment que c'est le moment d'aller sur FaKebok",
                     "envelope_big": "Cette enveloppe est bien trop grande",
+                    "toffee_bowl": "Mec, les bonbons c'est pour les gamins.",
                     "default": "Tu crois que c'est le moment de faire ça ?"
                 },
                 "phase_0": {
@@ -189,8 +191,8 @@ var clients = (function() {
                     "default": "Vous croyez que c'est le moment de faire ça ?"
                 },
                 "phase_0": {
-                    "succeed": "access_card",
-                    "access_card": "Le colis est cassé !? Contactez donc votre centre de tri."
+                    "succeed": "keys",
+                    "keys": "Le colis est cassé !? Contactez donc votre centre de tri."
                 },
                 "phase_1": {
                     "succeed": "telephone",
