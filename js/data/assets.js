@@ -56,7 +56,8 @@ var assets = (function() {
             "pen"                 : ["assets/img/game/items/pen.png", "game"],
             "payslip"             : ["assets/img/game/items/payslip.png", "game"],
             "halo"                : ["assets/img/game/items/halo.png", "game"],
-            "dialog"              : ["assets/img/game/ui/dialog.png", "game"]
+            "dialog"              : ["assets/img/game/ui/dialog.png", "game"],
+            "folder"              : ["assets/img/game/ui/folder.png", "game"]
         },
         "atlases": {
             // "young_woman": ["assets/img/game/characters/young_woman", "game"]

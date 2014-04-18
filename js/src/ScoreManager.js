@@ -97,11 +97,11 @@ var ScoreManager = (function(TimeManager) {
     };
 
     ScoreManager.prototype.getLastDayScore = function() {
-        return daysScore.length > 0 ? this.daysScore[daysScore.length - 1] : null;
+        return this.daysScore.length > 0 ? this.daysScore[this.daysScore.length - 1] : null;
     };
 
     ScoreManager.prototype.getLastWeekScore = function() {
-        return weeksScore.length > 0 ? this.weeksScore[weeksScore.length - 1] : null;
+        return this.weeksScore.length > 0 ? this.weeksScore[this.weeksScore.length - 1] : null;
     };
 
     // Singleton

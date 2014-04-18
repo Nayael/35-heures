@@ -117,6 +117,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
     Game.prototype.onAssetsLoadingComplete = function(e) {
 
+        this.payslip = new Payslip();
         this.startGame();
     };
 
@@ -348,6 +349,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         this.stage.update();
         ClientManager.instance.update();
+        // this.payslip.render();
     };
 
     /**
@@ -386,6 +388,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
     Game.prototype.onEndOfDay = function() {
         // console.log('La journée est finie');
+        this.payslip.displayInfo(ScoreManager.instance.getLastDayScore());
         TimeManager.instance.running = false;
         this.fsm.goToNight();
     };

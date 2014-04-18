@@ -76,23 +76,25 @@ var clients = (function() {
                 },
                 "fail": "Vous êtes trop lent, Bibiche m'attend dehors, j'espère pour vous qu'il n'a pas pris froid"
             }
-        }/*,
+        },
         "woman": {
             "name": "woman",
             "displayName": "Mère de famille",
-            "intro" : "Bonjour, je souhaiterai envoyer ce colis",
+            "intro" : "Bonjour, je souhaiterai envoyer ces papiers, faites moi des photocopies",
             "neededTime" : 3,
             "vulnerability": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 3,
-                "default": 2
-            },
-            "responseDelay": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 8,
-                "default": 2
+                "computer": 2,
+                "crayons": 2,
+                "small_envelope": 2,
+                "envelope_big": 2,
+                "tampon": 2,
+                "tampon_2": 2,
+                "telephone": 2,
+                "toffee_bowl": 2,
+                "keys": 2,
+                "access_card": 2,
+                "stamps": 2,
+                "time": 5
             },
             "scenario": {
                 "default": {
@@ -101,20 +103,24 @@ var clients = (function() {
                     "default": "Vous croyez que c'est le moment de faire ça ?"
                 },
                 "phase_0": {
-                    "intro": "Prenez ce colis bon dieu!",
-                    "success": "keys",
-                    "keys": "Tenez voici mes papiers",
+                    "success": "access_card",
+                    "access_card": "Parfait je voudrais une enveloppe aussi svp",
                     "getPackage": "Vous ne vérifier pas mon identité ?"
                 },
                 "phase_1": {
-                    "intro": "Bon maintenant que vous avez vérifier mes papiers je veux bien ma commande",
-                    "success": "keys",
-                    "checkPapers": "Je vous est déjà donner les papiers",
+                    "success": "envelope_big",
+                    "envelope_big": "Merci, un tampon et c'est poster",
+                    "keys": "Merci, bonne journée"
+                },
+                "phase_2": {
+                    "success": "tampon_2",
+                    "tampon_2": "Merci bonne fin de journée",
+                    "tampon": "Ce n'est pas le bon tampon",
                     "keys": "Merci, bonne journée"
                 },
                 "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
             }
-        },
+        }/*,
         "young_man": {
             "name": "young_man",
             "displayName": "Roi Paul",
