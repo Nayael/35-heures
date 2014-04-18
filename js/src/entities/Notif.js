@@ -33,9 +33,9 @@ var Notif = (function(Globals, AssetManager, MakeEventDispatcher, Utils) {
         });
         view.draw(ctx);
 
-        ctx.font = "28px 'Courier New' bold justify";
+        ctx.font = "28px 'Courier New' bold";
         Utils.wrapText(ctx, title, 50, 50, this.spriteWidth - 100, 30);
-        ctx.font = "20px 'Courier New' justify";
+        ctx.font = "20px 'Courier New'";
         Utils.wrapText(ctx, content, 50, 80, this.spriteWidth - 100, 25);
     }
 

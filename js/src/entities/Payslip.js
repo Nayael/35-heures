@@ -30,21 +30,21 @@ var Payslip = (function(AssetManager) {
 
     Payslip.prototype.displayInfo = function(info) {
         var ctx = this.context;
-        ctx.font = "28px Courier bold justify";
+        ctx.font = "32px 'Arial' bold";
 
         var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(info.workedTimeForBoss);
         var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(info.actualWorkedTime);
 
-        ctx.fillText('Temps réellement travaillé : ' + gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 50, 50);
-        ctx.fillText('Temps patron : ' + gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 50, 100);
-        ctx.fillText('Réussi : ' + info.nbSuccess, 50, 150);
-        ctx.fillText('Fail : '+info.nbFailed, 50, 200);
-        ctx.fillText(( (info.productivity * 100) | 0)+"%", 50, 250);
+        ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 760, 255);
+        ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 760, 350);
+        ctx.fillText(info.nbSuccess, 760, 445);
+        ctx.fillText(info.nbFailed, 760, 540);
+        ctx.fillText( ( (info.productivity * 100) | 0) + "%", 760, 665);
     };
 
     Payslip.prototype.displayInfoWeek = function(info) {
         var ctx = this.context;
-        ctx.font = "28px Courier bold justify";
+        ctx.font = "32px 'Arial' bold";
 
         var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(info.workedTimeForBoss);
         var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(info.actualWorkedTime);
