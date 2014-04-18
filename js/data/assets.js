@@ -55,6 +55,7 @@ var assets = (function() {
             "post_it_computer"    : ["assets/img/game/items/post_it_computer.png", "game"],
             "pen"                 : ["assets/img/game/items/pen.png", "game"],
             "payslip"             : ["assets/img/game/items/payslip.png", "game"],
+            "halo"                : ["assets/img/game/items/halo.png", "game"],
             "dialog"              : ["assets/img/game/ui/dialog.png", "game"]
         },
         "atlases": {

@@ -27,7 +27,8 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
     ////////////
     // PUBLIC METHODS
     //
-    ActionManager.prototype.makeAction = function(action) {
+    ActionManager.prototype.makeAction = function(target) {
+        var action = target.action;
         if (this.currentAction) {
             if (TimeManager.instance.getTimeSinceAction() > 0 && TimeManager.instance.getTimeSinceAction() < this.currentAction.minDuration) {
                 return;
@@ -37,6 +38,12 @@ var ActionManager = (function(actions, MakeEventDispatcher, TimeManager) {
             }
         }
         this.currentAction = this.actions[action];
+        target.active = true;
+        var that = this;
+        setTimeout(function() {
+            target.active = false;
+            that.currentAction = undefined;
+        }, this.currentAction.minDuration*1000);
         _dispatchAction(this.actions[action]);
     }
 

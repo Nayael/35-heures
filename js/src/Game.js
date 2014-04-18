@@ -435,7 +435,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * Called when an entity is touched
      */
     Game.prototype.onEntityActionned = function(target) {
-        ActionManager.instance.makeAction(target.action);
+        ActionManager.instance.makeAction(target);
         // ClientManager.instance.actionHasChange(target.action);
     };
 

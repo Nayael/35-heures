@@ -7,6 +7,7 @@ var Entity = (function(AssetManager, View, MakeEventDispatcher, InputManager) {
             return new Entity(name);
         }
         this.view = null;
+        this.active = false;
         this.action = name;
         this.name = name;
         if (this.name) {
@@ -40,6 +41,14 @@ var Entity = (function(AssetManager, View, MakeEventDispatcher, InputManager) {
     Entity.prototype.isTouchable = function() {
         return this.view.touchable ? true : false;
     };
+
+    Entity.prototype.render = function(ctx) {
+        //         spriteWidth 
+        // spriteHeight
+        this.view.draw(ctx);
+        if (this.active)
+            ctx.drawImage(AssetManager.instance.assets.images.halo, this.x + this.view.spriteWidth / 2 - 145, this.y + this.view.spriteHeight / 2 - 141);
+    }
 
     return Entity;
 
