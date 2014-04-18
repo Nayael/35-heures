@@ -43,11 +43,10 @@ var Entity = (function(AssetManager, View, MakeEventDispatcher, InputManager) {
     };
 
     Entity.prototype.render = function(ctx) {
-        //         spriteWidth 
-        // spriteHeight
         this.view.draw(ctx);
-        if (this.active)
-            ctx.drawImage(AssetManager.instance.assets.images.halo, this.x + this.view.spriteWidth / 2 - 145, this.y + this.view.spriteHeight / 2 - 141);
+        if (this.active) {
+            ctx.drawImage(AssetManager.instance.assets.images["halo_" + this.name], this.x, this.y);
+        }
     }
 
     return Entity;
