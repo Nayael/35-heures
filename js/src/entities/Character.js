@@ -16,7 +16,7 @@ var Character = (function(Entity, StateMachine) {
         this.animSpeed = Character.ANIM_IN_SPEED;
 
         this.x = Character.START_X;
-        this.y = 15;
+        this.y = 60;
     }
     Character.inheritsFrom(Entity);
 
