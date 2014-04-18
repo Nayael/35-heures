@@ -95,6 +95,7 @@ var TimeManager = (function(MakeEventDispatcher) {
     // End a Day
     TimeManager.prototype.endDay = function() {
         this.running = false;
+        _timeOfDay = TimeManager.DAY_DURATION;
         this.currentPeriod = TimeManager.PERIODS[2];
         this.dispatch(TimeManager.END_OF_DAY);
         if (this.currentDay >= TimeManager.DAYS.length - 1) {
