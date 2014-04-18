@@ -1,25 +1,25 @@
-var DebugManager = (function() {
+var HudManager = (function() {
 	'use strict';
 
-	function DebugManager() {
+	function HudManager() {
 		// Singleton
-		if (DebugManager.instance) {
-			throw new Error('DebugManager is a singleton. Use DebugManager.instance.');
+		if (HudManager.instance) {
+			throw new Error('HudManager is a singleton. Use HudManager.instance.');
 		}
 
 		// enforces new
-		if (!(this instanceof DebugManager)) {
-			return new DebugManager();
+		if (!(this instanceof HudManager)) {
+			return new HudManager();
 		}
 	};
 
-	DebugManager.prototype.init = function() {
+	HudManager.prototype.init = function() {
 		// Adding the canvas to the stage
 		this.canvas = document.getElementById('main');
 		this.context = this.canvas.getContext('2d');
 	};
 
-	DebugManager.prototype.update = function() {
+	HudManager.prototype.update = function() {
 		var ctx = this.context;
 		ctx.fillStyle = 'black';
 		ctx.fillRect(50, 50, 250, 20);
@@ -28,8 +28,8 @@ var DebugManager = (function() {
 	};
 
 	// Singleton
-	DebugManager.instance = new DebugManager();
+	HudManager.instance = new HudManager();
 
-	return DebugManager;
+	return HudManager;
 
 }());

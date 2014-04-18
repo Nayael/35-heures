@@ -1,4 +1,4 @@
-var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager, ScoreManager) {
+var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, HudManager, NotificationManager, ScoreManager) {
     'use strict';
 
     /**
@@ -162,6 +162,9 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         // Initializing Score Manager
         ScoreManager.instance.init();
+
+        // Initialize Hud Manager
+        HudManager.instance.init();
 
         // Initalizaing Client Manager
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
@@ -332,7 +335,6 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         if (this.currentUpdateLoop) {
             this.currentUpdateLoop();
         }
-        //DebugManager.instance.update();
     };
 
     /**
@@ -351,6 +353,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         this.stage.update();
         ClientManager.instance.update();
+        HudManager.instance.update();
     };
 
     /**
@@ -540,4 +543,4 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     return Game;
 
 
-})(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, DebugManager, NotificationManager, ScoreManager);
+})(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, AssetManager, InputManager, Globals, Utils, assets, Stage, Entity, Character, ClientManager, TimeManager, ActionManager, HudManager, NotificationManager, ScoreManager);
