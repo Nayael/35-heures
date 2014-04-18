@@ -33,14 +33,14 @@ var TimeManager = (function(MakeEventDispatcher) {
     TimeManager.START_WEEK             = "TimeManager.START_WEEK";
     TimeManager.END_OF_WEEK            = "TimeManager.END_OF_WEEK";
     TimeManager.MORNING_DURATION       = 10;
-    TimeManager.DAY_DURATION           = 210;
+    TimeManager.DAY_DURATION           = 30;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
 
     // Private
     var _timeOfDay = 0;
     var _timeSinceAction = 0;
-    var _timeSinceClient = 0;
+    var _timeSinceClient = 30
 
     // Call once per frame
     TimeManager.prototype.update = function() {

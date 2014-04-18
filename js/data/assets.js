@@ -54,7 +54,7 @@ var assets = (function() {
             "small_envelope"      : ["assets/img/game/items/small_envelope.png", "game"],
             "post_it_computer"    : ["assets/img/game/items/post_it_computer.png", "game"],
             "pen"                 : ["assets/img/game/items/pen.png", "game"],
-            "payslip"             : ["assets/img/game/items/payslip.png", "game"],
+            "payslip"             : ["assets/img/game/ui/payslip.png", "game"],
             "halo"                : ["assets/img/game/items/halo.png", "game"],
             "dialog"              : ["assets/img/game/ui/dialog.png", "game"],
             "folder"              : ["assets/img/game/ui/folder.png", "game"]

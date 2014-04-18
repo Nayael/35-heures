@@ -37,7 +37,7 @@ var clients = (function() {
                 },
                 "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
             }
-        },
+        }/*,
         "old_woman": {
             "name": "old_woman",
             "displayName": "Vieille femme",
@@ -105,18 +105,15 @@ var clients = (function() {
                 "phase_0": {
                     "success": "access_card",
                     "access_card": "Parfait je voudrais une enveloppe aussi svp",
-                    "getPackage": "Vous ne vérifier pas mon identité ?"
                 },
                 "phase_1": {
                     "success": "envelope_big",
                     "envelope_big": "Merci, un tampon et c'est poster",
-                    "keys": "Merci, bonne journée"
                 },
                 "phase_2": {
                     "success": "tampon_2",
                     "tampon_2": "Merci bonne fin de journée",
                     "tampon": "Ce n'est pas le bon tampon",
-                    "keys": "Merci, bonne journée"
                 },
                 "fail": "Bon je pense que vous n'y mettez pas du votre! j'en parlerais à vos supérieurs, je ne vous souhaite pas le bonsoir monsieur"
             }

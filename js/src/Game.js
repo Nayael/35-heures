@@ -350,7 +350,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         this.stage.update();
         ClientManager.instance.update();
-        // this.payslip.render();
+        this.payslip.render();
     };
 
     /**
@@ -397,11 +397,15 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     Game.prototype.onEndOfDay = function() {
         ClientManager.instance.addListener(ClientManager.NEW_CLIENT, this.onNewClient, this);
         // console.log('La journée est finie');
-        this.payslip.displayInfo(ScoreManager.instance.getLastDayScore());
         TimeManager.instance.running = false;
         if (!TimeManager.instance.isJustBeforeBreak() && !TimeManager.instance.isJustBeforeNight()) {
             ClientManager.instance.endClient(false, false);
         }
+
+        setTimeout(function () {
+            Game.instance.payslip.displayInfo(ScoreManager.instance.getLastDayScore());
+        }, 100);
+        
         setTimeout(function () {
             Game.instance.fsm.goToNight();
         }, 2000);
