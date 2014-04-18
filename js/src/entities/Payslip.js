@@ -40,7 +40,7 @@ var Payslip = (function(AssetManager, TimeManager, ScoreManager) {
         ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 760, 350);
         ctx.fillText(info.nbSuccess, 760, 445);
         ctx.fillText(info.nbFailed, 760, 540);
-        ctx.fillText( ( (info.productivity * 100) | 0) + "%", 760, 665);
+        ctx.fillText(((info.productivity * 100) | 0) + "%", 760, 665);
     };
 
     Payslip.prototype.displayInfoWeek = function(info) {
@@ -52,60 +52,63 @@ var Payslip = (function(AssetManager, TimeManager, ScoreManager) {
         var gameTimeActuallyWorked;
         var productivity;
 
-        // Lundi
-        var monday = ScoreManager.instance.daysScore[0];
-        gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(monday.actualWorkedTime);
-        gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(monday.workedTimeForBoss);
-        productivity = ( (monday.productivity * 100) | 0) + "%";
-        ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 440, 315);
-        ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 440, 355);
-        ctx.fillText(productivity, 440, 390);
+        if (ScoreManager.instance.daysScore.length > 0) {
+            // Lundi
+            var monday = ScoreManager.instance.daysScore[0];
+            gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(monday.actualWorkedTime);
+            gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(monday.workedTimeForBoss);
+            productivity = ((monday.productivity * 100) | 0) + "%";
+            ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 440, 315);
+            ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 440, 355);
+            ctx.fillText(productivity, 440, 390);
+        }
 
-        // Mardi
-        var tuesday = ScoreManager.instance.daysScore[1];
-        gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(tuesday.actualWorkedTime);
-        gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(tuesday.workedTimeForBoss);
-        productivity = ( (tuesday.productivity * 100) | 0) + "%";
-        ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 440, 465);
-        ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 440, 505);
-        ctx.fillText(productivity, 440, 540);
-        
-
-        // Mercredi
-        var wednesday = ScoreManager.instance.daysScore[2];
-        gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(wednesday.actualWorkedTime);
-        gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(wednesday.workedTimeForBoss);
-        productivity = ( (wednesday.productivity * 100) | 0) + "%";
-        ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 440, 615);
-        ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 440, 655);
-        ctx.fillText(productivity, 440, 690);
-        
-
-        // Jeudi
-        var thursday = ScoreManager.instance.daysScore[3];
-        gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(thursday.actualWorkedTime);
-        gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(thursday.workedTimeForBoss);
-        productivity = ( (thursday.productivity * 100) | 0) + "%";
-        ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 1060, 170);
-        ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 1060, 210);
-        ctx.fillText(productivity, 1060, 245);
-
-
-        // Vendredi
-        var friday = ScoreManager.instance.daysScore[4];
-        gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(friday.actualWorkedTime);
-        gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(friday.workedTimeForBoss);
-        productivity = ( (friday.productivity * 100) | 0) + "%";
-        ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 1060, 330);
-        ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 1060, 370);
-        ctx.fillText(productivity, 1060, 405);
-
+        if (ScoreManager.instance.daysScore.length > 1) {
+            // Mardi
+            var tuesday = ScoreManager.instance.daysScore[1];
+            gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(tuesday.actualWorkedTime);
+            gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(tuesday.workedTimeForBoss);
+            productivity = ((tuesday.productivity * 100) | 0) + "%";
+            ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 440, 465);
+            ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 440, 505);
+            ctx.fillText(productivity, 440, 540);
+        }
+        if (ScoreManager.instance.daysScore.length > 2) {
+            // Mercredi
+            var wednesday = ScoreManager.instance.daysScore[2];
+            gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(wednesday.actualWorkedTime);
+            gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(wednesday.workedTimeForBoss);
+            productivity = ((wednesday.productivity * 100) | 0) + "%";
+            ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 440, 615);
+            ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 440, 655);
+            ctx.fillText(productivity, 440, 690);
+        }
+        if (ScoreManager.instance.daysScore.length > 3) {
+            // Jeudi
+            var thursday = ScoreManager.instance.daysScore[3];
+            gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(thursday.actualWorkedTime);
+            gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(thursday.workedTimeForBoss);
+            productivity = ((thursday.productivity * 100) | 0) + "%";
+            ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 1060, 170);
+            ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 1060, 210);
+            ctx.fillText(productivity, 1060, 245);
+        }
+        if (ScoreManager.instance.daysScore.length > 4) {
+            // Vendredi
+            var friday = ScoreManager.instance.daysScore[4];
+            gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(friday.actualWorkedTime);
+            gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(friday.workedTimeForBoss);
+            productivity = ((friday.productivity * 100) | 0) + "%";
+            ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 1060, 330);
+            ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 1060, 370);
+            ctx.fillText(productivity, 1060, 405);
+        }
         // Semaine
         ctx.fillStyle = 'black';
         ctx.font = "28px 'Courier New'";
         gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(info.actualWorkedTime);
         gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(info.workedTimeForBoss);
-        productivity = ( (info.productivity * 100) | 0) + "%";
+        productivity = ((info.productivity * 100) | 0) + "%";
         ctx.fillText(gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 1060, 500);
         ctx.fillText(gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 1060, 560);
         ctx.fillText(productivity, 1060, 620);
