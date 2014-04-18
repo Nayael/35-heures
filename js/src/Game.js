@@ -42,6 +42,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     var _entities = [];
     var _screenOffice;
     var _screenMenu;
+    var _screenLoading;
 
     ////////////
     // PUBLIC METHODS
@@ -51,8 +52,8 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         this.stage = new Stage(Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT, Globals.CANVAS_BACKGROUND);
 
         // Initializing Asset manager
-        AssetManager.instance.enqueueAssets(this.assets);
-        AssetManager.instance.addListener(AssetManager.LOADING_COMPLETE, this.onAssetsLoadingComplete, this);
+        AssetManager.instance.enqueueAssets(this.assets, "loading");
+        AssetManager.instance.addListener(AssetManager.LOADING_COMPLETE, this.onLoadingScreenLoaded, this);
         AssetManager.instance.loadAll();
 
         Game.instance.addListener(Game.DAY_SHEET_VALIDATED, this.onDaySheetValidated);
@@ -68,7 +69,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         this.fsm = StateMachine.create({
             events: [{
                 name: 'load',
-                from: ['none', 'menu'],
+                from: ['none'],
                 to: 'loading'
             }, {
                 name: 'play',
@@ -88,13 +89,14 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                 to: 'night'
             }, {
                 name: 'showMenu',
-                from: ['none', 'load'],
+                from: ['none', 'loading'],
                 to: 'menu'
             }],
             callbacks: {
                 onload: function(e) {
                     Game.instance.currentUpdateLoop = null;
-                    // Game.instance.currentUpdateLoop = Game.instance.loadingLoop;
+                    Game.instance.stage.setScreen(_screenLoading);
+                    Game.instance.currentUpdateLoop = Game.instance.loadLoop;
                 },
                 onshowMenu: function(e) {
                     Game.instance.currentUpdateLoop = Game.instance.menuLoop;
@@ -123,7 +125,36 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         });
     };
 
+    Game.prototype.onLoadingScreenLoaded = function(e) {
+
+        _screenLoading = new Screen();
+        var loading_bar_outside = new Entity('loading_bar_outside');
+        var loading_bar_inside  = new Entity('loading_bar_inside');
+        var logo                = new Entity('logo');
+        var barTotalWidth = loading_bar_inside.view.spriteWidth + 0;
+        loading_bar_inside.view.spriteWidth = 0;
+        loading_bar_inside.x = 211;
+        loading_bar_inside.y = 558;
+        logo.x = 1280 / 2 - logo.view.spriteWidth / 2;
+        logo.y = 720 / 4 - logo.view.spriteHeight / 2;
+        _screenLoading.addChild(loading_bar_outside);
+        _screenLoading.addChild(loading_bar_inside);
+        _screenLoading.addChild(logo);
+        this.fsm.load();
+
+        AssetManager.instance.removeListener(AssetManager.LOADING_COMPLETE, this.onLoadingScreenLoaded);
+
+        AssetManager.instance.enqueueAssets(this.assets);
+        AssetManager.instance.addListener(AssetManager.LOADING_COMPLETE, this.onAssetsLoadingComplete, this);
+        AssetManager.instance.loadAll(updateLoadingScreen);
+
+        function updateLoadingScreen(e) {
+            loading_bar_inside.view.spriteWidth = barTotalWidth * (e.completedCount / e.totalCount);
+        };
+    };
+
     Game.prototype.onAssetsLoadingComplete = function(e) {
+        AssetManager.instance.removeListener(AssetManager.LOADING_COMPLETE, this.onAssetsLoadingComplete, this);
 
         this.payslip = new Payslip('payslip');
         this.payslipWeek = new Payslip('folder');
@@ -407,7 +438,13 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      */
     Game.prototype.menuLoop = function() {
         this.stage.update();
+    };
 
+    /**
+     * Loop called during the loading
+     */
+    Game.prototype.loadLoop = function() {
+        this.stage.update();
     };
 
     Game.prototype.onEndMorning = function() {

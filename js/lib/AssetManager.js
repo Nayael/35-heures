@@ -38,9 +38,9 @@ var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
     /**
      * Loads the images for the game
      */
-    AssetManager.prototype.enqueueImages = function() {
+    AssetManager.prototype.enqueueImages = function(tag) {
         // Declaring all the assets in PxLoader
-        this.assets.images = _parseImageData(this.assets.images);
+        this.assets.images = _parseImageData(this.assets.images, tag);
     };
 
     /**
@@ -67,18 +67,18 @@ var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
     /**
      * Adds all the assets list to the loader
      */
-    AssetManager.prototype.enqueueAssets = function(assets) {
+    AssetManager.prototype.enqueueAssets = function(assets, tag) {
         this.assets = assets;
-        this.enqueueImages();
-        this.enqueueAtlases();
+        this.enqueueImages(tag);
+        // this.enqueueAtlases();
         // this.enqueueSounds();
     }
 
-    AssetManager.prototype.loadAll = function() {
+    AssetManager.prototype.loadAll = function(progressCallback) {
         // Loader progression
-        _pxLoader.addProgressListener(function(e) {
-            console.log('loading progress');
-        });
+        if (progressCallback) {
+            _pxLoader.addProgressListener(progressCallback);
+        }
 
         _pxLoader.addCompletionListener(function(e) {
             console.log('loading finished');
@@ -87,9 +87,6 @@ var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
 
         // Starting the loading
         _pxLoader.start();
-        for (var i = 0; i < _atlasesJSONRequests.length; i++) {
-            _atlasesJSONRequests[i].send(null);
-        }
     };
 
     AssetManager.prototype.getImage = function(name) {
@@ -104,16 +101,15 @@ var AssetManager = (function(MakeEventDispatcher, PxLoader, PxLoaderImage) {
      * @param  {object} data The file data
      * @return {object}      The new object with assets added to PxLoader
      */
-    function _parseImageData (data) {
+    function _parseImageData (data, tag) {
         var obj = data, prop, current;
         for (prop in obj) {
             if (obj.hasOwnProperty(prop)) {
                 current = obj[prop];
-                if (typeof current === 'object' && current.length == undefined) {
-                    _parseImageData(current)
-                } else {
-                    obj[prop] = _pxLoader.addImage(AssetManager.instance.IMAGE_PATH + current[0], current[1]);
+                if (tag !== undefined && current[1] != tag || typeof current[0] !== "string") {
+                    continue;
                 }
+                obj[prop] = _pxLoader.addImage(AssetManager.instance.IMAGE_PATH + current[0], current[1]);
             }
         }
         return obj;

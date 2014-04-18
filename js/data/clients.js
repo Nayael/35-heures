@@ -117,7 +117,7 @@ var clients = (function() {
                 },
                 "phase_1": {
                     "succeed": "envelope_big",
-                    "envelope_big": "Merci, un tampon et c'est poster",
+                    "envelope_big": "Merci, un tampon et c'est posté",
                 },
                 "phase_2": {
                     "succeed": "tampon_2",

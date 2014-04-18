@@ -6,6 +6,10 @@ var assets = (function() {
 
         },
         "images": {
+            "loading_bar_inside" : ["assets/img/loading/loading_bar_inside.png", "loading"],
+            "loading_bar_outside": ["assets/img/loading/loading_bar_outside.png", "loading"],
+            "logo"               : ["assets/img/loading/logo.png", "loading"],
+
             "background_menu" : ["assets/img/menu/background_menu.png", "menu"],
             "menu_play_button": ["assets/img/menu/menu_play_button.png", "menu"],
             "logo_isart_digital": ["assets/img/menu/logo_isart_digital.png", "menu"],
