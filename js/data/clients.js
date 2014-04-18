@@ -8,24 +8,25 @@ var clients = (function() {
             "intro" : "Bonjour, je viens retirer une commande. Tenez voici le recommandé",
             "neededTime" : 5,
             "vulnerability": {
-                "computer": 5,
-                "crayons": 2,
-                "small_envelope": 2,
-                "envelope_big": 2,
-                "tampon": 2,
-                "tampon_2": 2,
+                "computer": 3,
+                "crayons": 6,
+                "small_envelope": 6,
+                "envelope_big": 6,
+                "tampon": 6,
+                "tampon_2": 6,
                 "telephone": 5,
                 "toffee_bowl": 0.5,
                 "keys": 2,
-                "access_card": 2,
-                "stamps": 2,
-                "time": 7
+                "access_card": 3,
+                "stamps": 6,
+                "time": 6
             },
             "scenario": {
                 "default": {
                     "time":"Pff, je n'ai pas toute la journée, j'ai du shopping à faire moi",
                     "computer": "Vous vous foutez de moi ! Vous traînez sur FaKebok au lieu de me filer mon colis ! J'en parlerai à la direction !",
-                    "default": "Mais qu'est-ce que vous foutez !"
+                    "default": "Mais qu'est-ce que vous foutez !",
+                    "toffee_bowl":"Merci pour les bonbons"
                 },
                 "phase_0": {
                     "succeed": "computer",
@@ -47,13 +48,13 @@ var clients = (function() {
                 "computer": 2,
                 "crayons": 2,
                 "small_envelope": 2,
-                "envelope_big": 2,
+                "envelope_big": 5,
                 "tampon": 4,
                 "tampon_2": 4,
                 "telephone": 3,
                 "toffee_bowl": 2,
-                "keys": 2,
-                "access_card": 2,
+                "keys": 5,
+                "access_card": 5,
                 "stamps": 2,
                 "time": 2
             },
@@ -90,7 +91,7 @@ var clients = (function() {
                 "tampon": 4,
                 "tampon_2": 2,
                 "telephone": 2,
-                "toffee_bowl": 1,
+                "toffee_bowl": 0.5,
                 "keys": 5,
                 "access_card": 2,
                 "stamps": 5,
@@ -131,10 +132,10 @@ var clients = (function() {
                 "crayons": 2,
                 "small_envelope": 3,
                 "envelope_big": 6,
-                "tampon": 2,
+                "tampon": -1,
                 "tampon_2": 4,
                 "telephone": 2,
-                "toffee_bowl": 1,
+                "toffee_bowl": -1,
                 "keys": 5,
                 "access_card": 2,
                 "stamps": 5,
@@ -161,23 +162,25 @@ var clients = (function() {
                 },
                 "fail": "Je me casse, t'es vraiment trop lent mec."
             }
-        }/*,
+        },
         "old_man": {
             "name": "old_man",
             "displayName": "Jean-Jacques",
             "intro" : "J'ai un colis urgent à récupérer.",
             "neededTime" : 3,
             "vulnerability": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 3,
-                "default": 2
-            },
-            "responseDelay": {
-                "technology": 0.5,
-                "paperwork": 1.5,
-                "time": 8,
-                "default": 2
+                "computer": 5,
+                "crayons": 2,
+                "small_envelope": 3,
+                "envelope_big": 6,
+                "tampon": 2,
+                "tampon_2": 4,
+                "telephone": 8,
+                "toffee_bowl": 1,
+                "keys": 5,
+                "access_card": 2,
+                "stamps": 5,
+                "time": 3
             },
             "scenario": {
                 "default": {
@@ -186,18 +189,16 @@ var clients = (function() {
                     "default": "Vous croyez que c'est le moment de faire ça ?"
                 },
                 "phase_0": {
-                    "intro": "Faites attention, c'est un colis fragile, dépéchez vous de me l'apporter",
                     "succeed": "access_card",
-                    "access_card": "Le colis est cassé !?"
+                    "access_card": "Le colis est cassé !? Contactez donc votre centre de tri."
                 },
                 "phase_1": {
-                    "intro": "Je veux faire une réclamation, je veux pas de ce colis",
                     "succeed": "telephone",
-                    "telephone": "C'est toujours pareil avec la Pauste aujourd'hui, vous êtes des incapables.",
+                    "telephone": "Mon colis n'est pas assuré !? C'est une honte ! C'est toujours pareil avec la Pauste aujourd'hui, vous êtes des incapables.",
                 },
                 "fail": "Vous êtes nul, un véritable incapable, de mon temps on n'aurait jamais vu ça"
             }
-        }*/
+        }
     };
 
     return clients;
