@@ -30,8 +30,8 @@ var Payslip = (function(AssetManager, TimeManager, ScoreManager) {
 
     Payslip.prototype.displayInfo = function(info) {
         var ctx = this.context;
+        ctx.fillStyle = 'black';
         ctx.font = "32px 'Courier New' bold";
-
 
         var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(info.workedTimeForBoss);
         var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(info.actualWorkedTime);
@@ -45,6 +45,7 @@ var Payslip = (function(AssetManager, TimeManager, ScoreManager) {
 
     Payslip.prototype.displayInfoWeek = function(info) {
         var ctx = this.context;
+        ctx.fillStyle = 'black';
         ctx.font = "24px 'Courier New'";
 
         var gameTimeWorkedForBoss;
@@ -100,6 +101,7 @@ var Payslip = (function(AssetManager, TimeManager, ScoreManager) {
         ctx.fillText(productivity, 1060, 405);
 
         // Semaine
+        ctx.fillStyle = 'black';
         ctx.font = "28px 'Courier New'";
         gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(info.actualWorkedTime);
         gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(info.workedTimeForBoss);

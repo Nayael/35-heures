@@ -34,8 +34,10 @@ var Notif = (function(Globals, AssetManager, MakeEventDispatcher, Utils) {
         view.draw(ctx);
 
         ctx.font = "28px 'Courier New' bold";
+        ctx.fillStyle = 'black';
         Utils.wrapText(ctx, title, 50, 50, this.spriteWidth - 100, 30);
         ctx.font = "20px 'Courier New'";
+        ctx.fillStyle = 'black';
         Utils.wrapText(ctx, content, 50, 80, this.spriteWidth - 100, 25);
     }
 
