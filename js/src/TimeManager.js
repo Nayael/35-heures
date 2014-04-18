@@ -33,7 +33,7 @@ var TimeManager = (function(MakeEventDispatcher) {
     TimeManager.START_WEEK             = "TimeManager.START_WEEK";
     TimeManager.END_OF_WEEK            = "TimeManager.END_OF_WEEK";
     TimeManager.MORNING_DURATION       = 120;
-    TimeManager.DAY_DURATION           = 210;
+    TimeManager.DAY_DURATION           = 240;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
 
@@ -128,6 +128,10 @@ var TimeManager = (function(MakeEventDispatcher) {
             m: ((realTime % 30) * 2) | 0
         };
     };
+
+    TimeManager.prototype.getTimeOfDay = function() {
+        return this.realTimeToGameTime(_timeOfDay);
+    }
 
     TimeManager.prototype.isJustBeforeBreak = function() {
         return TimeManager.MORNING_DURATION - _timeOfDay > 0 && TimeManager.MORNING_DURATION - _timeOfDay <= 10;

@@ -57,7 +57,18 @@ var assets = (function() {
             "payslip"             : ["assets/img/game/ui/payslip.png", "game"],
             "halo"                : ["assets/img/game/items/halo.png", "game"],
             "dialog"              : ["assets/img/game/ui/dialog.png", "game"],
-            "folder"              : ["assets/img/game/ui/folder.png", "game"]
+            "folder"              : ["assets/img/game/ui/folder.png", "game"],
+
+            "hud_base"                      :["assets/img/game/hud/hud_base.png", "game"],
+            "hud_monitor"                   :["assets/img/game/hud/hud_monitor.png", "game"],
+            "hud_watch_base"                :["assets/img/game/hud/hud_watch_base.png", "game"],
+            "hud_watch_big_hand"            :["assets/img/game/hud/hud_watch_big_hand.png", "game"],
+            "hud_watch_inside"              :["assets/img/game/hud/hud_watch_inside.png", "game"],
+            "hud_watch_inside_circle_hands" :["assets/img/game/hud/hud_watch_inside_circle_hands.png", "game"],
+            "hud_watch_small_hand"          :["assets/img/game/hud/hud_watch_small_hand.png", "game"],
+            "hud_progressbar_base"          :["assets/img/game/hud/hud_progressbar_base.png", "game"],
+            "hud_progressbar_blue"          :["assets/img/game/hud/hud_progressbar_blue.png", "game"],
+            "hud_progressbar_highlight"    :["assets/img/game/hud/hud_progressbar_highlight.png", "game"]
         },
         "atlases": {
             // "young_woman": ["assets/img/game/characters/young_woman", "game"]
