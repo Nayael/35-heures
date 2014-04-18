@@ -15,7 +15,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         }
 
         MakeEventDispatcher(this);
-        
+
         this.assets = assets;
         this.currentClient = null;
         this.fsm = null;
@@ -30,9 +30,9 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     // STATIC ATTRIBUTES
     //
     Game.STATE_LOADING = 'loading';
-    Game.STATE_MENU    = 'menu';
+    Game.STATE_MENU = 'menu';
     Game.STATE_PLAYING = 'playing';
-    Game.STATE_PAUSED  = 'paused';
+    Game.STATE_PAUSED = 'paused';
     Game.DAY_SHEET_VALIDATED = "Game.DAY_SHEET_VALIDATED";
     Game.WEEK_SHEET_VALIDATED = "Game.WEEK_SHEET_VALIDATED";
 
@@ -88,25 +88,25 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
                 to: 'night'
             }],
             callbacks: {
-                onload: function (e) {
+                onload: function(e) {
                     Game.instance.currentUpdateLoop = null;
                     // Game.instance.currentUpdateLoop = Game.instance.loadingLoop;
                 },
-                onentermenu: function (e) {
+                onentermenu: function(e) {
                     Game.instance.currentUpdateLoop = Game.instance.menuLoop;
                     Game.instance.stage.setScreen(_screenMenu);
                 },
-                onplay: function (e) {
+                onplay: function(e) {
                     Game.instance.currentUpdateLoop = Game.instance.gameLoop;
                     Game.instance.stage.setScreen(_screenOffice);
                 },
-                onpause: function (e) {
+                onpause: function(e) {
                     Game.instance.currentUpdateLoop = Game.instance.gamePause;
                 },
-                ongoToBreak: function (e) {
+                ongoToBreak: function(e) {
                     Game.instance.currentUpdateLoop = Game.instance.breakPeriodLoop;
                 },
-                ongoToNight: function (e) {
+                ongoToNight: function(e) {
                     Game.instance.currentUpdateLoop = Game.instance.nightPeriodLoop;
                     // TODO anim
                     Game.instance.showDaySheet();
@@ -154,7 +154,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         // Initializing Client Manager
         ClientManager.instance.init();
-        
+
         // Initializing Score Manager
         ScoreManager.instance.init();
 
@@ -181,7 +181,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
 
         // We launch the main game loop
         this.fsm.play();
-        
+
         // The current period is the night : we are about to start the day
         TimeManager.instance.running = false;
 
@@ -197,34 +197,34 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     Game.prototype.initScreens = function() {
         _screenOffice = new Screen();
         _screenMenu = new Screen();
-        
-        var backgroundOffice     = new Entity('background');
-        var template             = new Entity('template');
-        var computer             = new Entity('computer');
-        var crayons              = new Entity('crayons');
-        var bad_package          = new Entity('bad_package');
-        var bad_package_2        = new Entity('bad_package_2');
-        var tampon               = new Entity('tampon');
-        var tampon_2             = new Entity('tampon_2');
-        var telephone            = new Entity('telephone');
-        var desk                 = new Entity('desk');
-        var wall                 = new Entity('wall');
-        var keys                 = new Entity('keys');
-        var access_card          = new Entity('access_card');
-        var monitor              = new Entity('monitor');
-        var stamps               = new Entity('stamps');
+
+        var backgroundOffice = new Entity('background');
+        var template = new Entity('template');
+        var computer = new Entity('computer');
+        var crayons = new Entity('crayons');
+        var bad_package = new Entity('bad_package');
+        var bad_package_2 = new Entity('bad_package_2');
+        var tampon = new Entity('tampon');
+        var tampon_2 = new Entity('tampon_2');
+        var telephone = new Entity('telephone');
+        var desk = new Entity('desk');
+        var wall = new Entity('wall');
+        var keys = new Entity('keys');
+        var access_card = new Entity('access_card');
+        var monitor = new Entity('monitor');
+        var stamps = new Entity('stamps');
         var window_middle_poster = new Entity('window_middle_poster');
-        var toffee_bowl          = new Entity('toffee_bowl');
-        var small_envelope       = new Entity('small_envelope');
-        var post_it_computer     = new Entity('post_it_computer');
-        var pen                  = new Entity('pen');
-        var payslip              = new Entity('payslip');
-        var middle_window        = new Entity('middle_window');
-        var envelope_under_box   = new Entity('envelope_under_box');
-        var envelope_big         = new Entity('envelope_big');
-        var box_files            = new Entity('box_files');
-        var books_under_tampon   = new Entity('books_under_tampon');
-        var book                 = new Entity('book');
+        var toffee_bowl = new Entity('toffee_bowl');
+        var small_envelope = new Entity('small_envelope');
+        var post_it_computer = new Entity('post_it_computer');
+        var pen = new Entity('pen');
+        var payslip = new Entity('payslip');
+        var middle_window = new Entity('middle_window');
+        var envelope_under_box = new Entity('envelope_under_box');
+        var envelope_big = new Entity('envelope_big');
+        var box_files = new Entity('box_files');
+        var books_under_tampon = new Entity('books_under_tampon');
+        var book = new Entity('book');
 
         post_it_computer.setTouchable(false);
 
@@ -261,50 +261,50 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         stamps.y = 551;
         window_middle_poster.x = 674;
         window_middle_poster.y = 178;
-        toffee_bowl.x = 504;         
-        toffee_bowl.y = 358;         
-        small_envelope.x = 794;      
-        small_envelope.y = 637;      
-        post_it_computer.x = 20;    
-        post_it_computer.y = 346;    
+        toffee_bowl.x = 504;
+        toffee_bowl.y = 358;
+        small_envelope.x = 794;
+        small_envelope.y = 637;
+        post_it_computer.x = 20;
+        post_it_computer.y = 346;
         pen.x = 684;
         pen.y = 405;
-        payslip.x = 0;             
-        payslip.y = 0;             
-        middle_window.x = 0;       
-        middle_window.y = 51;       
-        envelope_under_box.x = 848;  
-        envelope_under_box.y = 583;  
-        envelope_big.x = 332;        
-        envelope_big.y = 505;        
-        box_files.x = 795;           
-        box_files.y = 416;           
-        books_under_tampon.x = 575;  
-        books_under_tampon.y = 546;  
-        book.x = 128;                
-        book.y = 540;                
+        payslip.x = 0;
+        payslip.y = 0;
+        middle_window.x = 0;
+        middle_window.y = 51;
+        envelope_under_box.x = 848;
+        envelope_under_box.y = 583;
+        envelope_big.x = 332;
+        envelope_big.y = 505;
+        box_files.x = 795;
+        box_files.y = 416;
+        books_under_tampon.x = 575;
+        books_under_tampon.y = 546;
+        book.x = 128;
+        book.y = 540;
 
         _screenOffice.addChild(backgroundOffice, false);
-        _screenOffice.addChild(middle_window, true);   
-        _screenOffice.addChild(desk, true);  
+        _screenOffice.addChild(middle_window, true);
+        _screenOffice.addChild(desk, true);
         _screenOffice.addChild(telephone, true);
         _screenOffice.addChild(access_card, true);
         _screenOffice.addChild(window_middle_poster, true);
-        _screenOffice.addChild(toffee_bowl, true);         
-        _screenOffice.addChild(small_envelope, true);                
-        _screenOffice.addChild(computer, true);        
-        _screenOffice.addChild(post_it_computer, true);    
+        _screenOffice.addChild(toffee_bowl, true);
+        _screenOffice.addChild(small_envelope, true);
+        _screenOffice.addChild(computer, true);
+        _screenOffice.addChild(post_it_computer, true);
         _screenOffice.addChild(pen, true);
         //_screenOffice.addChild(payslip, true);        
-        _screenOffice.addChild(envelope_under_box, true);   
+        _screenOffice.addChild(envelope_under_box, true);
         _screenOffice.addChild(box_files, true);
         _screenOffice.addChild(books_under_tampon, true);
-        _screenOffice.addChild(book, true);    
+        _screenOffice.addChild(book, true);
         _screenOffice.addChild(tampon, true);
-        _screenOffice.addChild(tampon_2, true);     
-        _screenOffice.addChild(stamps, true);        
-        _screenOffice.addChild(envelope_big, true);                
-        _screenOffice.addChild(keys, true);               
+        _screenOffice.addChild(tampon_2, true);
+        _screenOffice.addChild(stamps, true);
+        _screenOffice.addChild(envelope_big, true);
+        _screenOffice.addChild(keys, true);
         //_screenOffice.addChild(template, true);
         // _screenOffice.addChild(id_card);
         // _screenOffice.addChild(bad_package);
@@ -354,7 +354,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * Loop called while the game is paused
      */
     Game.prototype.gamePauseLoop = function() {
-        
+
     };
 
     /**
@@ -375,7 +375,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * Loop called during the menu
      */
     Game.prototype.menuLoop = function() {
-        
+
     };
 
     Game.prototype.onEndMorning = function() {
@@ -400,7 +400,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         console.log('showDaySheet');
         //var sheet = new 
         // TEMPORARY
-        setTimeout(function () {
+        setTimeout(function() {
             Game.instance.dispatch(Game.DAY_SHEET_VALIDATED);
         }, 1500);
     };
@@ -417,7 +417,7 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
     Game.prototype.showWeekSheet = function() {
         console.log('showWeekSheet');
         // TEMPORARY
-        setTimeout(function () {
+        setTimeout(function() {
             Game.instance.dispatch(Game.WEEK_SHEET_VALIDATED);
         }, 1500);
     };
@@ -438,18 +438,15 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
      * Called when a client gets angry
      */
     Game.prototype.onClientChangeState = function(state) {
-        if(state == ClientManager.PATIENCE_ANGRY && this.currentClient.fsm.current != "angry")
-        {
+        if (state == ClientManager.PATIENCE_ANGRY && this.currentClient.fsm.current != "angry") {
             this.currentClient.fsm.makeAngry();
-            ClientManager.instance.removeListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState);
-        }else if(state == ClientManager.PATIENCE_IDLE && this.currentClient.fsm.current != "idle")
-        {
+            // ClientManager.instance.removeListener(ClientManager.PATIENCE_ANGRY, this.onClientChangeState);
+        } else if (state == ClientManager.PATIENCE_IDLE && this.currentClient.fsm.current != "idle") {
             this.currentClient.fsm.makeIdle();
-            ClientManager.instance.removeListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState);
-        }else if(state == ClientManager.PATIENCE_HAPPY && this.currentClient.fsm.current != "happy")
-        {
+            // ClientManager.instance.removeListener(ClientManager.PATIENCE_IDLE, this.onClientChangeState);
+        } else if (state == ClientManager.PATIENCE_HAPPY && this.currentClient.fsm.current != "happy") {
             this.currentClient.fsm.makeHappy();
-            ClientManager.instance.removeListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState);
+            // ClientManager.instance.removeListener(ClientManager.PATIENCE_HAPPY, this.onClientChangeState);
         }
     };
 
@@ -464,26 +461,28 @@ var Game = (function(onEachFrame, MakeEventDispatcher, StateMachine, Keyboard, A
         var newClient = new Character(client.name);
         this.currentClient = newClient;
         this.addEntity(newClient);
-        
+
         if (previousClient) {
             previousClient.removeListener(Entity.ACTIONNED, this.onEntityActionned);
-            previousClient.animate(-1, onClientOutAnimComplete);
+            setTimeout(function() {
+                previousClient.animate(-1, onClientOutAnimComplete);
+            }, 1000);
         } else {
             _screenOffice.addChild(newClient, false, 1);
             newClient.animate(1, onClientInAnimComplete);
         }
 
-        function onClientOutAnimComplete (client) {
-        NotificationManager.instance.clearStack();
+        function onClientOutAnimComplete(client) {
+            NotificationManager.instance.clearStack();
             Game.instance.removeEntity(client);
             _screenOffice.removeChild(client);
-            setTimeout(function(){                
+            setTimeout(function() {
                 _screenOffice.addChild(newClient, false, 1);
                 newClient.animate(1, onClientInAnimComplete);
-            },800);
+            }, 800);
         }
 
-        function onClientInAnimComplete (client) {
+        function onClientInAnimComplete(client) {
             ClientManager.instance.startClient();
             Game.instance.stage.touchable = true;
         }
