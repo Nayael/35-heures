@@ -106,18 +106,29 @@ var ClientManager = (function(clients, TimeManager, ActionManager, MakeEventDisp
     }
 
     // Call when a client is end
-    ClientManager.prototype.endClient = function(succeed) {
+    ClientManager.prototype.endClient = function(succeed, createClient) {
+        if (createClient !== false) {
+            createClient = true;
+        }
         if (!succeed) {
             console.log("display fail");
             ClientManager.instance.dispatch(ClientManager.CLIENT_SPEAK, this.currentClient["displayName"], this.currentClient["scenario"]["fail"]);
+        }
+        
+        // If there is only a few before a period end, we don't create a new client, and trigger the break
+        if (TimeManager.instance.isJustBeforeBreak() || TimeManager.instance.isJustBeforeNight()) {
+            createClient = false;
         }
 
         // Compute data
         this.timeSinceClient = TimeManager.instance.getTimeSinceClient();
 
         this.running = false;
-        ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, succeed, this.timeSinceClient, this.currentClient["neededTime"]);
-        ClientManager.instance.newClient();
+        ClientManager.instance.dispatch(ClientManager.END_CLIENT, this.currentClient, succeed, this.timeSinceClient, this.currentClient["neededTime"], createClient);
+        // this.currentClient = null;
+        if (createClient) {
+            ClientManager.instance.newClient();
+        }
     };
 
     ClientManager.prototype.updateClientFace = function() {
