@@ -4,10 +4,10 @@ var Payslip = (function(AssetManager) {
     /**
      * @constructor
      */
-    function Payslip() {
+    function Payslip(name) {
         // enforces new
         if (!(this instanceof Payslip)) {
-            return new Payslip();
+            return new Payslip(name);
         }
         this.destinationCanvas = document.getElementById('main');
         this.destinationCtx = this.destinationCanvas.getContext('2d');
@@ -15,7 +15,7 @@ var Payslip = (function(AssetManager) {
         this.context = this.canvas.getContext('2d');
         this.canvas.width = 1280;
         this.canvas.height = 720;
-        this.img = AssetManager.instance.assets.images['payslip'];
+        this.img = AssetManager.instance.assets.images[name];
         this.reset();
     }
 
@@ -25,17 +25,24 @@ var Payslip = (function(AssetManager) {
         ctx.globalAlpha = .8;
         ctx.fillRect(0, 0, 1280, 720);
         ctx.globalAlpha = 1;
-        ctx.drawImage(this.img, 400, 20);
+        ctx.drawImage(this.img, 1280 / 2 - this.img.width / 2, 20);
     };
 
-    // "actualWorkedTime": actualWorkedTime,
-    // "workedTimeForBoss": this.workedTimeForBoss,
-    // "nbSuccess": nbSuccess,
-    // "nbFailed": this.clientsScore.length - nbSuccess,
-    // "productivity": actualWorkedTime / this.workedTimeForBoss,
-    // "clients": this.clientsScore
-
     Payslip.prototype.displayInfo = function(info) {
+        var ctx = this.context;
+        ctx.font = "28px Courier bold justify";
+
+        var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(info.workedTimeForBoss);
+        var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(info.actualWorkedTime);
+
+        ctx.fillText('Temps réellement travaillé : ' + gameTimeActuallyWorked.h + "h" + gameTimeActuallyWorked.m, 50, 50);
+        ctx.fillText('Temps patron : ' + gameTimeWorkedForBoss.h + "h" + gameTimeWorkedForBoss.m, 50, 100);
+        ctx.fillText('Réussi : ' + info.nbSuccess, 50, 150);
+        ctx.fillText('Fail : '+info.nbFailed, 50, 200);
+        ctx.fillText(( (info.productivity * 100) | 0)+"%", 50, 250);
+    };
+
+    Payslip.prototype.displayInfoWeek = function(info) {
         var ctx = this.context;
         ctx.font = "28px Courier bold justify";
 

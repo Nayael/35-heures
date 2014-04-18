@@ -33,21 +33,21 @@ var Notif = (function(Globals, AssetManager, MakeEventDispatcher, Utils) {
         });
         view.draw(ctx);
 
-        ctx.font = "28px Courier bold justify";
-        Utils.wrapText(ctx, title, 50, 50, this.spriteWidth, 30);
-        ctx.font = "20px Courier justify";
-        Utils.wrapText(ctx, content, 50, 80, this.spriteWidth, 25);
+        ctx.font = "28px 'Courier New' bold justify";
+        Utils.wrapText(ctx, title, 50, 50, this.spriteWidth - 100, 30);
+        ctx.font = "20px 'Courier New' justify";
+        Utils.wrapText(ctx, content, 50, 80, this.spriteWidth - 100, 25);
     }
 
     ////////////
     // STATIC ATTRIBUTES
     //
     Notif.START_Y = Globals.CANVAS_HEIGHT + 20;
-    Notif.END_Y = 500;
-    Notif.ANIM_SPEED = 20;
-    Notif.ANIM_ACCELERATION = 0.75;
+    Notif.END_Y = 530;
+    Notif.ANIM_SPEED = 25;
+    Notif.ANIM_ACCELERATION = 1;
     Notif.DELAY_AFTER_ANIM = 500;
-    Notif.DISPLAY_DURATION = 2000;
+    Notif.DISPLAY_DURATION = 20000;
     Notif.ANIMATION_COMPLETE = "Notif.ANIMATION_COMPLETE";
     Notif.DESTROY = "Notif.DESTROY";
 
