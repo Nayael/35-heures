@@ -24,7 +24,7 @@ var TimeManager = (function(MakeEventDispatcher) {
     };
 
     // Static
-    TimeManager.DAYS                   = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+    TimeManager.DAYS                   = ['Lundi', 'Mardi'/*, 'Mercredi', 'Jeudi', 'Vendredi'*/];
     TimeManager.PERIODS                = ['MORNING', 'AFTERNOON', 'NIGHT'];
     TimeManager.START_PERIOD_MORNING   = "TimeManager.START_PERIOD_MORNING";
     TimeManager.END_PERIOD_MORNING     = "TimeManager.END_PERIOD_MORNING";
@@ -32,9 +32,8 @@ var TimeManager = (function(MakeEventDispatcher) {
     TimeManager.END_OF_DAY             = "TimeManager.END_OF_DAY";
     TimeManager.START_WEEK             = "TimeManager.START_WEEK";
     TimeManager.END_OF_WEEK            = "TimeManager.END_OF_WEEK";
-    TimeManager.MORNING_DURATION       = 120;
-    TimeManager.DAY_DURATION           = 210;
-    TimeManager.TIME_BETWEEN_PERIODS   = 3500;
+    TimeManager.MORNING_DURATION       = 10;
+    TimeManager.DAY_DURATION           = 50;
     TimeManager.TIME_BETWEEN_PERIODS   = 3500;
 
     // Private
