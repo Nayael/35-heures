@@ -30,7 +30,7 @@ var Payslip = (function(AssetManager) {
 
     Payslip.prototype.displayInfo = function(info) {
         var ctx = this.context;
-        ctx.font = "32px 'Arial' bold";
+        ctx.font = "32px 'Courier New' bold";
 
         var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(info.workedTimeForBoss);
         var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(info.actualWorkedTime);
@@ -44,7 +44,7 @@ var Payslip = (function(AssetManager) {
 
     Payslip.prototype.displayInfoWeek = function(info) {
         var ctx = this.context;
-        ctx.font = "32px 'Arial' bold";
+        ctx.font = "32px 'Courier New' bold";
 
         var gameTimeWorkedForBoss = TimeManager.instance.realTimeToGameTime(info.workedTimeForBoss);
         var gameTimeActuallyWorked = TimeManager.instance.realTimeToGameTime(info.actualWorkedTime);
