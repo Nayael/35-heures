@@ -72,7 +72,19 @@ var assets = (function() {
             "hud_watch_small_hand"          :["assets/img/game/hud/hud_watch_small_hand.png", "game"],
             "hud_progressbar_base"          :["assets/img/game/hud/hud_progressbar_base.png", "game"],
             "hud_progressbar_blue"          :["assets/img/game/hud/hud_progressbar_blue.png", "game"],
-            "hud_progressbar_highlight"    :["assets/img/game/hud/hud_progressbar_highlight.png", "game"]
+            "hud_progressbar_highlight"     :["assets/img/game/hud/hud_progressbar_highlight.png", "game"],
+
+            "halo_computer"         :["assets/img/game/items/halo/computer_halo.png", "game"],
+            "halo_crayons"          :["assets/img/game/items/halo/pen_halo.png", "game"],
+            "halo_small_envelope"   :["assets/img/game/items/halo/small_envelope_halo.png", "game"],
+            "halo_envelope_big"     :["assets/img/game/items/halo/envelope_big_halo.png", "game"],
+            "halo_tampon"           :["assets/img/game/items/halo/tampon_halo.png", "game"],
+            "halo_tampon_2"         :["assets/img/game/items/halo/tampon_2_halo.png", "game"],
+            "halo_telephone"        :["assets/img/game/items/halo/telephone_halo.png", "game"],
+            "halo_toffee_bowl"      :["assets/img/game/items/halo/toffee_bowl_halo.png", "game"],
+            "halo_keys"             :["assets/img/game/items/halo/keys_halo.png", "game"],
+            "halo_access_card"      :["assets/img/game/items/halo/magnetic_access_halo.png", "game"],
+            "halo_stamps"           :["assets/img/game/items/halo/stamps_halo.png", "game"]
         },
         "atlases": {
             // "young_woman": ["assets/img/game/characters/young_woman", "game"]
