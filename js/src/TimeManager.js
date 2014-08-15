@@ -141,11 +141,11 @@ var TimeManager = (function(MakeEventDispatcher) {
     };
 
     TimeManager.prototype.isBreak = function() {
-        return TimeManager.MORNING_DURATION - _timeOfDay > 0 && TimeManager.MORNING_DURATION = _timeOfDay;
+        return TimeManager.MORNING_DURATION - _timeOfDay > 0 && TimeManager.MORNING_DURATION == _timeOfDay;
     };
 
     TimeManager.prototype.isNight = function() {
-        return TimeManager.DAY_DURATION - _timeOfDay > 0 && TimeManager.DAY_DURATION = _timeOfDay;
+        return TimeManager.DAY_DURATION - _timeOfDay > 0 && TimeManager.DAY_DURATION == _timeOfDay;
     };
 
     // Return current day
